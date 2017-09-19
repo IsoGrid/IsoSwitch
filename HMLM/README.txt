@@ -1,0 +1,1 @@
+This code (HashMatchLogMap - HMLM) was used to build a large scale simulation of the IsoGrid route-finding algorithms. The results were published to IsoGrid.org in second half of 2016.
