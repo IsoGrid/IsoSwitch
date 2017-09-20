@@ -33,7 +33,7 @@ to connect nodes operating in Mode #1 to nodes operating in Mode #2.
 
 # Declaration & Dedication
     Copyright (2017) Travis J Martin
-    Copyright (2017) Linddsey A Martin
+    Copyright (2017) Lindsey A Martin
     
     IsoSwitch.201709 is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 3 as published
