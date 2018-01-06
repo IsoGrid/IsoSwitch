@@ -1,0 +1,8 @@
+10118193-0001LF.lib and 10118193-0001LF.mod:
+Copyright 2016 SnapEDA.com and are licensed with a
+Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with the Design Exception 1.0. 
+
+
+615032137821.lib and 615032137821.mod:
+Submitted to SnapEDA.com by user akubec on Feb 18th 2017 and licensed with a 
+Creative Commons Attribution-ShareAlike 4.0 International License (CC BY-SA) with the Design Exception 1.0. 

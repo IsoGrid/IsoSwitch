@@ -1,0 +1,109 @@
+ERC report (12/27/2017 12:28:23 PM, Encoding UTF8 )
+
+***** Sheet /
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (115.57 mm,97.79 mm): Pin 109 (Power input) of component U1 is not driven (Net 8).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (143.51 mm,97.79 mm): Pin 102 (Power input) of component U1 is not driven (Net 10).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (246.38 mm,135.89 mm): Pin 1 (Power input) of component #PWR075 is not driven (Net 14).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (33.02 mm,20.32 mm): Pin 1 (Passive) of component F1 is not driven (Net 17).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (95.25 mm,20.32 mm): Pin 4 (Power input) of component U2 is not driven (Net 25).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (181.61 mm,27.94 mm): Pin 6 (Input) of component U3 is not driven (Net 27).
+
+***** Sheet /Tile1/
+
+***** Sheet /Tile1/EthernetPort2/
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (179.07 mm,74.93 mm): Pin 1 (Power input) of component #PWR094 is not driven (Net 4).
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U12 is not driven (Net 126).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,91.44 mm): Pin 17 (Power input) of component U10 is not driven (Net 127).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U13 is not driven (Net 144).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U11 is not driven (Net 153).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U10 is not driven (Net 165).
+
+***** Sheet /Tile1/EthernetPort3/
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (179.07 mm,74.93 mm): Pin 1 (Power input) of component #PWR094 is not driven (Net 4).
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U12 is not driven (Net 126).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,91.44 mm): Pin 17 (Power input) of component U10 is not driven (Net 127).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U13 is not driven (Net 144).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U11 is not driven (Net 153).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U10 is not driven (Net 165).
+
+***** Sheet /Tile0/
+
+***** Sheet /Tile0/EthernetPort0/
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (179.07 mm,74.93 mm): Pin 1 (Power input) of component #PWR094 is not driven (Net 4).
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U12 is not driven (Net 126).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,91.44 mm): Pin 17 (Power input) of component U10 is not driven (Net 127).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U13 is not driven (Net 144).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U11 is not driven (Net 153).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U10 is not driven (Net 165).
+
+***** Sheet /Tile0/EthernetPort1/
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (179.07 mm,74.93 mm): Pin 1 (Power input) of component #PWR094 is not driven (Net 4).
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(7): A no connect symbol is connected to more than 1 pin
+    @ (167.64 mm,48.26 mm): More than 1 pin connected to an UnConnect symbol.
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U12 is not driven (Net 126).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,91.44 mm): Pin 17 (Power input) of component U10 is not driven (Net 127).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U13 is not driven (Net 144).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U11 is not driven (Net 153).
+ErrType(3): Pin connected to some others pins but no pin to drive it
+    @ (167.64 mm,93.98 mm): Pin 3 (Power input) of component U10 is not driven (Net 165).
+
+ ** ERC messages: 46  Errors 0  Warnings 46

@@ -52,6 +52,7 @@ E) To the extent that this file embodies any of our patentable inventions, we
 #define TX_NUM_SUBFRAMES        NUM_SUBFRAMES
 #define TX_NUM_CRUMBS_PER_EPOCH ETH_NUM_CRUMBS_PER_EPOCH
 #define TX_NUM_CRUMBS           ETH_NUM_CRUMBS
+#define TX_PKT_ISO_ARRAY_SIZE   PKT_ISO_ARRAY_SIZE
 #define TX_PKT_ARRAY_SIZE       PKT_ARRAY_SIZE
 
 // Start up an ethernet frame to hold the CrowdSwitch frame

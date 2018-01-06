@@ -1,6 +1,6 @@
 
-# IsoSwitch.201709
-IsoSwitch.201709 is a point-in-time release of the GPLv3-licensed source code and HW design for the CrowdSwitch product.
+# IsoSwitch.201801
+IsoSwitch.201801 is a point-in-time release of the GPLv3-licensed source code and HW design for the CrowdSwitch product.
 Please do not use the CrowdSwitch name for anything switch-like. 
 The CrowdSwitch name is claimed by Travis and Lindsey Martin.
 
@@ -11,7 +11,9 @@ It's not ready for use as there are major missing features and missing tests. Pl
 This code is not yet useful as a switch: It only runs under an XMOS simulator.
 
 # CrowdSwitch
-CrowdSwitch is a future hardware product built using the [IsoGrid](http://www.isogrid.org) protocol. When wired together they form a streaming, scalable, mesh network. 
+![CrowdSwitch PCB Layout](/images/CrowdSwitchLayout_700.png =408x331) ![CrowdSwitch Top-Down Render](/images/CrowdSwitchRenderTopDown_700.png =374x343)
+CrowdSwitch is an open hardware product built using the [IsoGrid](http://www.isogrid.org) protocol. When wired together they form a streaming, scalable, mesh network.  
+The full hardware design files (i.e. mechanical drawings, schematics, bill of materials, PCB layout data) are included in this release.
 
 Our initial plan is to give low cost (or free) CrowdSwitches to low income residents of extremely 
 high-density urban communities. 
@@ -19,47 +21,50 @@ The best funding model still isn't clear, but we intend to build it within a 501
 to make our altruistic motives super clear.
 - 4-port auto-configuring switch
   - 3x RJ45 ~100 Mbps full-duplex [ethernet PHY](https://en.wikipedia.org/wiki/Ethernet_physical_layer#Fast_Ethernet) with 1ms worst-case switching latency
-  - 1x internal [SPI](https://en.wikipedia.org/wiki/Serial_Peripheral_Interface_Bus) connection to an onboard [SoC](https://en.wikipedia.org/wiki/System_on_a_chip) with 8ms worst-case switching latency 
+  - 1x RJ45 ~50 Mbps full-duplex Ethernet connection to an external controller PC or [SoC](https://en.wikipedia.org/wiki/System_on_a_chip) with 8ms worst-case switching latency 
 - The core of the switch is an [xCORE-200 XL216-512-TQ128](http://www.xmos.com/download/private/xCORE-200-XL-Product-Brief%281.3%29.pdf)
-- Onboard SoC with ~512MB of RAM, ~4GB of flash, and able to create a wireless hotspot
-- Target BOM cost is ~$20.
+- Powered by Micro USB
+- Target BOM cost is ~$15.
+- External controller PC/SoC (~$9) with ~512MB of RAM, ~16GB of flash, and able to create a wireless hotspot
 
-The Wi-Fi part will be able to work in one of two modes:
+The Wi-Fi on the PC/SoC will be able to work in one of two modes:
  1. Providing Internet access to a user
  2. Connecting to a regular Wi-Fi Internet access point
 
 The IsoGrid formed by the interconnected mesh of CrowdSwitches provides a redundant multi-path backbone
-to connect nodes operating in Mode #1 to nodes operating in Mode #2.
+to connect nodes operating in Mode (1) to nodes operating in Mode (2).
+
+![CrowdSwitch Perspective Render](/images/CrowdSwitchPerspective_700.png) 
 
 # Declaration & Dedication
     Copyright (2017) Travis J Martin
     Copyright (2017) Lindsey A Martin
-
-    IsoSwitch.201709 is free software: you can redistribute it and/or modify
+    
+    IsoSwitch.201801 is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 3 as published
     by the Free Software Foundation.
 
-    IsoSwitch.201709 is distributed in the hope that it will be useful,
+    IsoSwitch.201801 is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License version 3 for more details.
 
     You should have received a copy of the GNU General Public License version 3
-    along with IsoSwitch.201709.  If not, see <http://www.gnu.org/licenses/>.
+    along with IsoSwitch.201801.  If not, see <http://www.gnu.org/licenses/>.
 
-    A) We, the undersigned contributors to IsoSwitch.201709, declare that our 
+    A) We, the undersigned contributors to IsoSwitch.201801, declare that our 
        contribution was created by us as individuals, on our own time, entirely for 
        altruistic reasons, with the expectation and desire that the Copyright for our 
-       contribution would expire in the year 2037 and enter the public domain.
+       contribution would expire in the year 2038 and enter the public domain.
     B) At the time when you first read this declaration, you are hereby granted a license
-       to use IsoSwitch.201709 under the terms of the GNU General Public License, v3.
-    C) Additionally, for all uses of IsoSwitch.201709 after Jan 1st 2037, we hereby waive 
+       to use IsoSwitch.201801 under the terms of the GNU General Public License, v3.
+    C) Additionally, for all uses of IsoSwitch.201801 after Jan 1st 2038, we hereby waive 
        all copyright and related or neighboring rights together with all associated claims
        and causes of action with respect to this work to the extent possible under law.
     D) We have read and understand the terms and intended legal effect of CC0, and hereby 
-       voluntarily elect to apply it to IsoSwitch.201709 for all uses or copies that occur 
-       after Jan 1st 2037.
-    E) To the extent that IsoSwitch.201709 embodies any of our patentable inventions, we 
+       voluntarily elect to apply it to IsoSwitch.201801 for all uses or copies that occur 
+       after Jan 1st 2038.
+    E) To the extent that IsoSwitch.201801 embodies any of our patentable inventions, we 
        hearby grant you a worldwide, royalty-free, non-exclusive, perpetual license to 
        those inventions.
 
@@ -82,10 +87,13 @@ free to fork it under the terms of the GPLv3 license.
 | Component         | Description                                                                         |
 |-------------------|-------------------------------------------------------------------------------------|
 | HMLM(Test)        | Prototype HashMatchLogMap route mapping algorithm                                   |
-| IsoSwitch         | C# implementation of an IsoGrid switch (bridging C# interfaces and SPI)             |
+| HW                | Schematic, PCB Layout in KiCad format. BoM in xlsx format                           |
+| HW\Datasheets     | Archived datasheets for select components                                           |
+| HW\SnapEda        | Symbols and Footprints for some components, freely licensed by SnapEda              |
+| IsoSwitch         | C# implementation of an IsoGrid switch controller (bridging C# interfaces and ETH)  |
 | XMOS\             |                                                                                     |
 | XMOS\EthPluginX   | Simulation plugin for Ethernet PHY in XMOS\IsoSwitch using named-pipes              |
-| XMOS\SpiSocPlugin | Simulation plugin for SPI <--> SoC transport of XMOS\IsoSwitch using named-pipes    |
+| XMOS\SpiSocPlugin | Simulation plugin for SPI <--> SoC transport  (soon to be deprecated)               |
 | XMOS\IsoSwitch    | 15-core XMOS Firmware implementing the High-performance kernel of an IsoGrid switch |
 
 
@@ -98,4 +106,4 @@ Instructions for Windows:
 * Open the CrowdSwitch.sln in Visual Studio
 * Rebuild the solution
 * Run IsoSwitchTest.UT1.SimpleStream from Test Explorer
-  * It runs for 6-7 minutes
+  * It runs for 7-9 minutes

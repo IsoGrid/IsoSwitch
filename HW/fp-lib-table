@@ -1,0 +1,3 @@
+(fp_lib_table
+  (lib (name TempRJ45)(type KiCad)(uri "$(KIPRJMOD)/TempRJ45.pretty")(options "")(descr ""))
+)

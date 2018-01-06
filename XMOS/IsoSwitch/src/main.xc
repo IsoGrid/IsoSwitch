@@ -48,7 +48,7 @@ E) To the extent that this file embodies any of our patentable inventions, we
 extern void rx_decoder(
     LINKID linkId,
     UINT8 numSubframes,
-    client interface IFrameFill iFrame0,
+    client interface IFrameFill iFrameSelf,
     client interface IFrameFill iFrame1,
     client interface IFrameFill iFrame2,
     client interface IFrameFill iFrame3,

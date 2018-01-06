@@ -1,5 +1,5 @@
 ﻿/*
-Copyright (c) 2017 Travis J Martin (travis.martin) [at} isogrid.org)
+Copyright (c) 2018 Travis J Martin (travis.martin) [at} isogrid.org)
 
 This file is part of IsoSwitch.201709
 

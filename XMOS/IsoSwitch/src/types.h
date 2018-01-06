@@ -59,8 +59,7 @@ typedef UINT16 LINKID;
 typedef UINT8  SLOTID;
 typedef UINT16 SUBFRAMEID;
 
-typedef UINT8 PKT_T;
-typedef UINT8 ROUTE_T;
+typedef UINT16 PKT_T;
 
 #define TRUE  1
 #define FALSE 0
@@ -79,51 +78,104 @@ typedef UINT8 ROUTE_T;
 #define PKT_T_HOP_COUNTER              ((PKT_T)5)
 #define PKT_T_WITH_REPLY               ((PKT_T)6)
 #define PKT_T_GET_ROUTE_UTIL_FACTOR    ((PKT_T)7)
-#define PKT_T_MAX                      ((PKT_T)8)
+#define PKT_T_LOCAL_GET_STATUS         ((PKT_T)8)
+#define PKT_T_LOCAL_SET_CONFIG         ((PKT_T)9)
+#define PKT_T_LOCAL_RESPONSE           ((PKT_T)10)
+#define PKT_T_LOCAL_SEND_PING          ((PKT_T)11)
+#define PKT_T_LOCAL_INIT_ISO_STREAM    ((PKT_T)12)
+#define PKT_T_MAX                      ((PKT_T)13)
+
+#define PKT_FT_INIT_ISO_STREAM_FAIL    0x51AF6D77
+
+#define CONTINUE_STREAM 1
+
+// List of all Failure codes for PKT_T_FAILURE
+#define FAIL_ENERGY_EXHAUSTED                  3
+
+typedef UINT32 ENERGY32;
 
 typedef union
 {
-  UINT64 i64;
-  UINT32 i32[2];
-} PAYTYPE;
+  UINT64   i64;
+  ENERGY32 i32[2];
+} ENERGY;
 
 typedef struct
 {
   PKT_T   pktType;
-  UINT8   reserved1;
-  UINT16  reserved2;
+  UINT16  reserved0;
   UINT32  pktFullType;
 
-  PAYTYPE payment;
+  ENERGY  energy;
 } WORD0_HDR;
-
-typedef struct
-{
-  UINT64 low;
-  UINT64 high;
-} WORD1_Breadcrumb;
-
-typedef struct
-{
-  UINT64  hopCounter;
-  PAYTYPE replyCostAccumulator;
-} WORD2;
 
 typedef struct
 {
   UINT32  pktId;
   UINT16  isoWordCount;
   UINT8   isoRouteTagOffset;
-  UINT8   reserved;
-  PAYTYPE isoPayment;
-} WORD3;
+  UINT8   tickAndPriority;
+  ENERGY  replyEnergy;
+} WORD1;
+
+typedef struct
+{
+  UINT32  pktId;
+  UINT16  isoWordCount;
+  UINT16  reserved0;
+  UINT64  downstreamRoute;
+} WORD1_LOCAL_ISOINIT;
+
+typedef struct
+{
+  UINT64  gpsTimeAtSend;
+  UINT64  fullLinkId;
+} WORD1_LOCAL_PING;
+
+typedef struct
+{
+  UINT64 low;
+  UINT64 high;
+} WORD2_Breadcrumb;
+
+typedef struct
+{
+  PKT_T   pktType;
+  UINT16  reserved0;
+  UINT32  uniqueId;
+
+  UINT64  route;
+} WORD0_LOCAL_COMMAND;
+
+typedef struct
+{
+  PKT_T   pktType;
+  PKT_T   pktCommandType;
+  UINT32  uniqueId;
+
+  UINT64  reserved0;
+} WORD0_LOCAL_RESPONSE;
+
+typedef struct
+{
+  UINT32  pktId;
+  UINT8   failureCode;
+  UINT8   reserved0;
+  UINT8   reserved1;
+  UINT8   reserved2;
+  ENERGY  energyLast;
+} WORD1_PKT_FAILURE;
 
 typedef union
 {
-  WORD0_HDR        w0_Hdr;
-  WORD1_Breadcrumb w1_bc;
-  WORD2            w2;
-  WORD3            w3;
+  WORD0_HDR            w0_Hdr;
+  WORD0_LOCAL_COMMAND  w0_localCommand;
+  WORD0_LOCAL_RESPONSE w0_localResponse;
+  WORD1                w1;
+  WORD1_LOCAL_ISOINIT  w1_localIsoInit;
+  WORD1_LOCAL_PING     w1_localPing;
+  WORD2_Breadcrumb     w2_bc;
+  WORD1_PKT_FAILURE    w1_pktFail;
 
   UINT64 i64[2];
   UINT32 i32[4];
@@ -132,21 +184,6 @@ typedef union
 } WORD;
 
 typedef UINT32 WORD_SIZE[4];
-
-// PaymentCredits are converted into a native C double floating point value
-// A double has a sign bit, an 11 bit exponent (with 1,023 bias), and a 52 bit mantissa
-#define PAYMENT_HIGH_MANTISSA_MASK 0x000FFFFF
-
-#define DOUBLE_MANTISSA_HIGH_BITS 20
-
-#define ISO_CONN_INIT_CREDIT_MASK_AND_SHIFT_MANTISSA(INDEX, WORD) \
-  (static_cast<UINT64>(WORD & ISO_CONN_INIT_ ## INDEX ## _CREDIT_MANTISSA_MASK) << ISO_CONN_INIT_ ## INDEX ## _CREDIT_SHIFT)
-
-#define PAYTYPE_TO_EXP(EXP) (static_cast<UINT64>(1023 + EXP) << DOUBLE_MANTISSA_BITS)
-#define PAYTYPE_TO_DOUBLE_HIGH_PART(PAYTYPE) ((static_cast<UINT32>(PAYTYPE.B.exponent) - 1023) << DOUBLE_MANTISSA_HIGH_BITS)
-
-#define ISO_CONN_INIT_CREDIT_EXPONENT_FROM_CREDIT(CREDIT) static_cast<UINT16>(((CREDIT >> DOUBLE_MANTISSA_BITS) & 0x7FF) - 1023)
-
 
 typedef struct
 {
@@ -158,5 +195,45 @@ typedef struct
   UINT32 spi_ignore_zero;
 } SUBFRAME;
 
+// NOTE: This structure should be a power of 2 bytes for perf reasons (accessing an array is easier)
+// NOTE: This structure MUST be exactly (16 * 4) bytes because it's delivered in that size
+typedef struct
+{
+  UINT32 BC_8_PktCount;
+  UINT32 BC_120_PktCount;
+  UINT32 LowEnergyCount;
+  UINT32 ExceedMaxEnergyCount;
+
+  UINT32 IsoExceedReplyEnergyCount;
+  UINT32 IsoTickExpiredCount;
+  UINT32 IsoWordCountMaxExceededCount;
+  UINT32 MissedCount;
+
+  UINT32 ErasedCount;
+  UINT32 JumbledCount;
+  UINT64 Iso0Count;
+
+  ENERGY ReceiveEnergy;
+  ENERGY TransmitEnergy;
+} OUT_STATUS;
+
+// NOTE: This structure should be a power of 2 bytes for perf reasons (accessing an array is easier)
+// NOTE: This structure MUST be exactly (16 * 4) bytes because it's delivered in that size
+typedef struct
+{
+  ENERGY32 IsoEnergy;
+  ENERGY32 PktReplyEnergy;
+  ENERGY32 BC_8_PktEnergy;
+  ENERGY32 BC_120_PktEnergy;
+
+  UINT64 Reserved0;
+  UINT64 Reserved1;
+
+  UINT64 Reserved2;
+  UINT64 Reserved3;
+
+  UINT64 Reserved4;
+  UINT64 Reserved5;
+} IN_CONFIGURATION;
 
 #endif /* TYPES_H_ */

@@ -75,23 +75,42 @@ typedef enum
   PKT_DECODE_INIT_ISO_STREAM_6,
   PKT_DECODE_INIT_ISO_STREAM_7,
 
-  PKT_FAILED_INIT_ISO_STREAM_2,
-  PKT_FAILED_INIT_ISO_STREAM_3,
-  PKT_FAILED_INIT_ISO_STREAM_4,
-  PKT_FAILED_INIT_ISO_STREAM_5,
-  PKT_FAILED_INIT_ISO_STREAM_6,
-  PKT_FAILED_INIT_ISO_STREAM_7,
-
   PKT_DECODE_INIT_ISO_STREAM_FROM_BC_2,
   PKT_DECODE_HOP_COUNTER_2,
   PKT_DECODE_WITH_REPLY_2,
   PKT_DECODE_GET_ROUTE_UTIL_FACTOR_2,
 
+  PKT_DECODE_PASSTHROUGH_2,
   PKT_DECODE_PASSTHROUGH_3,
   PKT_DECODE_PASSTHROUGH_4,
   PKT_DECODE_PASSTHROUGH_5,
   PKT_DECODE_PASSTHROUGH_6,
   PKT_DECODE_PASSTHROUGH_7,
+
+  PKT_DECODE_LOCAL_SET_CONFIG_2,
+  PKT_DECODE_LOCAL_SET_CONFIG_3,
+  PKT_DECODE_LOCAL_SET_CONFIG_4,
+
+  PKT_DECODE_LOCAL_IGNORE_WORD_2,
+  PKT_DECODE_LOCAL_IGNORE_WORD_3,
+  PKT_DECODE_LOCAL_IGNORE_WORD_4,
+  PKT_DECODE_LOCAL_IGNORE_WORD_5,
+  PKT_DECODE_LOCAL_IGNORE_WORD_6,
+  PKT_DECODE_LOCAL_IGNORE_WORD_7,
+
+  PKT_DECODE_LOCAL_RESPONSE_2,
+  PKT_DECODE_LOCAL_RESPONSE_3,
+  PKT_DECODE_LOCAL_RESPONSE_4,
+  PKT_DECODE_LOCAL_RESPONSE_5,
+  PKT_DECODE_LOCAL_RESPONSE_6,
+  PKT_DECODE_LOCAL_RESPONSE_7,
+
+  PKT_DECODE_LOCAL_INIT_ISO_STREAM_2,
+  PKT_DECODE_LOCAL_INIT_ISO_STREAM_3,
+  PKT_DECODE_LOCAL_INIT_ISO_STREAM_4,
+  PKT_DECODE_LOCAL_INIT_ISO_STREAM_5,
+  PKT_DECODE_LOCAL_INIT_ISO_STREAM_6,
+  PKT_DECODE_LOCAL_INIT_ISO_STREAM_7,
 
   PKT_DECODE_READY_FOR_PKT,
   PKT_DECODE_WAITING_FOR_INTER_PKT_GAP,
@@ -101,10 +120,8 @@ typedef struct
 {
   PKT_DECODE state; // The state enumeration
   LINKID destLinkId; // The destination LINKID for the uPkt
-
-  // TODO: Allow Dynamic values
-  PAYTYPE payScaleFactor;
-  PAYTYPE pktCost;
+  UINT32 tick; // The tick of the current uPkt
+  PKT_DECODE finalState;
 
   WORD  buf[PKT_BUF_WORD_COUNT]; // Buffer holding the current uPkt
 } RX_PKT_STATE;
@@ -140,17 +157,13 @@ void rx_decoder(
 {
   if (sizeof(WORD) != sizeof(WORD_SIZE))
   {
-    printf("WORD SIZE IS INCORRECT! %d %d %d %d\n", sizeof(WORD0_HDR), sizeof(WORD1_Breadcrumb), sizeof(WORD2), sizeof(WORD3));
+    printf("WORD SIZE IS INCORRECT! %d %d %d\n", sizeof(WORD0_HDR), sizeof(WORD2_Breadcrumb), sizeof(WORD1));
     while (TRUE);
   }
 
   RX_PKT_STATE pktDecoder = {};
-  pktDecoder.payScaleFactor.i32[0] = 0;
-  pktDecoder.payScaleFactor.i32[1] = 1;
-  pktDecoder.pktCost.i32[0] = 0;
-  pktDecoder.pktCost.i32[1] = 1;
 
-  UINT16 subframeId = -1;
+  UINT16 subframeId = (numSubframes - 1);
 
   // This is a special uPkt buffer for starting
   // isostreams in the future
@@ -206,10 +219,7 @@ void rx_decoder(
     {
       printf("Bad Start%d!!\n", linkId);
     }
-
-    pSlot = (SLOT_STATE* unsafe)(slots);
   }
-
 
   while (1)
   unsafe
@@ -240,7 +250,6 @@ void rx_decoder(
     }
 
     SUBFRAME& subframe = rxSubframeReadyFlag ? pRxBuf->s[1] : pRxBuf->s[0];
-
     if (subframe.crc != -1)
     {
       printf("****%dCRC%d(%x)!!!\n", linkId, subframeId, subframe.crc);
@@ -271,55 +280,60 @@ void rx_decoder(
           // by one frame to account for the removal of the IsoStreamRoute tag (the
           // last one was at the end of the word)
 
+          UINT16 iCrumb;
+          UINT16 crumb;
+          UINT8 slotRef;
           if ((subframe.slotValidityFlags & 1) == 0)
           {
             // Slot was erased, fail the slot
-            pSlot->state = SLOT_REF_MARKER | 0xFE;
-            pSlot->framesRemaining--;
-            pPktBufTail = (pPktBufTail + PKT_WORD_COUNT);
-            pPktBufTail = (pPktBufTail == pPktBufEndOfBuffer) ? pktBuf : pPktBufTail;
-            continue;
+            slotRef = SLOT_REF_RESULT_CORRUPTED_WORD;
+          }
+          else
+          {
+            iCrumb = pPktBufTail[2].i16[0] & 0x3FFF;
+            crumb = iCrumb;
+
+            // The uPkt InitIsoStream words are saved in the tail of the buffer
+            slotRef = IFRAME_FROM_LINKID(slotDestLink).AllocIsoStream((WORD*)pPktBufTail, word, crumb);
           }
 
-          UINT16 iCrumb = pPktBufTail[1].i16[0] & 0x3FFF;
-          UINT16 crumb = iCrumb;
-
-          // The uPkt InitIsoStream words are saved in the tail of the buffer
-          UINT8 slotRef = IFRAME_FROM_LINKID(slotDestLink).AllocIsoStream((WORD*)pPktBufTail, word, crumb);
-          if (slotRef == 0xFE)
+          if (slotRef >= SLOT_REF_RESULT_FAILURE_BASE)
           {
-            // TODO: Fail the Pkt, no resources available right now.
             // NOTE: The input slot remains allocated (it was allocated by the previous switch)
 
-            // fail the slot
-            pSlot->state = SLOT_REF_MARKER | 0xFE;
-            pSlot->framesRemaining--;
-            pPktBufTail = (pPktBufTail + PKT_WORD_COUNT);
-            pPktBufTail = (pPktBufTail == pPktBufEndOfBuffer) ? pktBuf : pPktBufTail;
-            continue;
+            iFrameSelf.SendFailedPkt(
+                pPktBufTail[0].w0_Hdr.energy,
+                pPktBufTail[1].w1.pktId,
+                slotRef);
+
+            // Mark the slot as failed
+            pSlot->state = SLOT_REF_MARKER | SLOT_REF_RESULT_FAILURE_BASE;
           }
+          else
+          {
+            // TODO: Decide if LOCAL_ENERGY needs to drop or round up the bottom 16 bits
+            ADD_LOCAL_ENERGY(pRxBuf->status[pPktBufTail[1].w1.tickAndPriority & 3].ReceiveEnergy, pPktBufTail->w0_Hdr.energy);
 
-          forwardCrumbs[iCrumb] = slotDestLink | crumb;
+            forwardCrumbs[iCrumb] = slotDestLink | crumb;
 
-          pSlot->state = slotDestLink | WORD_WRAP_MARKER | SLOT_REF_MARKER | slotRef;
+            pSlot->state = SLOT_REF_MARKER | slotDestLink | slotRef;
+          }
 
           pPktBufTail = (pPktBufTail + PKT_WORD_COUNT);
           pPktBufTail = (pPktBufTail == pPktBufEndOfBuffer) ? pktBuf : pPktBufTail;
-
-          // continue without decrementing framesRemaining (because a single word was consumed)
+          pSlot->framesRemaining--;
           continue;
         }
 
         if ((pSlot->state & SLOT_REF_MARKER) == SLOT_REF_MARKER)
         {
           UINT8 slotRef = (pSlot->state & 0xFF);
-          if (slotRef == 0xFE)
+          if (slotRef == SLOT_REF_RESULT_FAILURE_BASE)
           {
             // The output slot couldn't be allocated, so the data in 'word' is irrelevent
 
             if (pSlot->framesRemaining == 0)
             {
-              // TODO: This case probably can't be hit since the minimum wordCount is 32
               // Deallocate the input slot
               pSlot->state = 0;
               continue;
@@ -338,35 +352,31 @@ void rx_decoder(
 
         if (pSlot->framesRemaining == 0)
         {
-          if (pSlot->state & WORD_WRAP_MARKER)
+          // The current input slot will be deallocated by the sender immediately after this word.
+          // Unless a continuance is provided in this word
+          UINT32 validityFlag = (subframe.slotValidityFlags & 1);
+          pSlot->framesRemaining = IFRAME_FROM_LINKID(slotDestLink).TryContinue(pSlot->state, word, validityFlag);
+          if (pSlot->framesRemaining == 0)
           {
-            // The first word was consumed by the IsoStreamRoute tag process. So:
-            // 1. The current input slot was already deallocated by the sender.
-            // 2. The current word should be processed by the uPkt decoder
-            IFRAME_FROM_LINKID(slotDestLink).SendLastWord_Wrapped(pSlot->state);
-
-            // Deallocate the input slot
-            pSlot->state = 0;
-          }
-          else
-          {
-            // The current input slot will be deallocated by the sender immediately after this word.
-            // TODO: Add the footer
-            IFRAME_FROM_LINKID(slotDestLink).SendLastWord(pSlot->state, word, subframe.slotValidityFlags & 1);
-
             // Deallocate the input slot
             pSlot->state = 0;
             continue;
           }
-        }
-        else // framesRemaining > 0
-        {
-          UINT32 validityFlag = (subframe.slotValidityFlags & 1);
-          IFRAME_FROM_LINKID(slotDestLink).SendWord(pSlot->state, word, validityFlag);
 
-          pSlot->framesRemaining--;
+          UINT8 tick = word.i8[1] >> 6;
+          pRxBuf->status[tick].Iso0Count += pSlot->framesRemaining;
+
+          // TODO: Decide if LOCAL_ENERGY needs to drop or round up the bottom 16 bits
+          ADD_LOCAL_ENERGY(pRxBuf->status[tick].ReceiveEnergy, word.w0_Hdr.energy);
+
+          // Continue without decrementing framesRemaining because TryContinue() pre-decrements it
           continue;
         }
+
+        // framesRemaining > 0
+        IFRAME_FROM_LINKID(slotDestLink).SendWord(pSlot->state, word, (subframe.slotValidityFlags & 1));
+        pSlot->framesRemaining--;
+        continue;
       }
 
       if (subframe.slotAllocatedFlags & 1)
@@ -374,6 +384,7 @@ void rx_decoder(
         printf("****%dMissed%X (%x, %x, %x, %x)!!!\n", linkId, inSlotId, word.i32[0], word.i32[1], word.i32[2], word.i32[3]);
 
         // The input switch thinks this slot is allocated, we must have missed an InitIsoStream
+        pRxBuf->status[(pRxBuf->nextTick - 2) % 4].MissedCount++;
         continue;
       }
 
@@ -382,8 +393,10 @@ void rx_decoder(
         printf("****%dErased%X %d!!!\n", linkId, subframe.slotAllocatedFlags, inSlotId);
 
         // The input switch thinks this slot is erased
+        pRxBuf->status[(pRxBuf->nextTick - 2) % 4].ErasedCount++;
         switch (pktDecoder.state)
         {
+        // TODO: What do do about Energy in this case?
         case PKT_DECODE_INIT_ISO_STREAM_2:
           pPktBufHead -= 2;
           break;
@@ -428,6 +441,7 @@ void rx_decoder(
         else
         {
           printf("***Jumbled\n");
+          pRxBuf->status[(pRxBuf->nextTick - 2) % 4].JumbledCount++;
         }
         break;
 
@@ -436,65 +450,30 @@ void rx_decoder(
         pktDecoder.state = PKT_DECODE_INIT_ISO_STREAM_2;
 
         pPktBufHead->i64[0] = pktDecoder.buf[0].i64[0];
-
-        PAYTYPE pktPayment = pktDecoder.buf[0].w0_Hdr.payment;
-
-        UINT32 borrow;
-        SUB64_WITH_BORROW(pktPayment, borrow, pktPayment, 0, 1);
-        if (borrow)
-        {
-          // Not enough payment. Drop uPkt.
-          printf("Not enough payment!\n");
-          pktDecoder.state = PKT_DECODE_WAITING_FOR_INTER_PKT_GAP;
-          break;
-        }
-
-        PAYTYPE pktPaymentScaled;
-        UINT32 overflow;
-        FIXED_POINT_MULTIPLY_64_32p32(pktPaymentScaled, overflow, pktPayment, pktDecoder.payScaleFactor);
-        pPktBufHead->w0_Hdr.payment = pktPaymentScaled;
-
-        if (overflow)
-        {
-          printf("Payment Overflow!\n");
-          // Payment exceeds allowable transfer size
-          pktDecoder.state = PKT_FAILED_INIT_ISO_STREAM_2;
-        }
-
-        if (pPktBufHead->w0_Hdr.payment.i32[1] > 0x8000) // TODO: Support configurable payment limits
-        {
-          printf("Payment over limit!\n");
-          // Payment exceeds allowable transfer size
-          pktDecoder.state = PKT_FAILED_INIT_ISO_STREAM_2;
-        }
+        pPktBufHead->w0_Hdr.energy = pktDecoder.buf[0].w0_Hdr.energy;
 
         pPktBufHead++;
+        word.i32[0]++;
         pPktBufHead->i64[0] = word.i64[0];
-        pPktBufHead->i64[1] = word.i64[1];
+        pktDecoder.tick = word.w1.tickAndPriority & 3;
+
+        // TODO: Need to do this for BC_120 as well
+        // TODO: Need to figure out how to delete
+        pRxBuf->status[pktDecoder.tick].BC_8_PktCount++;
+
+        // Don't check for overflow because it's extremely unlikely
+        // that the previous hop would have sent a uPkt with such a high ReplyEnergy.
+        // Also, the consequences of overflow don't impact the energy ledger.
+        ADD64_32(pPktBufHead->w1.replyEnergy,
+                 word.w1.replyEnergy,
+                 pRxBuf->config[pktDecoder.tick].PktReplyEnergy);
+
         pPktBufHead++;
         break;
 
-      case PKT_FAILED_INIT_ISO_STREAM_2:
       case PKT_DECODE_INIT_ISO_STREAM_2:
-        pPktBufHead->i64[0] = word.i64[0] + 1; // HopCounter
-
-        PAYTYPE pktReplyPayment = { word.i64[1] };
-
-        PAYTYPE pktReplyPaymentScaled;
-        UINT32 ignore;
-        FIXED_POINT_MULTIPLY_64_32p32(pktReplyPaymentScaled, ignore, pktReplyPayment, pktDecoder.payScaleFactor);
-
-        pPktBufHead->i64[1] = pktReplyPaymentScaled.i64 + pktDecoder.pktCost.i64;
-
-        pPktBufHead++;
-        pktDecoder.state++;
-        break;
-
-      case PKT_FAILED_INIT_ISO_STREAM_3:
       case PKT_DECODE_INIT_ISO_STREAM_3:
-      case PKT_FAILED_INIT_ISO_STREAM_4:
       case PKT_DECODE_INIT_ISO_STREAM_4:
-      case PKT_FAILED_INIT_ISO_STREAM_5:
       case PKT_DECODE_INIT_ISO_STREAM_5:
         pPktBufHead->i64[0] = word.i64[0];
         pPktBufHead->i64[1] = word.i64[1];
@@ -502,7 +481,6 @@ void rx_decoder(
         pktDecoder.state++;
         break;
 
-      case PKT_FAILED_INIT_ISO_STREAM_6:
       case PKT_DECODE_INIT_ISO_STREAM_6:
         pktDecoder.state++;
         pPktBufHead->i64[0] = word.i64[0];
@@ -520,98 +498,96 @@ void rx_decoder(
         pPktBufHead -= 6; // Reset pPktBufHead back to the beginning
         pktDecoder.state = PKT_DECODE_WAITING_FOR_INTER_PKT_GAP;
 
-        WORD3& isoInit3 = pPktBufHead[3].w3;
+        WORD0_HDR&  isoInit0 = pPktBufHead[0].w0_Hdr;
+        WORD1&      isoInit1 = pPktBufHead[1].w1;
 
-        PAYTYPE isoPayment = isoInit3.isoPayment;
+        UINT16 iCrumb;
+        UINT16 crumb;
+        UINT16 slotRef;
 
-        UINT32 borrow;
-        SUB64_WITH_BORROW(isoPayment, borrow, isoPayment, 0, 1);
-        if (borrow)
+        if (isoInit1.isoWordCount >> 15) // Shift out the mulitiplier and leave just the reserved
         {
-          // Not enough payment. Drop IsoStream.
-          printf("Not enough isoPayment!\n");
-          break;
+          printf("SLOT_REF_RESULT_EXCEEDS_MAX_WORDS!\n");
+          // Unsupported word-count reserved bit
+          slotRef = SLOT_REF_RESULT_EXCEEDS_MAX_WORDS;
+        }
+        else if (isoInit1.isoWordCount < 3)
+        {
+          printf("SLOT_REF_RESULT_BELOW_MIN_WORDS!\n");
+          slotRef = SLOT_REF_RESULT_BELOW_MIN_WORDS;
+        }
+        else
+        {
+          UINT64 i64_0 = pRouteTag->i64[0];
+          destLinkId = (UINT32)(i64_0) << LINK_SHIFT;
+
+          // Shift CurrentRouteTags by 2 bits
+          UINT64 i64_1 = pRouteTag->i64[1];
+          pRouteTag->i64[0] = (i64_0 >> 2) | (i64_1 << 62);
+          UINT64 i64_2 = word.i64[0];
+          pRouteTag->i64[1] = (i64_1 >> 2) | (i64_2 << 62);
+
+          // This switch consumes 2 bits of IsoStreamRoute
+          UINT8 isoRouteTagOffset = isoInit1.isoRouteTagOffset + 2;
+          if (isoRouteTagOffset > 127)
+          {
+            // NextRouteTags is empty and needs to be filled by word wrapping the IsoStream
+            isoInit1.isoRouteTagOffset = isoRouteTagOffset % 128;
+
+            // Set the framesRemaining before decrementing because it will still be
+            // decremented when the next word is handled
+            pSlot->framesRemaining = isoInit1.isoWordCount;
+            pRxBuf->status[pktDecoder.tick].Iso0Count += pSlot->framesRemaining;
+
+            // Consume one word of the stream
+            isoInit1.isoWordCount--;
+
+            pPktBufHead += PKT_WORD_COUNT;
+
+            // Delay the allocation due to the word wrap
+            pSlot->state = WORD_WRAP_ALLOC_DELAYED | destLinkId;
+            break;
+          }
+
+          isoInit1.isoRouteTagOffset = isoRouteTagOffset;
+
+          // Shift NextRouteTags by 2
+          UINT64 i64_3 = word.i64[1];
+          word.i64[0] = (i64_2 >> 2) | (i64_3 << 62);
+          word.i64[1] = (i64_3 >> 2);
+
+          iCrumb = pPktBufHead[3].i16[0] & 0x3FFF;
+          crumb = iCrumb;
+
+          slotRef = IFRAME_FROM_LINKID(destLinkId).AllocIsoStream((WORD*)pPktBufHead, word, crumb);
         }
 
-        PAYTYPE isoPaymentScaled;
-        UINT32 overflow;
-        FIXED_POINT_MULTIPLY_64_32p32(isoPaymentScaled, overflow, isoPayment, pktDecoder.payScaleFactor);
-        isoInit3.isoPayment = isoPaymentScaled;
-
-        if (overflow)
+        if (slotRef >= SLOT_REF_RESULT_FAILURE_BASE)
         {
-          printf("IsoPayment Overflow!\n");
-          // Payment exceeds allowable transfer size
-          break;
-        }
-
-        if (pPktBufHead->w0_Hdr.payment.i32[1] > 0x8000) // TODO: Support configurable payment limits
-        {
-          printf("IsoPayment over limit!\n");
-          // Payment exceeds allowable transfer size
-          break;
-        }
-
-        // Shift out the mulitiplier and leave just the exponent
-        if (isoInit3.isoWordCount >> 10)
-        {
-          printf("Unsupported word-count exponent!\n");
-          // Unsupported word-count exponent
-          break;
-        }
-
-        pSlot->framesRemaining = (isoInit3.isoWordCount << 6 >> 6) + 31; // 31==32 because framesRemaining is zero indexed
-
-        UINT64 i64_0 = pRouteTag->i64[0];
-        destLinkId = (UINT32)(i64_0) << LINK_SHIFT;
-
-        // Shift CurrentRouteTags by 2 bits
-        UINT64 i64_1 = pRouteTag->i64[1];
-        pRouteTag->i64[0] = (i64_0 >> 2) | (i64_1 << 62);
-        UINT64 i64_2 = word.i64[0];
-        pRouteTag->i64[1] = (i64_1 >> 2) | (i64_2 << 62);
-
-        // This switch consumes 2 bits of IsoStreamRoute
-        UINT8 isoRouteTagOffset = isoInit3.isoRouteTagOffset + 2;
-        if (isoRouteTagOffset > 127)
-        {
-          // NextRouteTags is empty and needs to be filled by word wrapping the IsoStream
-          isoInit3.isoRouteTagOffset = isoRouteTagOffset % 128;
-          pPktBufHead += PKT_WORD_COUNT;
-
-          // Delay the allocation due to the word wrap
-          pSlot->state = WORD_WRAP_ALLOC_DELAYED | destLinkId;
-          break;
-        }
-
-        isoInit3.isoRouteTagOffset = isoRouteTagOffset;
-
-        // Shift NextRouteTags by 2
-        UINT64 i64_3 = word.i64[1];
-        word.i64[0] = (i64_2 >> 2) | (i64_3 << 62);
-        word.i64[1] = (i64_3 >> 2);
-
-        UINT16 iCrumb = pPktBufHead[1].i16[0] & 0x3FFF;
-        UINT16 crumb = iCrumb;
-
-        UINT16 slotRef = IFRAME_FROM_LINKID(destLinkId).AllocIsoStream((WORD*)pPktBufHead, word, crumb);
-        if (slotRef == 0xFE)
-        {
-          // TODO: Fail the Pkt, no resources available right now.
           // NOTE: The input slot remains allocated (it was allocated by the previous switch)
 
-          // The slot will be marked as failed because slotRef == 0xFE
+          // TODO: Set the breadcrumb to follow the return path
+
+          iFrameSelf.SendFailedPkt(
+              pPktBufHead->w0_Hdr.energy,
+              isoInit1.pktId,
+              slotRef);
+
+          // Mark the slot as failed
+          slotRef = SLOT_REF_RESULT_FAILURE_BASE;
         }
+        else
+        {
+          // TODO: Decide if LOCAL_ENERGY needs to drop or round up the bottom 16 bits
+          ADD_LOCAL_ENERGY(pRxBuf->status[pktDecoder.tick].ReceiveEnergy, pPktBufHead->w0_Hdr.energy);
+        }
+
+        pSlot->framesRemaining = isoInit1.isoWordCount;
+        pRxBuf->status[pktDecoder.tick].Iso0Count += pSlot->framesRemaining;
 
         forwardCrumbs[iCrumb] = destLinkId | crumb;
 
         pSlot->state = SLOT_REF_MARKER | destLinkId | slotRef;
-        break;
-
-      case PKT_FAILED_INIT_ISO_STREAM_7:
-        // TODO: Send failure reply
-        pPktBufHead -= 6; // Reset pPktBufHead back to the beginning
-        pktDecoder.state = PKT_DECODE_WAITING_FOR_INTER_PKT_GAP;
         break;
 
       case PKT_DECODE_READY_FOR_PKT:
@@ -629,47 +605,132 @@ void rx_decoder(
           break;
         }
 
-        pktDecoder.state = pktDecoder.buf[0].i32[0] = word.i32[0];
+        pktDecoder.buf[0].i32[0] = word.i32[0];
+        pktDecoder.state = word.w0_Hdr.pktType;
         pktDecoder.buf[0].w0_Hdr.pktFullType = word.w0_Hdr.pktFullType;
-        pktDecoder.buf[0].w0_Hdr.payment = word.w0_Hdr.payment;
+        pktDecoder.buf[0].w0_Hdr.energy = word.w0_Hdr.energy;
         break;
 
       case PKT_T_HOP_COUNTER:
-        // This word should contain a breadcrumb
         pktDecoder.buf[1].i64[0] = word.i64[0];
+        pktDecoder.buf[1].w1.pktId++; // HopCounter
         pktDecoder.buf[1].i64[1] = word.i64[1];
-        FOLLOW_CRUMB(pktDecoder);
         pktDecoder.state = PKT_DECODE_HOP_COUNTER_2;
         break;
 
       case PKT_DECODE_HOP_COUNTER_2:
         pktDecoder.buf[2].i64[0] = word.i64[0];
         pktDecoder.buf[2].i64[1] = word.i64[1];
-        pktDecoder.buf[2].w2.hopCounter++;
+        FOLLOW_CRUMB(pktDecoder);
         pktDecoder.state = PKT_DECODE_PASSTHROUGH_3;
         break;
 
       case PKT_T_WITH_REPLY:
-        // This word should contain a breadcrumb
         pktDecoder.buf[1].i64[0] = word.i64[0];
         pktDecoder.buf[1].i64[1] = word.i64[1];
-        FOLLOW_CRUMB(pktDecoder);
         pktDecoder.state = PKT_DECODE_WITH_REPLY_2;
         break;
 
       case PKT_T_GET_ROUTE_UTIL_FACTOR:
-        // This word should contain a breadcrumb
         pktDecoder.buf[1].i64[0] = word.i64[0];
         pktDecoder.buf[1].i64[1] = word.i64[1];
         pktDecoder.state = PKT_DECODE_GET_ROUTE_UTIL_FACTOR_2;
         break;
 
 
-      case PKT_T_INIT_ISO_STREAM_FROM_BC:
-        // This word should contain a breadcrumb
+      case PKT_T_LOCAL_INIT_ISO_STREAM:
         pktDecoder.buf[1].i64[0] = word.i64[0];
         pktDecoder.buf[1].i64[1] = word.i64[1];
-        FOLLOW_CRUMB(pktDecoder);
+        pktDecoder.state = PKT_DECODE_LOCAL_INIT_ISO_STREAM_2;
+        break;
+
+      case PKT_DECODE_LOCAL_INIT_ISO_STREAM_2:
+        pktDecoder.buf[2].i64[0] = word.i64[0];
+        pktDecoder.buf[2].i64[1] = word.i64[1];
+        pktDecoder.state = PKT_DECODE_LOCAL_INIT_ISO_STREAM_3;
+        break;
+
+      case PKT_DECODE_LOCAL_INIT_ISO_STREAM_3:
+        pktDecoder.buf[3].i64[0] = word.i64[0];
+        pktDecoder.buf[3].i64[1] = word.i64[1];
+        pktDecoder.state = PKT_DECODE_LOCAL_INIT_ISO_STREAM_4;
+        break;
+
+      case PKT_DECODE_LOCAL_INIT_ISO_STREAM_4:
+        pktDecoder.buf[4].i64[0] = word.i64[0];
+        pktDecoder.buf[4].i64[1] = word.i64[1];
+        pktDecoder.state = PKT_DECODE_LOCAL_INIT_ISO_STREAM_5;
+        break;
+
+      case PKT_DECODE_LOCAL_INIT_ISO_STREAM_5:
+        pktDecoder.buf[5].i64[0] = word.i64[0];
+        pktDecoder.buf[5].i64[1] = word.i64[1];
+        pktDecoder.state = PKT_DECODE_LOCAL_INIT_ISO_STREAM_6;
+        break;
+
+      case PKT_DECODE_LOCAL_INIT_ISO_STREAM_6:
+        pktDecoder.buf[6].i64[0] = word.i64[0];
+        pktDecoder.buf[6].i64[1] = word.i64[1];
+        pktDecoder.state = PKT_DECODE_LOCAL_INIT_ISO_STREAM_7;
+        break;
+
+      case PKT_DECODE_LOCAL_INIT_ISO_STREAM_7:
+        // Allocate the slot to an IsoStream
+
+        LINKID destLinkId = 0;
+
+        pktDecoder.state = PKT_DECODE_WAITING_FOR_INTER_PKT_GAP;
+
+        WORD0_HDR&           isoInit0 = pktDecoder.buf[0].w0_Hdr;
+        WORD1_LOCAL_ISOINIT& isoInit1 = pktDecoder.buf[1].w1_localIsoInit;
+
+        UINT16 slotRef;
+
+        if (isoInit1.isoWordCount >> 15) // Shift out the mulitiplier and leave just the reserved
+        {
+          printf("SLOT_REF_RESULT_EXCEEDS_MAX_WORDS!\n");
+          // Unsupported word-count reserved bit
+          slotRef = SLOT_REF_RESULT_EXCEEDS_MAX_WORDS;
+        }
+        else if (isoInit1.isoWordCount < 3)
+        {
+          printf("SLOT_REF_RESULT_BELOW_MIN_WORDS!\n");
+          slotRef = SLOT_REF_RESULT_BELOW_MIN_WORDS;
+        }
+        else
+        {
+          UINT64 downstreamRoute = isoInit1.downstreamRoute;
+          destLinkId = (UINT32)(downstreamRoute) << LINK_SHIFT;
+
+          if (destLinkId == 0)
+          {
+            // Always go upstream if the destLinkId == 0
+            slotRef = iFrame1.AllocLocalIsoStream((WORD*)pktDecoder.buf, word);
+          }
+          else
+          {
+            // Shift downstreamRoute by 2 bits
+            isoInit1.downstreamRoute = downstreamRoute >> 2;
+
+            slotRef = IFRAME_FROM_LINKID(destLinkId).AllocLocalIsoStream((WORD*)pktDecoder.buf, word);
+          }
+        }
+
+        if (slotRef >= SLOT_REF_RESULT_FAILURE_BASE)
+        {
+          // NOTE: The input slot remains allocated (it was allocated by the previous switch)
+          // Mark the slot as failed
+          slotRef = SLOT_REF_RESULT_FAILURE_BASE;
+        }
+
+        pSlot->framesRemaining = isoInit1.isoWordCount;
+
+        pSlot->state = SLOT_REF_MARKER | destLinkId | slotRef;
+        break;
+
+      case PKT_T_INIT_ISO_STREAM_FROM_BC:
+        pktDecoder.buf[1].i64[0] = word.i64[0];
+        pktDecoder.buf[1].i64[1] = word.i64[1];
         pktDecoder.state = PKT_DECODE_INIT_ISO_STREAM_FROM_BC_2;
         break;
 
@@ -680,38 +741,220 @@ void rx_decoder(
       case PKT_DECODE_GET_ROUTE_UTIL_FACTOR_2:
         break;
 
+      case PKT_T_LOCAL_SET_CONFIG:
+        pktDecoder.buf[1].i64[0] = word.i64[0];
+        pktDecoder.buf[1].i64[1] = word.i64[1];
+        pktDecoder.state = PKT_DECODE_LOCAL_SET_CONFIG_2;
+        break;
+
+      case PKT_T_LOCAL_RESPONSE:
+        pktDecoder.buf[1].i64[0] = word.i64[0];
+        pktDecoder.buf[1].i64[1] = word.i64[1];
+        pktDecoder.state = PKT_DECODE_LOCAL_RESPONSE_2;
+        break;
+
+      case PKT_DECODE_PASSTHROUGH_2:
+      case PKT_DECODE_LOCAL_SET_CONFIG_2:
+      case PKT_DECODE_LOCAL_RESPONSE_2:
+        pktDecoder.buf[2].i64[0] = word.i64[0];
+        pktDecoder.buf[2].i64[1] = word.i64[1];
+        pktDecoder.state++;
+        break;
+
       case PKT_DECODE_PASSTHROUGH_3:
+      case PKT_DECODE_LOCAL_SET_CONFIG_3:
+      case PKT_DECODE_LOCAL_RESPONSE_3:
         pktDecoder.buf[3].i64[0] = word.i64[0];
         pktDecoder.buf[3].i64[1] = word.i64[1];
-        pktDecoder.state = PKT_DECODE_PASSTHROUGH_4;
+        pktDecoder.state++;
         break;
 
       case PKT_DECODE_PASSTHROUGH_4:
+      case PKT_DECODE_LOCAL_RESPONSE_4:
         pktDecoder.buf[4].i64[0] = word.i64[0];
         pktDecoder.buf[4].i64[1] = word.i64[1];
-        pktDecoder.state = PKT_DECODE_PASSTHROUGH_5;
+        pktDecoder.state++;
         break;
 
       case PKT_DECODE_PASSTHROUGH_5:
+      case PKT_DECODE_LOCAL_RESPONSE_5:
         pktDecoder.buf[5].i64[0] = word.i64[0];
         pktDecoder.buf[5].i64[1] = word.i64[1];
-        pktDecoder.state = PKT_DECODE_PASSTHROUGH_6;
+        pktDecoder.state++;
         break;
 
       case PKT_DECODE_PASSTHROUGH_6:
+      case PKT_DECODE_LOCAL_RESPONSE_6:
         pktDecoder.buf[6].i64[0] = word.i64[0];
         pktDecoder.buf[6].i64[1] = word.i64[1];
-        pktDecoder.state = PKT_DECODE_PASSTHROUGH_7;
+        pktDecoder.state++;
+        break;
+
+      // Don't copy the unused words
+      case PKT_DECODE_LOCAL_IGNORE_WORD_2:
+      case PKT_DECODE_LOCAL_IGNORE_WORD_3:
+      case PKT_DECODE_LOCAL_IGNORE_WORD_4:
+      case PKT_DECODE_LOCAL_IGNORE_WORD_5:
+      case PKT_DECODE_LOCAL_IGNORE_WORD_6:
+        pktDecoder.state++;
+        break;
+
+      case PKT_DECODE_LOCAL_IGNORE_WORD_7:
+        pktDecoder.state = PKT_DECODE_WAITING_FOR_INTER_PKT_GAP;
         break;
 
       case PKT_DECODE_PASSTHROUGH_7:
         IFRAME_FROM_LINKID(pktDecoder.destLinkId).SendPkt(pktDecoder.buf, word);
+        pktDecoder.state = PKT_DECODE_WAITING_FOR_INTER_PKT_GAP;
+        break;
 
+      case PKT_T_LOCAL_GET_STATUS:
+        // Only handle LOCAL commands from the local upstream port
+        if (linkId == 0)
+        {
+          PKT_T commandType = pktDecoder.buf[0].w0_localCommand.pktType;
+          UINT32 uniqueId = pktDecoder.buf[0].w0_localCommand.uniqueId;
+          UINT64 route = pktDecoder.buf[0].w0_localCommand.route;
+          UINT32 destLinkId = (UINT32)(route) & 0x3;
+
+          // Shift route by 2 bits
+          route = route >> 2;
+          pktDecoder.buf[0].w0_localCommand.route = route;
+
+          if ((UINT32)route == 0)
+          {
+            // Final destination
+            switch (destLinkId)
+            {
+            case 0:
+              iFrameSelf.GetFinalStatus(pktDecoder.buf);
+              iFrameSelf.SendLocalStatusResponse(commandType, uniqueId, pktDecoder.buf);
+              break;
+            case 1:
+              iFrame1.GetFinalStatus(pktDecoder.buf);
+              iFrameSelf.SendLocalStatusResponse(commandType, uniqueId, pktDecoder.buf);
+              break;
+            case 2:
+              iFrame2.GetFinalStatus(pktDecoder.buf);
+              iFrameSelf.SendLocalStatusResponse(commandType, uniqueId, pktDecoder.buf);
+              break;
+            case 3:
+              iFrame3.GetFinalStatus(pktDecoder.buf);
+              iFrameSelf.SendLocalStatusResponse(commandType, uniqueId, pktDecoder.buf);
+              break;
+            }
+          }
+          else
+          {
+            // Forward to the next downstream port
+            switch (destLinkId)
+            {
+            case 1: iFrame1.SendLocalPkt((WORD*)pktDecoder.buf, word); break;
+            case 2: iFrame2.SendLocalPkt((WORD*)pktDecoder.buf, word); break;
+            case 3: iFrame3.SendLocalPkt((WORD*)pktDecoder.buf, word); break;
+            }
+          }
+        }
+
+        pktDecoder.state = PKT_DECODE_LOCAL_IGNORE_WORD_2;
+        break;
+
+      case PKT_DECODE_LOCAL_SET_CONFIG_4:
+        // Only handle LOCAL commands from the local upstream port
+        if (linkId == 0)
+        {
+          WORD* unsafe pConfig = pktDecoder.buf + 1;
+          PKT_T commandType = pktDecoder.buf->w0_localCommand.pktType;
+          UINT32 uniqueId = pktDecoder.buf->w0_localCommand.uniqueId;
+
+          UINT64 route = pktDecoder.buf[0].w0_localCommand.route;
+          UINT32 destLinkId = (UINT32)(route) & 0x3;
+
+          // Shift route by 2 bits
+          route = route >> 2;
+          pktDecoder.buf[0].w0_localCommand.route = route;
+
+          if ((UINT32)route == 0)
+          {
+            // Final destination
+            switch (destLinkId)
+            {
+            case 0:
+              iFrameSelf.SetNextConfig((WORD*)pConfig, word);
+              iFrameSelf.SendLocalSimpleResponse(commandType, uniqueId);
+              break;
+            case 1:
+              iFrame1.SetNextConfig((WORD*)pConfig, word);
+              iFrameSelf.SendLocalSimpleResponse(commandType, uniqueId);
+              break;
+            case 2:
+              iFrame2.SetNextConfig((WORD*)pConfig, word);
+              iFrameSelf.SendLocalSimpleResponse(commandType, uniqueId);
+              break;
+            case 3:
+              iFrame3.SetNextConfig((WORD*)pConfig, word);
+              iFrameSelf.SendLocalSimpleResponse(commandType, uniqueId);
+              break;
+            }
+          }
+          else
+          {
+            // Forward to the next downstream port
+            switch (destLinkId)
+            {
+            case 1: iFrame1.SendLocalPkt((WORD*)pktDecoder.buf, word); break;
+            case 2: iFrame2.SendLocalPkt((WORD*)pktDecoder.buf, word); break;
+            case 3: iFrame3.SendLocalPkt((WORD*)pktDecoder.buf, word); break;
+            }
+          }
+        }
+
+        pktDecoder.state = PKT_DECODE_LOCAL_IGNORE_WORD_5;
+        break;
+
+      case PKT_T_LOCAL_SEND_PING:
+        if (linkId == 0) // Heading Downstream
+        {
+          UINT64 route = pktDecoder.buf[0].w0_localCommand.route;
+          UINT32 destLinkId = (UINT32)(route) & 0x3;
+
+          // Shift route by 2 bits
+          pktDecoder.buf[0].w0_localCommand.route = route >> 2;
+
+          switch (destLinkId)
+          {
+          case 0: iFrameSelf.DownstreamLocalPing(pktDecoder.buf[0], word); break;
+          case 1:    iFrame1.DownstreamLocalPing(pktDecoder.buf[0], word); break;
+          case 2:    iFrame2.DownstreamLocalPing(pktDecoder.buf[0], word); break;
+          case 3:    iFrame3.DownstreamLocalPing(pktDecoder.buf[0], word); break;
+          }
+        }
+        else // Heading upstream
+        {
+          if (pktDecoder.buf[0].w0_localCommand.route == 0)
+          {
+            // Set the route right as it enters the local switch mesh
+            pktDecoder.buf[0].w0_localCommand.route = pRxBuf->fullLinkId;
+          }
+
+          iFrame1.UpstreamLocalPing(pktDecoder.buf[0], word);
+        }
+
+        pktDecoder.state = PKT_DECODE_LOCAL_IGNORE_WORD_2;
+        break;
+
+      case PKT_DECODE_LOCAL_RESPONSE_7:
+        // iFrame1 should always be the local upstream port unless the
+        // response arrived from the local upstream port, which is forbidden
+        if (linkId != 0)
+        {
+          iFrame1.SendLocalPkt(pktDecoder.buf, word);
+        }
         pktDecoder.state = PKT_DECODE_WAITING_FOR_INTER_PKT_GAP;
         break;
 
       default:
-        printf("***Unexpected pktDecoder State!\n");
+        printf("***Unexpected pktDecoder State %d!\n", pktDecoder.state);
         break;
       }
     }

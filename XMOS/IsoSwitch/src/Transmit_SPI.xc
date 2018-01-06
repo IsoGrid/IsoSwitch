@@ -53,6 +53,7 @@ E) To the extent that this file embodies any of our patentable inventions, we
 #define TX_NUM_SUBFRAMES        SPI_NUM_SUBFRAMES
 #define TX_NUM_CRUMBS           SPI_NUM_CRUMBS
 #define TX_NUM_CRUMBS_PER_EPOCH SPI_NUM_CRUMBS_PER_EPOCH
+#define TX_PKT_ISO_ARRAY_SIZE   SPI_PKT_ISO_ARRAY_SIZE
 #define TX_PKT_ARRAY_SIZE       SPI_PKT_ARRAY_SIZE
 
 

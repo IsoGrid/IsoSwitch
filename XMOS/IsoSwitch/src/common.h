@@ -78,7 +78,8 @@ E) To the extent that this file embodies any of our patentable inventions, we
 #define USE_SPI_TRANSPORT
 
 #define PKT_WORD_COUNT 8
-#define PKT_ARRAY_SIZE (NUM_SUBFRAMES * 2) // 50% of a frame worth of PKT
+#define PKT_ISO_ARRAY_SIZE (NUM_SUBFRAMES * 2) // 50% of a frame worth of IsoInit PKT
+#define PKT_ARRAY_SIZE     (32 * 4)            // 160% of a frame worth of PKT
 
 // The number of breadcrumbs is split into 128 epochs. Clients have two options.
 // Option 1: Target as close to 8 seconds as possible, but no less
@@ -102,7 +103,16 @@ E) To the extent that this file embodies any of our patentable inventions, we
 
 // NUM_SUBFRAMES MUST be evenly divisible by SPI_NUM_SUBFRAMES
 #define SPI_NUM_SUBFRAMES         4
-#define SPI_PKT_ARRAY_SIZE        ((SPI_NUM_SUBFRAMES) * 2) // 50% of a frame worth of PKT
+#define SPI_PKT_ISO_ARRAY_SIZE    ((SPI_NUM_SUBFRAMES) * 2) // 50% of a frame worth of IsoInit PKT
+#define SPI_PKT_ARRAY_SIZE        ((SPI_NUM_SUBFRAMES) * 8) // 200% of a frame worth of PKT
+
+#ifdef DEBUG_PRINTS
+  #define DBGPRINT(...) printf(...)
+#else
+  #define DBGPRINT(...)
+#endif
+
+#define ASSERT(EXPR)
 
 typedef struct
 {
@@ -120,10 +130,16 @@ typedef struct
   UINT32 outputCrumbs; // Actually a (UINT16* unsafe)
   UINT16 numCrumbs;
 
+  UINT32 pktIsoArray; // Actually a (WORD* unsafe)
+  UINT16 pktIsoArraySize;
+
   UINT32 pktArray; // Actually a (WORD* unsafe)
   UINT16 pktArraySize;
 
   UINT16 slotAllocs[NUM_SLOTREFS];
+
+  UINT16 pktIsoHead;
+  UINT16 pktIsoTail;
 
   UINT16 pktHead;
   UINT16 pktTail;
@@ -150,6 +166,13 @@ typedef struct
   SUBFRAME s[2];
   UINT8 subframeReadyFlag;
   INT32 timingOffset;
+
+  UINT32 nextTick;
+  IN_CONFIGURATION config[4];
+  OUT_STATUS status[4];
+
+  UINT64 fullLinkId;
+  UINT64 lastGpsTime;
 } RX_SUBFRAME_BUFFER;
 
 // Client: TX_FUNC
@@ -183,24 +206,54 @@ interface IFrameRxInit
 interface IFrameFill
 {
   // Use a SlotRef to send a word and return the actual slot
-  UINT16 SendWordViaSlotRef(UINT8 slotRef, WORD word, UINT8 erasureFlag);
+  UINT16 SendWordViaSlotRef(UINT8 slotRef, WORD& word, UINT8 validityFlag);
 
-  void SendWord(UINT16 slotState, WORD word, UINT8 erasureFlag);
-  void SendLastWord(UINT16 slotState, WORD word, UINT8 erasureFlag);
-  void SendLastWord_Wrapped(UINT16 slotState);
+  void SendWord(UINT16 slotState, WORD& word, UINT8 validityFlag);
 
+  UINT16 TryContinue(UINT16 slotState, WORD& wordRef, UINT8 validityFlag);
 
-  void SendPkt(WORD pkt[PKT_BUF_WORD_COUNT], WORD& lastWord);
+  void SetNextConfig(WORD words[3], WORD& word3);
+  void GetFinalStatus(WORD words[4]);
+  void DownstreamLocalPing(WORD& word0, WORD& word1);
+  void UpstreamLocalPing(WORD& word0, WORD& word1);
+  void SendLocalPkt(WORD pkt[PKT_BUF_WORD_COUNT], WORD& word7);
+  void SendLocalStatusResponse(PKT_T commandType, UINT32 uniqueId, WORD words[4]);
+  void SendLocalSimpleResponse(PKT_T commandType, UINT32 uniqueId);
+
+  void SendPkt(WORD pkt[PKT_BUF_WORD_COUNT], WORD& word7);
+  void SendFailedPkt(ENERGY energy, UINT32 pktId, UINT8 slotRef);
 
   // Allocate an IsoStream and return a slotRef and outputCrumb
   UINT16 AllocIsoStream(WORD pkt[PKT_BUF_WORD_COUNT], WORD& lastWord, UINT16& outputCrumb);
+
+  // Allocate an IsoStream for local use (not routable) and return a slotRef
+  UINT16 AllocLocalIsoStream(WORD pkt[PKT_BUF_WORD_COUNT], WORD& lastWord);
+
 };
+
+typedef enum
+{
+  SLOT_REF_RESULT_FAILURE_BASE = 0xF2,
+  SLOT_REF_RESULT_TICK_EXPIRED = 0xF3,
+  SLOT_REF_RESULT_NO_CRUMB = 0xF4,
+  SLOT_REF_RESULT_NO_ISO_BUFFER = 0xF5,
+  SLOT_REF_RESULT_NO_SLOT_BUFFER = 0xF6,
+  SLOT_REF_RESULT_NO_SLOT = 0xF7,
+  SLOT_REF_RESULT_NO_PKT_ENERGY = 0xF8,
+  SLOT_REF_RESULT_NO_ISO_ENERGY = 0xF9,
+  SLOT_REF_RESULT_EXCEEDS_REPLY_ENERGY = 0xFA,
+  SLOT_REF_RESULT_EXCEEDS_MAX_ENERGY = 0xFB,
+  SLOT_REF_RESULT_CORRUPTED_WORD = 0xFC,
+  SLOT_REF_RESULT_EXCEEDS_MAX_WORDS = 0xFD,
+  SLOT_REF_RESULT_BELOW_MIN_WORDS = 0xFE,
+} SLOT_REF_RESULT;
 
 #define CopyWord(DEST, SRC) memcpy(&DEST, &SRC, sizeof(WORD))
 #define ZeroWord(WORD) memset(&WORD, 0, sizeof(WORD))
 
 #define CopyPkt(DEST, SRC) memcpy(DEST, SRC, sizeof(WORD) * PKT_WORD_COUNT)
 #define CopyPktBuf(DEST, SRC) memcpy(DEST, SRC, sizeof(WORD) * PKT_BUF_WORD_COUNT)
+#define CopyWords(DEST, SRC, COUNT) memcpy(DEST, SRC, sizeof(WORD) * COUNT)
 
 #define ISO_INIT_BUF_SIZE (16 * PKT_WORD_COUNT)
 
@@ -223,9 +276,55 @@ interface IFrameFill
   {RESULT64.i32[1], RESULT64.i32[0]} = mac(OPA64.i32[0], OPB64.i32[1], RESULT64.i32[1], RESULT64.i32[0]); \
 }
 
-#define SUB64_WITH_BORROW(RESULT64, BORROW32, OP64, SUBLOW, SUBHIGH) \
-__asm__("lsub %0,%1,%2,%3,%4":"=r"(BORROW32),"=r"(RESULT64.i32[0]):"r"(OP64.i32[0]),"r"(SUBLOW),"r"(0)); \
-__asm__("lsub %0,%1,%2,%3,%4":"=r"(BORROW32),"=r"(RESULT64.i32[1]):"r"(OP64.i32[1]),"r"(SUBHIGH),"r"(BORROW32)); \
+// Perform a 64x32 bit integer multiply (NEVER TESTED)
+//
+// mac computes: ((unsigned long long)a * b) + c.
+// {result_high, result_low} = mac(a, b, c_high, c_low);
+#define MULTIPLY_64_32(RESULT64, OVERFLOW32, OP64, OP32) \
+{ \
+  UINT32 highAccumulator; \
+  /* Multiply the lows */ \
+  {highAccumulator, RESULT64.i32[0]} = mac(OP64.i32[0], OP32, 0, 0); \
+  /* Multiply the High&Low */ \
+  {OVERFLOW32, RESULT64.i32[1]} = mac(OP64.i32[1], OP32, 0, highAccumulator); \
+}
 
+// Perform a 32x32 --> 64bit integer multiply
+//
+// mac computes: ((unsigned long long)a * b) + c.
+// {result_high, result_low} = mac(a, b, c_high, c_low);
+#define MULTIPLY_32x32_64(RESULT64, OPA32, OPB32) {RESULT64.i32[1], RESULT64.i32[0]} = mac(OPA32, OPB32, 0, 0);
+
+
+#define SUB64_WITH_BORROW(RESULT64, BORROW32, OP64, SUB64) \
+__asm__("lsub %0,%1,%2,%3,%4":"=r"(BORROW32),"=r"(RESULT64.i32[0]):"r"(OP64.i32[0]),"r"(SUB64.i32[0]),"r"(0)); \
+__asm__("lsub %0,%1,%2,%3,%4":"=r"(BORROW32),"=r"(RESULT64.i32[1]):"r"(OP64.i32[1]),"r"(SUB64.i32[1]),"r"(BORROW32)); \
+
+#define SUB64_32_WITH_BORROW(RESULT64, BORROW32, OP64, SUB32) \
+__asm__("lsub %0,%1,%2,%3,%4":"=r"(BORROW32),"=r"(RESULT64.i32[0]):"r"(OP64.i32[0]),"r"(SUB32),"r"(0)); \
+__asm__("lsub %0,%1,%2,%3,%4":"=r"(BORROW32),"=r"(RESULT64.i32[1]):"r"(OP64.i32[1]),"r"(0),"r"(BORROW32)); \
+
+#define ADD64_WITH_CARRY(RESULT64, CARRY32, OP64, ADD64) \
+__asm__("ladd %0,%1,%2,%3,%4":"=r"(CARRY32),"=r"(RESULT64.i32[0]):"r"(OP64.i32[0]),"r"(ADD64.i32[0]),"r"(0)); \
+__asm__("ladd %0,%1,%2,%3,%4":"=r"(CARRY32),"=r"(RESULT64.i32[1]):"r"(OP64.i32[1]),"r"(ADD64.i32[1]),"r"(CARRY32)); \
+
+#define ADD64_32(RESULT64, OP64, ADD32) \
+{ \
+  UINT32 carry32; \
+  __asm__("ladd %0,%1,%2,%3,%4":"=r"(carry32),"=r"(RESULT64.i32[0]):"r"(OP64.i32[0]),"r"(ADD32),"r"(0)); \
+  RESULT64.i32[1] = OP64.i32[1] + carry32; \
+}
+
+#define ADD64_32_WITH_CARRY(RESULT64, CARRY32, OP64, ADD32) \
+__asm__("ladd %0,%1,%2,%3,%4":"=r"(CARRY32),"=r"(RESULT64.i32[0]):"r"(OP64.i32[0]),"r"(ADD32),"r"(0)); \
+__asm__("ladd %0,%1,%2,%3,%4":"=r"(CARRY32),"=r"(RESULT64.i32[1]):"r"(OP64.i32[1]),"r"(0),"r"(CARRY32)); \
+
+#define SUB32_WITH_BORROW(RESULT32, BORROW32, OP32, SUB) \
+__asm__("lsub %0,%1,%2,%3,%4":"=r"(BORROW32),"=r"(RESULT32):"r"(OP32),"r"(SUB),"r"(0));
+
+#define DEC64_WITH_BORROW(RESULT64, BORROW32, OP64) \
+__asm__("lsub %0,%1,%2,%3,%4":"=r"(BORROW32),"=r"(RESULT64.i32[1]):"r"(OP64.i32[1]),"r"(1),"r"(0));
+
+#define ADD_LOCAL_ENERGY(RESULT64, OP64) RESULT64.i64 += OP64.i64;
 
 #endif /* COMMON_H_ */

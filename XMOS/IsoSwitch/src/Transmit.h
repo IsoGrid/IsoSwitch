@@ -312,8 +312,21 @@ void TX_FUNC()
         if (pktWordHead != PKT_WORD_COUNT)
         {
           // Slot is unallocated, send a uPkt word
-          WORD* unsafe pWord = (pPkt + pktWordHead);
+          WORD* unsafe pWord = (pPkt + (pktWordHead % 8));
+
           TX_UINT32(pWord->i32[0]);
+
+          CacheFreeCrumbSlots8s(pCtx, cc);
+
+          pSubframe->s.slotValidityFlags |= slotMask;
+
+          TX_UINT32(pWord->i32[1]);
+
+          CacheFreeCrumbSlots120s(pCtx, cc);
+
+          UINT32 temp32 = pWord->i32[3]; // Save a copy of the last 32bits
+
+          TX_UINT32(pWord->i32[2]);
 
           if (++pktWordHead == PKT_WORD_COUNT)
           {
@@ -322,23 +335,16 @@ void TX_FUNC()
             // Allocate the slot and send the info back to the frame_task
             *pSlotAlloc = shiftedSubframeIndex | i;
 
-#ifdef DEBUG_PRINTS
-            printf("*TxConf#%x(%x,%x)\n", iSlotAlloc, curSubframeIndex, i);
-#endif
-            // TODO: pktHead should only be incremented after pWord is no longer used
-            pCtx->pktHead = (pCtx->pktHead + 1) % TX_PKT_ARRAY_SIZE;
+            DBGPRINT("*TxConf#%x(%x,%x)\n", iSlotAlloc, curSubframeIndex, i);
+            pCtx->pktIsoHead = (pCtx->pktIsoHead + 1) % TX_PKT_ISO_ARRAY_SIZE;
+          }
+          else if (pktWordHead == 24)
+          {
+            pCtx->pktHead = (pCtx->pktHead + 1) % (TX_PKT_ARRAY_SIZE);
+            pktWordHead = PKT_WORD_COUNT;
           }
 
-          TX_UINT32(pWord->i32[1]);
-
-          CacheFreeCrumbSlots8s(pCtx, cc);
-
-          pSubframe->s.slotValidityFlags |= slotMask;
-          TX_UINT32(pWord->i32[2]);
-
-          CacheFreeCrumbSlots120s(pCtx, cc);
-
-          TX_UINT32(pWord->i32[3]);
+          TX_UINT32(temp32);
         }
         else
         {
@@ -351,14 +357,26 @@ void TX_FUNC()
             pSlotAlloc = (UINT16* unsafe)(pCtx->slotAllocs + iSlotAlloc);
             if (*pSlotAlloc != 0)
             {
-              pPkt = (WORD* unsafe)(pCtx->pktArray) + (pCtx->pktHead * PKT_WORD_COUNT);
+              pPkt = (WORD* unsafe)(pCtx->pktIsoArray) + (pCtx->pktIsoHead * PKT_WORD_COUNT);
               pktWordHead = 0;
+            }
+            else if (pCtx->pktHead != pCtx->pktTail)
+            {
+              // non-Iso uPkt is available
+              pPkt = (WORD* unsafe)(pCtx->pktArray) + (pCtx->pktHead * PKT_WORD_COUNT);
+              pktWordHead = 16;
             }
             else
             {
               // No uPkt available, just send the inter-pkt-gap again
               pktWordHead = PKT_WORD_COUNT;
             }
+          }
+          else if (pCtx->pktHead != pCtx->pktTail)
+          {
+            // non-Iso uPkt is available
+            pPkt = (WORD* unsafe)(pCtx->pktArray) + (pCtx->pktHead * PKT_WORD_COUNT);
+            pktWordHead = 16;
           }
           else
           {

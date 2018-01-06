@@ -45,6 +45,9 @@ E) To the extent that this file embodies any of our patentable inventions, we
 
 #include "common.h"
 
+#define IN_CONFIG(TICK, MEMBER) rxBuf.config[TICK].MEMBER
+#define OUT_STATUS(TICK, MEMBER) rxBuf.status[TICK].MEMBER
+
 void frame_task(LINKID linkId,
                 server interface ITxBufInit iTxBufInit,
                 server interface IRxBufInit iRxBufInit,
@@ -58,6 +61,8 @@ void frame_task(LINKID linkId,
                 UINT16* unsafe outputCrumbs,
                 UINT16* unsafe inputCrumbs,
                 UINT16 const numCrumbs,
+                WORD* unsafe pktIsoArray,
+                UINT8 const pktIsoArraySize,
                 WORD* unsafe pktArray,
                 UINT8 const pktArraySize)
 {
@@ -71,6 +76,8 @@ void frame_task(LINKID linkId,
     txBuf.numSubframes = numSubframes;
     txBuf.outputCrumbs = (UINT32)outputCrumbs;
     txBuf.numCrumbs = numCrumbs;
+    txBuf.pktIsoArray = (UINT32)pktIsoArray;
+    txBuf.pktIsoArraySize = pktIsoArraySize;
     txBuf.pktArray = (UINT32)pktArray;
     txBuf.pktArraySize = pktArraySize;
 
@@ -90,6 +97,32 @@ void frame_task(LINKID linkId,
   }
 
   UINT16 slotAllocCount = 0;
+
+  rxBuf.nextTick = 1;
+  rxBuf.config[0].IsoEnergy = 1;
+  rxBuf.config[1].IsoEnergy = 1;
+  rxBuf.config[2].IsoEnergy = 1;
+  rxBuf.config[3].IsoEnergy = 1;
+  rxBuf.config[0].PktReplyEnergy = 10;
+  rxBuf.config[1].PktReplyEnergy = 10;
+  rxBuf.config[2].PktReplyEnergy = 10;
+  rxBuf.config[3].PktReplyEnergy = 10;
+  rxBuf.config[0].BC_8_PktEnergy = 100;
+  rxBuf.config[1].BC_8_PktEnergy = 100;
+  rxBuf.config[2].BC_8_PktEnergy = 100;
+  rxBuf.config[3].BC_8_PktEnergy = 100;
+  rxBuf.config[0].BC_120_PktEnergy = 1000;
+  rxBuf.config[1].BC_120_PktEnergy = 1000;
+  rxBuf.config[2].BC_120_PktEnergy = 1000;
+  rxBuf.config[3].BC_120_PktEnergy = 1000;
+
+  UINT8* unsafe pNextConfig;
+  UINT8* unsafe pFinalStatus;
+  unsafe
+  {
+    pNextConfig = (UINT8* unsafe)&rxBuf.config[rxBuf.nextTick];
+    pFinalStatus = (UINT8* unsafe)&rxBuf.status[rxBuf.nextTick];
+  }
 
   // The frame_task is responsible for initializing all shared memory sections.
   // The other tasks call the init functions below to retrieve pointers to
@@ -174,6 +207,7 @@ void frame_task(LINKID linkId,
   nextTxSubframeTime = nextTxFrameTime;
 
   UINT8 curSubframeIndex = 0;
+  UINT32 curFrameIndex = 0;
 
   while (1)
   unsafe
@@ -220,6 +254,15 @@ void frame_task(LINKID linkId,
       {
         nextTxSubframeTime = nextTxFrameTime;
         curSubframeIndex = 0;
+
+        if (curFrameIndex++ == (1024 * 8))
+        {
+          curFrameIndex = 0;
+
+          rxBuf.nextTick = (rxBuf.nextTick + 1) % 4;
+          pNextConfig = (UINT8* unsafe)&rxBuf.config[rxBuf.nextTick];
+          pFinalStatus = (UINT8* unsafe)&rxBuf.status[rxBuf.nextTick];
+        }
       }
 
       if (isSpiFraming)
@@ -239,7 +282,7 @@ void frame_task(LINKID linkId,
       }
       break;
 
-    case f[int i].SendWordViaSlotRef(UINT8 slotRef, WORD word, UINT8 validityFlag) -> UINT16 slotState:
+    case f[int i].SendWordViaSlotRef(UINT8 slotRef, WORD& word, UINT8 validityFlag) -> UINT16 slotState:
       UINT16* unsafe slotAllocs = txBuf.slotAllocs;
       UINT16 slotStateTest = slotAllocs[slotRef];
       
@@ -265,91 +308,275 @@ void frame_task(LINKID linkId,
       SUBFRAMEID subframeId = slotState >> 5;
       SLOTID slotId = (slotState & 0x1F);
 
-#ifdef DEBUG_PRINTS
-      printf("***SWvSR %x (%x, %x, %x)-(%x,%x)\n", slotRef, slotAllocNext, slotAllocScan, slotAllocLast, subframeId, slotId);
-#endif
+      DBGPRINT("***SWvSR %x (%x, %x, %x)-(%x,%x)\n", slotRef, slotAllocNext, slotAllocScan, slotAllocLast, subframeId, slotId);
 
       UINT32 validityFlags32 = validityFlag;
       subframes[subframeId].s.slotValidityFlags |= (validityFlags32 << slotId);
 
       WORD* unsafe slots = subframes[subframeId].s.slots;
-      slots[slotId].i64[0] = word.i64[0];
-      slots[slotId].i64[1] = word.i64[1];
+      CopyWord(slots[slotId], word);
       break;
 
-    case f[int i].SendWord(UINT16 slotState, WORD word, UINT8 validityFlag):
+    case f[int i].SendWord(UINT16 slotState, WORD& word, UINT8 validityFlag):
       SUBFRAMEID subframeId = (slotState & 0x1FE0) >> 5;
       SLOTID slotId = (slotState & 0x1F);
       
-#ifdef DEBUG_PRINTS
-      printf("***SW(%x,%x)\n", subframeId, slotId);
-#endif
+      DBGPRINT("***SW(%x,%x)\n", subframeId, slotId);
 
       UINT32 validityFlags32 = validityFlag;
       subframes[subframeId].s.slotValidityFlags |= (validityFlags32 << slotId);
 
       WORD* unsafe slots = subframes[subframeId].s.slots;
-      slots[slotId].i64[0] = word.i64[0];
-      slots[slotId].i64[1] = word.i64[1];
-
+      CopyWord(slots[slotId], word);
       break;
 
-    case f[int i].SendLastWord(UINT16 slotState, WORD word, UINT8 validityFlag):
-      deallocs[slotState & 0x1FFF] = 1;
+    case f[int i].TryContinue(UINT16 slotState, WORD& wordRef, UINT8 validityFlag) -> UINT16 framesRemaining:
       SUBFRAMEID subframeId = (slotState & 0x1FE0) >> 5;
       SLOTID slotId = (slotState & 0x1F);
 
       UINT32 validityFlags32 = validityFlag;
       subframes[subframeId].s.slotValidityFlags |= (validityFlags32 << slotId);
 
-      // TODO: Insert footer into this last word
       WORD* unsafe slots = subframes[subframeId].s.slots;
-      slots[slotId].i64[0] = word.i64[0];
-      slots[slotId].i64[1] = word.i64[1];
 
-      slotAllocCount--;
-      break;
+      if (validityFlags32)
+      {
+        WORD word;
+        CopyWord(word, wordRef);
 
-    case f[int i].SendLastWord_Wrapped(UINT16 slotState):
-      deallocs[slotState & 0x1FFF] = 1;
-      SUBFRAMEID subframeId = (slotState & 0x1FE0) >> 5;
-      SLOTID slotId = (slotState & 0x1F);
+        UINT32 cur = word.i32[0];
 
-      // TODO: Insert footer into this last word
-      WORD* unsafe slots = subframes[subframeId].s.slots;
+        if ((cur & 0xFF) != CONTINUE_STREAM)
+        {
+          // Stream not continued, pass words unchanged and dealloc slot
+
+          slots[slotId].i64[0] = word.i64[0];
+          slots[slotId].i64[1] = word.i64[1];
+
+          deallocs[slotState & 0x1FFF] = 1;
+          slotAllocCount--;
+          framesRemaining = 0;
+          break;
+        }
+
+        cur <<= 8;
+        UINT32 wordCountExponent = cur & 0xFF;
+
+        cur <<= 8;
+        UINT32 tick = cur & 3;
+        cur <<= 2;
+        UINT32 priority = (cur & 0xF) + 1;
+
+        if (tick == rxBuf.nextTick)
+        {
+          rxBuf.status[(rxBuf.nextTick - 1) % 4].IsoTickExpiredCount++;
+          printf("IsoTickExpired\n");
+        }
+        else if (wordCountExponent > 10)
+        {
+          rxBuf.status[tick].IsoWordCountMaxExceededCount++;
+          printf("IsoWordCountMaxExceeded\n");
+        }
+        else
+        {
+          UINT32 framesRemaining32 = (1 << (wordCountExponent + 5)) + 1;
+
+          ENERGY energy = word.w0_Hdr.energy;
+
+          // TODO: Consider if this multiplication can be done with a shift and an addition instead
+          ENERGY isoStreamEnergy64;
+          MULTIPLY_32x32_64(isoStreamEnergy64, framesRemaining32, rxBuf.config[tick].IsoEnergy);
+          UINT32 borrow;
+          SUB64_WITH_BORROW(energy, borrow, energy, isoStreamEnergy64);
+          if (borrow)
+          {
+            rxBuf.status[tick].LowEnergyCount++;
+            printf("IsoLowEnergy %d\n", word.w0_Hdr.energy);
+          }
+          else if (energy.i32[1] > 0x8) // TODO: Support configurable energy limits
+          {
+            rxBuf.status[tick].ExceedMaxEnergyCount++;
+            printf("IsoExceedMaxEnergy %d\n", energy);
+          }
+          else
+          {
+            // Continuance is accepted (don't dealloc)
+            slots[slotId].i64[0] = word.i64[0];
+            slots[slotId].i64[1] = energy.i64;
+
+            ADD_LOCAL_ENERGY(rxBuf.status[tick].TransmitEnergy, energy);
+
+            // pre-decrement to be able to fit 64k into 16 bits (framesRemaining is zero indexed)
+            framesRemaining = framesRemaining32 - 1;
+            break;
+          }
+        }
+      }
+
+      // Failure case, pass on zeros and dealloc the slot
+
       slots[slotId].i64[0] = 0;
       slots[slotId].i64[1] = 0;
 
+      deallocs[slotState & 0x1FFF] = 1;
       slotAllocCount--;
+      framesRemaining = 0;
       break;
 
-    case f[int i].SendPkt(WORD pkt[PKT_BUF_WORD_COUNT], WORD& lastWord):
-      if ((txBuf.pktTail + 1) % pktArraySize == txBuf.pktHead)
+    case f[int i].SetNextConfig(WORD words[3], WORD& word3):
+      DBGPRINT("***CFG\n");
+      memcpy(pNextConfig, words, sizeof(WORD) * 3);
+      memcpy(pNextConfig + (sizeof(WORD) * 3), &word3, sizeof(WORD));
+      break;
+
+    case f[int i].GetFinalStatus(WORD words[4]):
+      DBGPRINT("***STA %d\n", *((UINT32* unsafe)pFinalStatus));
+      memcpy(words, pFinalStatus, sizeof(WORD) * 4);
+      break;
+
+    case f[int i].DownstreamLocalPing(WORD& word0, WORD& word1):
+      rxBuf.fullLinkId = word1.w1_localPing.fullLinkId;
+      rxBuf.lastGpsTime = word1.w1_localPing.gpsTimeAtSend;
+
+      // Reset the nextTick and the curFrameIndex
+      curFrameIndex = rxBuf.lastGpsTime;
+      curFrameIndex <<= 2; // Push the Tick bits off the end
+      curFrameIndex >>= (32 - 13); // curFrameIndex should be left with 13 bits
+      rxBuf.nextTick = ((((UINT32)rxBuf.lastGpsTime) >> 30) + 1) % 4; // Tick is in bits 30:31
+      DBGPRINT("***PNG %d %d\n", rxBuf.nextTick, curFrameIndex);
+
+      pNextConfig = (UINT8* unsafe)&rxBuf.config[rxBuf.nextTick];
+      pFinalStatus = (UINT8* unsafe)&rxBuf.status[rxBuf.nextTick];
+
+      // Only pass it on if we're on a downstream port
+      if (linkId != 0)
       {
-        // buffer empty
-        break;
+        UINT16 nextPktTail = txBuf.pktTail + 1;
+        if (nextPktTail == pktArraySize) nextPktTail = 0;
+        if (nextPktTail == txBuf.pktHead) break; // buffer empty
+
+        WORD* unsafe pPkt = (WORD* unsafe)(txBuf.pktArray) + (txBuf.pktTail * PKT_WORD_COUNT);
+        CopyWord(pPkt[0], word0);
+        CopyWord(pPkt[1], word1);
+        txBuf.pktTail = nextPktTail;
       }
+      break;
+
+    case f[int i].UpstreamLocalPing(WORD& word0, WORD& word1):
+      ASSERT(linkId == 0);
+      UINT16 nextPktTail = txBuf.pktTail + 1;
+      if (nextPktTail == pktArraySize) nextPktTail = 0;
+      if (nextPktTail == txBuf.pktHead) break; // buffer empty
+
+      WORD* unsafe pPkt = (WORD* unsafe)(txBuf.pktArray) + (txBuf.pktTail * PKT_WORD_COUNT);
+      CopyWord(pPkt[0], word0);
+      CopyWord(pPkt[1], word1);
+      DBGPRINT("***UPP\n", linkId);
+      txBuf.pktTail = nextPktTail;
+      break;
+
+    case f[int i].SendLocalPkt(WORD pkt[PKT_BUF_WORD_COUNT], WORD& word7):
+      UINT16 nextPktTail = txBuf.pktTail + 1;
+      if (nextPktTail == pktArraySize) nextPktTail = 0;
+      if (nextPktTail == txBuf.pktHead) break; // buffer empty
 
       WORD* unsafe pPkt = (WORD* unsafe)(txBuf.pktArray) + (txBuf.pktTail * PKT_WORD_COUNT);
       CopyPktBuf(pPkt, pkt);
-      CopyWord(pPkt[7], lastWord);
-      txBuf.pktTail = (txBuf.pktTail + 1) % pktArraySize;
+      CopyWord(pPkt[7], word7);
+      txBuf.pktTail = nextPktTail;
       break;
 
-    case f[int i].AllocIsoStream(WORD pkt[PKT_BUF_WORD_COUNT], WORD& lastWord, UINT16& outputCrumb) -> UINT16 slotRef:
-      if ((txBuf.pktTail + 1) % pktArraySize == txBuf.pktHead)
+    case f[int i].SendLocalStatusResponse(PKT_T commandType, UINT32 uniqueId, WORD words[4]):
+      UINT16 nextPktTail = txBuf.pktTail + 1;
+      if (nextPktTail == pktArraySize) nextPktTail = 0;
+      if (nextPktTail == txBuf.pktHead) break; // buffer empty
+
+      WORD* unsafe pPkt = (WORD* unsafe)(txBuf.pktArray) + (txBuf.pktTail * PKT_WORD_COUNT);
+      pPkt->w0_localResponse.pktType = PKT_T_LOCAL_RESPONSE;
+      pPkt->w0_localResponse.pktCommandType = commandType;
+      pPkt->w0_localResponse.uniqueId = uniqueId;
+      pPkt++;
+      CopyWords(pPkt, words, 4);
+      txBuf.pktTail = nextPktTail;
+      break;
+
+    case f[int i].SendLocalSimpleResponse(PKT_T commandType, UINT32 uniqueId):
+      UINT16 nextPktTail = txBuf.pktTail + 1;
+      if (nextPktTail == pktArraySize) nextPktTail = 0;
+      if (nextPktTail == txBuf.pktHead) break; // buffer empty
+
+      WORD* unsafe pPkt = (WORD* unsafe)(txBuf.pktArray) + (txBuf.pktTail * PKT_WORD_COUNT);
+      pPkt->w0_localResponse.pktType = PKT_T_LOCAL_RESPONSE;
+      pPkt->w0_localResponse.pktCommandType = commandType;
+      pPkt->w0_localResponse.uniqueId = uniqueId;
+      txBuf.pktTail = nextPktTail;
+      break;
+
+    case f[int i].SendPkt(WORD pkt[PKT_BUF_WORD_COUNT], WORD& word7):
+      UINT16 nextPktTail = txBuf.pktTail + 1;
+      if (nextPktTail == pktArraySize) nextPktTail = 0;
+      if (nextPktTail == txBuf.pktHead) break; // buffer empty
+
+      WORD* unsafe pPkt = (WORD* unsafe)(txBuf.pktArray) + (txBuf.pktTail * PKT_WORD_COUNT);
+      CopyPktBuf(pPkt, pkt);
+      CopyWord(pPkt[7], word7);
+      txBuf.pktTail = nextPktTail;
+      break;
+
+    case f[int i].SendFailedPkt(ENERGY energy, UINT32 pktId, UINT8 slotRef):
+      UINT16 nextPktTail = txBuf.pktTail + 1;
+      if (nextPktTail == pktArraySize) nextPktTail = 0;
+      if (nextPktTail == txBuf.pktHead) break; // buffer empty
+
+      WORD* unsafe pPkt = (WORD* unsafe)(txBuf.pktArray) + (txBuf.pktTail * PKT_WORD_COUNT);
+
+      pPkt[0].w0_Hdr.energy = energy;
+      pPkt[1].w1_pktFail.energyLast = energy;
+      pPkt[1].w1_pktFail.pktId = pktId - 1; // HopCounter decrements when heading back
+      pPkt[1].w1_pktFail.failureCode = slotRef - SLOT_REF_RESULT_FAILURE_BASE;
+
+      // TODO: Complete this implementation
+      // TODO: Consider moving the rest to a post-processing step
+      pPkt[0].i32[0] = PKT_T_FAILURE;
+      pPkt[0].w0_Hdr.pktFullType = PKT_FT_INIT_ISO_STREAM_FAIL;
+
+      txBuf.pktTail = nextPktTail;
+      break;
+
+    case f[int i].AllocIsoStream(WORD pkt[PKT_BUF_WORD_COUNT], WORD& word7, UINT16& outputCrumb) -> UINT16 slotRef:
+      UINT16 nextPktIsoTail = txBuf.pktIsoTail + 1;
+      if (nextPktIsoTail == pktIsoArraySize) nextPktIsoTail = 0;
+
+      if (nextPktIsoTail == txBuf.pktIsoHead)
       {
-        // pktBuf circular buffer is full
-        printf("pktBuf full (%x, %x, %x)\n", slotAllocNext, slotAllocScan, slotAllocLast);
-        slotRef = 0xFE;
+        // pktIsoBuf circular buffer is full
+        printf("pktIsoBuf full (%x, %x, %x)\n", slotAllocNext, slotAllocScan, slotAllocLast);
+        slotRef = SLOT_REF_RESULT_NO_ISO_BUFFER;
         break;
       }
+
+      WORD* unsafe pPkt = (WORD* unsafe)(txBuf.pktIsoArray) + (txBuf.pktIsoTail * PKT_WORD_COUNT);
+      CopyWords(pPkt, pkt, 2); // Grab the first two words, to see if there are any issues
+
+      UINT32 tick = pPkt[1].w1.tickAndPriority & 3;
+      UINT32 priority = ((pPkt[1].w1.tickAndPriority >> 2) & 0xF) + 1;
+      if (tick == rxBuf.nextTick)
+      {
+        rxBuf.status[(rxBuf.nextTick - 1) % 4].IsoTickExpiredCount++;
+        printf("IsoTickExpired\n");
+        slotRef = SLOT_REF_RESULT_TICK_EXPIRED;
+        break;
+      }
+
+// TODO: Try to count how much space is available and use the Priority level
+      //UINT32 freePktIsoArray = (nextPktIsoTail - txBuf.pktIsoHead) %
+      //  pktIsoArraySize;
 
       if (slotAllocScan == slotAllocLast)
       {
         // slotAlloc circular buffer is full
         printf("slotAlloc full (%x, %x, %x)\n", slotAllocNext, slotAllocScan, slotAllocLast);
-        slotRef = 0xFE;
+        slotRef = SLOT_REF_RESULT_NO_SLOT_BUFFER;
         break;
       }
 
@@ -357,23 +584,30 @@ void frame_task(LINKID linkId,
       {
         // slotAllocCount exceeded (leave the rest for uPkts)
         printf("slotAllocCount\n");
-        slotRef = 0xFE;
+        slotRef = SLOT_REF_RESULT_NO_SLOT;
         break;
       }
 
-      WORD* unsafe pPkt = (WORD* unsafe)(txBuf.pktArray) + (txBuf.pktTail * PKT_WORD_COUNT);
-      CopyPktBuf(pPkt, pkt);
-
+      ENERGY energy = pPkt->w0_Hdr.energy;
+      UINT32 borrow;
       UINT16 crumb;
-      if (pPkt->i32[0] == PKT_T_INIT_ISO_STREAM_BC_120)
+      if (pPkt[0].i32[0] == PKT_T_INIT_ISO_STREAM_BC_120)
       {
+        // First: Subtract the energy for the uPkt
+        SUB64_32_WITH_BORROW(energy, borrow, energy, rxBuf.config[tick].BC_120_PktEnergy);
+        if (borrow)
+        {
+          slotRef = SLOT_REF_RESULT_NO_PKT_ENERGY; // Not enough energy.
+          break;
+        }
+
         UINT16* unsafe crumbs = txBuf.crumbCache120s;
         crumb = crumbs[txBuf.crumbCache120sHead];
         if (crumb == 0)
         {
           // No crumbs available to allocate
           printf("noCrumb\n");
-          slotRef = 0xFE;
+          slotRef = SLOT_REF_RESULT_NO_CRUMB;
           break;
         }
 
@@ -382,13 +616,23 @@ void frame_task(LINKID linkId,
       }
       else
       {
+        // First: Subtract the energy for the uPkt
+        SUB64_32_WITH_BORROW(energy, borrow, energy, rxBuf.config[tick].BC_8_PktEnergy);
+        if (borrow)
+        {
+          rxBuf.status[tick].LowEnergyCount++;
+          printf("PktLowEnergy %d\n", pPkt->w0_Hdr.energy);
+          slotRef = SLOT_REF_RESULT_NO_PKT_ENERGY; // Not enough energy.
+          break;
+        }
+
         UINT16* unsafe crumbs = txBuf.crumbCache8s;
         crumb = crumbs[txBuf.crumbCache8sHead];
         if (crumb == 0)
         {
           // No crumbs available to allocate
           printf("noCrumb\n");
-          slotRef = 0xFE;
+          slotRef = SLOT_REF_RESULT_NO_CRUMB;
           break;
         }
 
@@ -396,12 +640,45 @@ void frame_task(LINKID linkId,
         txBuf.crumbCache8sHead = (txBuf.crumbCache8sHead + 1) % NUM_CACHED_CRUMBS;
       }
 
+      // TODO: Consider how much of the below can be moved into a post-processing step in the frame_task
+
+      // Second: Subtract the energy for the isoStream
+      ENERGY isoStreamEnergy64;
+      MULTIPLY_32x32_64(isoStreamEnergy64, (UINT32)pPkt[1].w1.isoWordCount, rxBuf.config[tick].IsoEnergy);
+      SUB64_WITH_BORROW(energy, borrow, energy, isoStreamEnergy64);
+      if (borrow)
+      {
+        rxBuf.status[tick].LowEnergyCount++;
+        printf("IsoLowEnergy %d\n", pPkt->w0_Hdr.energy);
+        slotRef = SLOT_REF_RESULT_EXCEEDS_MAX_ENERGY;
+        break;
+      }
+
+      if (energy.i32[1] > 0x8) // TODO: Support configurable energy limits
+      {
+        rxBuf.status[tick].ExceedMaxEnergyCount++;
+        printf("IsoExceedMaxEnergy\n");
+        slotRef = SLOT_REF_RESULT_NO_ISO_ENERGY;
+        break;
+      }
+
+      if (energy.i64 < pPkt[1].w1.replyEnergy.i64)
+      {
+        rxBuf.status[tick].IsoExceedReplyEnergyCount++;
+        printf("IsoExceedReplyEnergy\n");
+        slotRef = SLOT_REF_RESULT_EXCEEDS_REPLY_ENERGY;
+        break;
+      }
+
+      ADD_LOCAL_ENERGY(rxBuf.status[tick].TransmitEnergy, energy);
+      pPkt[0].w0_Hdr.energy = energy;
+
       outputCrumbs[crumb] = (i << LINK_SHIFT) | outputCrumb;
       outputCrumb = crumb;
 
       // Set the new crumb in the uPkt
-      pPkt[1].i16[0] &= LINKID_MASK;
-      pPkt[1].i16[0] |= (crumb & 0x3FFF);
+      pPkt[2].i16[0] &= LINKID_MASK;
+      pPkt[2].i16[0] |= (crumb & 0x3FFF);
 
       if (isSpiFraming)
       {
@@ -413,16 +690,66 @@ void frame_task(LINKID linkId,
       }
       slotAllocScan = slotRef;
 
-#ifdef DEBUG_PRINTS
-      printf("***FxAlloc (%x, %x, %x)\n", slotAllocNext, slotAllocScan, slotAllocLast);
-#endif
+      DBGPRINT("***FxAlloc (%x, %x, %x)\n", slotAllocNext, slotAllocScan, slotAllocLast);
 
       // Mark that the slot needs to be filled by setting the SLOT_ALLOC_REQUESTED flag
       UINT16* unsafe pSlotAlloc = (UINT16* unsafe)(txBuf.slotAllocs) + slotRef;
       *pSlotAlloc |= SLOT_ALLOC_REQUESTED;
 
-      CopyWord(pPkt[7], lastWord);
-      txBuf.pktTail = (txBuf.pktTail + 1) % pktArraySize;
+      CopyWords(pPkt + 2, pkt + 2, 5);  // Grab the next five words
+      CopyWord(pPkt[7], word7);         // Grab word7
+      txBuf.pktIsoTail = nextPktIsoTail;
+      slotAllocCount++;
+      break;
+
+    case f[int i].AllocLocalIsoStream(WORD pkt[PKT_BUF_WORD_COUNT], WORD& word7) -> UINT16 slotRef:
+      UINT16 nextPktIsoTail = txBuf.pktIsoTail + 1;
+      if (nextPktIsoTail == pktIsoArraySize) nextPktIsoTail = 0;
+
+      if (nextPktIsoTail == txBuf.pktIsoHead)
+      {
+        // pktIsoBuf circular buffer is full
+        printf("pktIsoBuf full (%x, %x, %x)\n", slotAllocNext, slotAllocScan, slotAllocLast);
+        slotRef = SLOT_REF_RESULT_NO_ISO_BUFFER;
+        break;
+      }
+
+      if (slotAllocScan == slotAllocLast)
+      {
+        // slotAlloc circular buffer is full
+        printf("slotAlloc full (%x, %x, %x)\n", slotAllocNext, slotAllocScan, slotAllocLast);
+        slotRef = SLOT_REF_RESULT_NO_SLOT_BUFFER;
+        break;
+      }
+
+      if (slotAllocCount > maxSlotAllocCount)
+      {
+        // slotAllocCount exceeded (leave the rest for uPkts)
+        printf("slotAllocCount\n");
+        slotRef = SLOT_REF_RESULT_NO_SLOT;
+        break;
+      }
+
+      if (isSpiFraming)
+      {
+        slotRef = (slotAllocScan + 5) % NUM_SLOTREFS;
+      }
+      else
+      {
+        slotRef = (slotAllocScan + 1) % NUM_SLOTREFS;
+      }
+      slotAllocScan = slotRef;
+
+      DBGPRINT("***FxAlloc (%x, %x, %x)\n", slotAllocNext, slotAllocScan, slotAllocLast);
+
+      // Mark that the slot needs to be filled by setting the SLOT_ALLOC_REQUESTED flag
+      UINT16* unsafe pSlotAlloc = (UINT16* unsafe)(txBuf.slotAllocs) + slotRef;
+      *pSlotAlloc |= SLOT_ALLOC_REQUESTED;
+
+      WORD* unsafe pPkt = (WORD* unsafe)(txBuf.pktIsoArray) + (txBuf.pktIsoTail * PKT_WORD_COUNT);
+      CopyWords(pPkt, pkt, 7);  // Grab the first 7 words
+      CopyWord(pPkt[7], word7); // Grab word7
+      txBuf.pktIsoTail = nextPktIsoTail;
       slotAllocCount++;
       break;
     }
@@ -450,6 +777,9 @@ void frame_ETH(LINKID linkId,
   UINT16 inputCrumbs[ETH_NUM_CRUMBS + 4] = {}; // add a bit extra to protect against minor overflow
   UINT16* restrict pInputCrumbs = inputCrumbs;
 
+  WORD pktIsoArray[PKT_ISO_ARRAY_SIZE][PKT_WORD_COUNT] = {};
+  WORD* restrict pPktIsoArray = (WORD* restrict)pktIsoArray;
+
   WORD pktArray[PKT_ARRAY_SIZE][PKT_WORD_COUNT] = {};
   WORD* restrict pPktArray = (WORD* restrict)pktArray;
 
@@ -457,7 +787,7 @@ void frame_ETH(LINKID linkId,
   {
     frame_task(linkId, iTxBufInit, iRxBufInit, iFrameRxInit, iFrameFill, cyclerIn, cyclerOut,
                (pSubframes), (pDeallocs), NUM_SUBFRAMES, (pOutputCrumbs), (pInputCrumbs), ETH_NUM_CRUMBS,
-               pPktArray, PKT_ARRAY_SIZE);
+               pPktIsoArray, PKT_ISO_ARRAY_SIZE, pPktArray, PKT_ARRAY_SIZE);
   }
 }
 
@@ -481,6 +811,9 @@ void frame_SPI(LINKID linkId,
   UINT16 inputCrumbs[SPI_NUM_CRUMBS + 4] = {}; // add a bit extra to protect against minor overflow
   UINT16* restrict pInputCrumbs = inputCrumbs;
 
+  WORD pktIsoArray[SPI_PKT_ISO_ARRAY_SIZE][PKT_WORD_COUNT] = {};
+  WORD* restrict pPktIsoArray = (WORD* restrict)pktIsoArray;
+
   WORD pktArray[SPI_PKT_ARRAY_SIZE][PKT_WORD_COUNT] = {};
   WORD* restrict pPktArray = (WORD* restrict)pktArray;
 
@@ -488,6 +821,6 @@ void frame_SPI(LINKID linkId,
   {
     frame_task(linkId, iTxBufInit, iRxBufInit, iFrameRxInit, iFrameFill, cyclerIn, cyclerOut,
                (pSubframes), (pDeallocs), SPI_NUM_SUBFRAMES, (pOutputCrumbs), (pInputCrumbs), SPI_NUM_CRUMBS,
-               pPktArray, SPI_PKT_ARRAY_SIZE);
+               pPktIsoArray, SPI_PKT_ISO_ARRAY_SIZE, pPktArray, SPI_PKT_ARRAY_SIZE);
   }
 }

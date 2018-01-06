@@ -1,32 +1,32 @@
 ﻿/*
-Copyright (c) 2017 Travis J Martin (travis.martin) [at} isogrid.org)
+Copyright (c) 2018 Travis J Martin (travis.martin) [at} isogrid.org)
 
-This file is part of IsoSwitch.201709
+This file is part of IsoSwitch.201801
 
-IsoSwitch.201709 is free software: you can redistribute it and/or modify
+IsoSwitch.201801 is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as published
 by the Free Software Foundation.
 
-IsoSwitch.201709 is distributed in the hope that it will be useful,
+IsoSwitch.201801 is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License version 3 for more details.
 
 You should have received a copy of the GNU General Public License version 3
-along with IsoSwitch.201709.  If not, see <http://www.gnu.org/licenses/>.
+along with IsoSwitch.201801.  If not, see <http://www.gnu.org/licenses/>.
 
 A) We, the undersigned contributors to this file, declare that our
    contribution was created by us as individuals, on our own time, entirely for
    altruistic reasons, with the expectation and desire that the Copyright for our
-   contribution would expire in the year 2037 and enter the public domain.
+   contribution would expire in the year 2038 and enter the public domain.
 B) At the time when you first read this declaration, you are hereby granted a license
    to use this file under the terms of the GNU General Public License, v3.
-C) Additionally, for all uses of this file after Jan 1st 2037, we hereby waive
+C) Additionally, for all uses of this file after Jan 1st 2038, we hereby waive
    all copyright and related or neighboring rights together with all associated claims
    and causes of action with respect to this work to the extent possible under law.
 D) We have read and understand the terms and intended legal effect of CC0, and hereby
    voluntarily elect to apply it to this file for all uses or copies that occur
-   after Jan 1st 2037.
+   after Jan 1st 2038.
 E) To the extent that this file embodies any of our patentable inventions, we
    hearby grant you a worldwide, royalty-free, non-exclusive, perpetual license to
    those inventions.
@@ -45,6 +45,7 @@ using System.Threading;
 using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace IsoSwitchTest
 {
@@ -61,11 +62,11 @@ namespace IsoSwitchTest
 
       //  SimpleStreamClient               SimpleStreamServer
       //          |                                 |
-      //    C# IsoSwitch1                     C# IsoSwitch2
+      //    C# IsoSwitchA                     C# IsoSwitchB
       //          |                                 |
-      //         SPI                               SPI
+      //         ETH                               ETH
       //          |                                 |
-      //   XMOS IsoSwitch1  <---- ETH ---->  XMOS IsoSwitch2
+      //   XMOS IsoSwitchA  <---- ETH ---->  XMOS IsoSwitchB
       //          |        \               /        |
       //          |         ETH          /          |
       //          |            \       /            |
@@ -75,54 +76,90 @@ namespace IsoSwitchTest
       //          |            /       \            |
       //          |         ETH          \          |
       //          |        /               \        |
-      //   XMOS IsoSwitch3  <---- ETH ---->  XMOS IsoSwitch4
+      //   XMOS IsoSwitchC  <---- ETH ---->  XMOS IsoSwitchD
       //          |                                 |
-      //         SPI                               SPI
+      //         ETH                               ETH
       //          |                                 |
-      //    C# IsoSwitch3                     C# IsoSwitch4
+      //    C# IsoSwitchC                     C# IsoSwitchD
       //          |                                 |
       //  SimpleStreamClient               SimpleStreamServer
 
 
-      IsoBridge isoBridge1 = new IsoBridge("IsoSwitch001");
-      IsoBridge isoBridge2 = new IsoBridge("IsoSwitch002");
+      IsoBridge isoBridgeA = new IsoBridge("IsoSwitch00A");
+      IsoBridge isoBridgeB = new IsoBridge("IsoSwitch00B");
 
-      // Start up the XMOS IsoSwitch001
-      System.Diagnostics.Process xsim001 = new System.Diagnostics.Process();
+      // Start up the XMOS IsoSwitch00A
+      System.Diagnostics.Process xsim00A = new System.Diagnostics.Process();
 #if true
-      xsim001.StartInfo.Arguments = "/k ..\\xSimIsoSwitch.cmd \"s\\\\.\\pipe\\IsoSwitch001_002\" . 001";
+      xsim00A.StartInfo.Arguments = "/k ..\\xSimIsoSwitch.cmd \"s\\\\.\\pipe\\IsoSwitch00A_00B\" . 00A";
 #else
-      xsim001.StartInfo.Arguments = "/k ..\\xSimIsoSwitch.cmd \"d\\\\.\\pipe\\IsoSwitch001_002\" . 001";
+      xsim00A.StartInfo.Arguments = "/k ..\\xSimIsoSwitch.cmd \"d\\\\.\\pipe\\IsoSwitch00A_00B\" . 00B";
 #endif
-      xsim001.StartInfo.FileName = "C:\\windows\\system32\\cmd.exe";
-      xsim001.StartInfo.UseShellExecute = true;
-      xsim001.Start();
+      xsim00A.StartInfo.FileName = "C:\\windows\\system32\\cmd.exe";
+      xsim00A.StartInfo.UseShellExecute = true;
+      xsim00A.Start();
 
-      // Start up the XMOS IsoSwitch002
-      //  xsim.exe --plugin EthPlugin1.dll "c \\.\pipe\IsoSwitch001_002" --plugin SpiSocPlugin.dll "\\.\pipe\IsoSwitch001" ..\XMOS\IsoSwitch\bin\IsoSwitch.xe
+      // Start up the XMOS IsoSwitch00B
+      //  xsim.exe --plugin EthPlugin1.dll "c \\.\pipe\IsoSwitch00A_00B" --plugin SpiSocPlugin.dll "\\.\pipe\IsoSwitch00A" ..\XMOS\IsoSwitch\bin\IsoSwitch.xe
 
 #if true
-      System.Diagnostics.Process xsim002 = new System.Diagnostics.Process();
-      xsim002.StartInfo.Arguments = "/k ..\\xSimIsoSwitch.cmd \"c\\\\.\\pipe\\IsoSwitch001_002\" . 002";
-      xsim002.StartInfo.FileName = "C:\\windows\\system32\\cmd.exe";
-      xsim002.StartInfo.UseShellExecute = true;
-      xsim002.Start();
+      System.Diagnostics.Process xsim00B = new System.Diagnostics.Process();
+      xsim00B.StartInfo.Arguments = "/k ..\\xSimIsoSwitch.cmd \"c\\\\.\\pipe\\IsoSwitch00A_00B\" . 00B";
+      xsim00B.StartInfo.FileName = "C:\\windows\\system32\\cmd.exe";
+      xsim00B.StartInfo.UseShellExecute = true;
+      xsim00B.Start();
 #else
-      bool isDebuggingIsoSwitch1 = false;
-      if (isDebuggingIsoSwitch1)
+      bool isDebuggingIsoSwitchA = false;
+      if (isDebuggingIsoSwitchA)
       {
-        isoBridge1.SetDoubleInit();
+        isoBridgeA.SetDoubleInit();
       }
 
-      bool isDebuggingIsoSwitch2 = false;
-      if (isDebuggingIsoSwitch2)
+      bool isDebuggingIsoSwitchB = false;
+      if (isDebuggingIsoSwitchB)
       {
-        isoBridge2.SetDoubleInit();
+        isoBridgeB.SetDoubleInit();
       }
 #endif
 
       Thread.Sleep(10000);
       int cb;
+      
+      UInt64 gpsTimeInitial = GpsTime.GpsTime37_27FromUtcDateTime(DateTime.Now);
+      // Clear the lower bits so it lands right on a Tick
+      gpsTimeInitial >>= 30;
+      gpsTimeInitial <<= 30;
+
+      // subtract some GpsTime so the next tick will come in about 5 frames
+      UInt64 expectedGpsSpanConfig = (GpsTime.OneFrame * 5);
+      gpsTimeInitial -= expectedGpsSpanConfig;
+
+      isoBridgeA.SetExplicitGpsTime(gpsTimeInitial);
+
+      TickMod tickModInitial = GpsTime.ToTick(gpsTimeInitial);
+
+      Thread.Sleep(4 * IsoBridge.SpeedFactor);
+
+      isoBridgeA.SendInitialConfig();
+      Assert.IsTrue(isoBridgeA.WaitForInitialConfig(gpsTimeInitial + expectedGpsSpanConfig));
+
+      // Let isoBridgeB get the time implicitly
+      while (!isoBridgeB.Test_SetImplictGpsTimeIfCoherent())
+      {
+        Thread.Sleep(1000);
+      }
+
+      isoBridgeB.SendInitialConfig();
+      Assert.IsTrue(isoBridgeB.WaitForInitialConfig(isoBridgeB.GpsTimeNow + expectedGpsSpanConfig));
+
+      UInt64 gpsTimeAfterConfig = isoBridgeA.GpsTimeNow;
+      UInt64 gpsSpanConfig = (gpsTimeAfterConfig - gpsTimeInitial);
+
+      // Make sure that the configuration has taken less than the span we allotted
+      // until the next tick occurs
+      Assert.IsTrue(gpsSpanConfig < expectedGpsSpanConfig);
+      Assert.AreEqual(tickModInitial, isoBridgeA.CurrentTick);
+      Assert.AreEqual(tickModInitial, isoBridgeB.CurrentTick);
 
       // Fill a buffer with sequential numbers
       byte[] buffer = new byte[32 * 16];
@@ -132,23 +169,33 @@ namespace IsoSwitchTest
         buffer[(i * 2) + 1] = (byte)((i >= 128) ? 1 : 0);
       }
 
-      List<IOutStream> clientStreams = new List<IOutStream>();
-      for (UInt32 i = 0; i < 32; i++)
+      // Wait for the next tick
+      while ((tickModInitial == isoBridgeA.CurrentTick) ||
+             (tickModInitial == isoBridgeB.CurrentTick))
       {
-        IOutStream clientStream = new OutStream(2.3, 2.3, 32);
+        Thread.Sleep(1000);
+        Console.WriteLine("Waiting 1 second for next Tick...");
+      }
+
+      // Wait some frames to ensure that the XMOS switch has ticked
+      isoBridgeA.WaitGpsSpan(GpsTime.OneFrame * 2);
+
+      List<IOutStream> clientStreams = new List<IOutStream>();
+      for (UInt32 i = 0; i < 16; i++)
+      {
+        IOutStream clientStream = new OutStream(400 + 64 + 4 + 50, 2);
 
         Pkt_IsoInit pktIsoInit = clientStream.PktInit;
         pktIsoInit.InitBreadcrum8Sec((UInt64)(_rand.Next()) << 16, (UInt64)_rand.Next());
-        pktIsoInit.w2.ReplyCostAccumulator.Set(0.1);
-        pktIsoInit.w2.HopCounter = (UInt64)((UInt32)(_rand.Next()) >> 1) << 32; // Ensure the MSB is cleared
-        pktIsoInit.w2.HopCounter |= (UInt64)((UInt32)(_rand.Next()));
-        pktIsoInit.w3_isoInit.PktId = (UInt32)(_rand.Next() << 8) | i;
+        pktIsoInit.w1_isoInit.ReplyEnergy = 10;
+        pktIsoInit.w1_isoInit.PktId = 0x100000;
+        pktIsoInit.w1_isoInit.Tick = isoBridgeB.CurrentTick;
         pktIsoInit.wX_routeTags.i64_0 = (i << 4) + (1 << 2) + (1 << 0);
 
         clientStreams.Add(clientStream);
 
         cb = 0;
-        while (cb < (32 * 16))
+        while (cb < (16 * 16))
         {
           StreamChunk outChunk = IsoBridge.GetEmptyChunk();
           outChunk.InitBytes(buffer, cb);
@@ -156,11 +203,11 @@ namespace IsoSwitchTest
           clientStream.EnqueueChunk(outChunk);
         }
 
-        isoBridge2.InitiateOutputIsoStream(clientStream);
+        isoBridgeB.InitiateOutputIsoStream(clientStream);
 
-        if (i > 4)
+        if (i > 2)
         {
-          Thread.Sleep(2000);
+          isoBridgeB.WaitGpsSpan(GpsTime.OneFrame / 16);
         }
       }
 
@@ -168,7 +215,7 @@ namespace IsoSwitchTest
       UInt32 routeTag = 0;
       foreach (IOutStream outStream in clientStreams)
       {
-        IInStream inStream = await isoBridge1.GetNextStream(null);
+        IInStream inStream = await isoBridgeA.GetNextStream(null);
         inStreams.Add(inStream);
 
         ValidateInboundIsoStream(outStream, inStream, routeTag);
@@ -208,14 +255,108 @@ namespace IsoSwitchTest
           chunk = await inStream.GetNextChunk(chunk);
         }
 
-        Assert.AreEqual(32 * 16, cb);
+        Assert.AreEqual(16 * 16, cb);
       }
 
       // Wait just a bit more to let it all rundown nicely
+      System.Threading.Thread.Sleep(1 * IsoBridge.SpeedFactor);
+
+      // Move the first tick
+      isoBridgeA.Test_TimeTravelForwardTick();
+      isoBridgeB.Test_TimeTravelForwardTick();
+
+      UInt64 statusAvailableGpsDeadline = isoBridgeA.GpsTimeNow + (GpsTime.OneFrame * 10);
+      isoBridgeA.WaitForStatusAvailable(statusAvailableGpsDeadline);
+      isoBridgeB.WaitForStatusAvailable(statusAvailableGpsDeadline);
+
+      for (UInt64 x = 0; x < 4; x++)
+      {
+        ValidateEmptySwitchPortStatus(isoBridgeA.GetSwitchPort(x).GetStatus(isoBridgeA.NextTick));
+        ValidateEmptySwitchPortStatus(isoBridgeB.GetSwitchPort(x).GetStatus(isoBridgeB.NextTick));
+      }
+
+      // Move the second tick
+      isoBridgeA.Test_TimeTravelForwardTick();
+      isoBridgeB.Test_TimeTravelForwardTick();
+
+      statusAvailableGpsDeadline = isoBridgeA.GpsTimeNow + (GpsTime.OneFrame * 10);
+      isoBridgeA.WaitForStatusAvailable(statusAvailableGpsDeadline);
+      isoBridgeB.WaitForStatusAvailable(statusAvailableGpsDeadline);
+
+      for (UInt64 x = 0; x < 4; x++)
+      {
+        ValidateEmptySwitchPortStatus(isoBridgeA.GetSwitchPort(x).GetStatus(isoBridgeA.NextTick));
+        ValidateEmptySwitchPortStatus(isoBridgeB.GetSwitchPort(x).GetStatus(isoBridgeB.NextTick));
+      }
+
+      // Move the Final tick
+      isoBridgeA.Test_TimeTravelForwardTick();
+      isoBridgeB.Test_TimeTravelForwardTick();
+
+      statusAvailableGpsDeadline = isoBridgeA.GpsTimeNow + (GpsTime.OneFrame * 10);
+      isoBridgeA.WaitForStatusAvailable(statusAvailableGpsDeadline);
+      isoBridgeB.WaitForStatusAvailable(statusAvailableGpsDeadline);
+
+      for (UInt64 x = 0; x < 4; x++)
+      {
+        if (x != 0)
+        {
+          ValidateEmptySwitchPortStatus(isoBridgeB.GetSwitchPort(x).GetStatus(isoBridgeB.NextTick));
+        }
+
+        if (x != 1)
+        {
+          ValidateEmptySwitchPortStatus(isoBridgeA.GetSwitchPort(x).GetStatus(isoBridgeA.NextTick));
+        }
+      }
+
+      ValidateCompletedSwitchPortStatus(isoBridgeB.GetSwitchPort(0).GetStatus(isoBridgeB.NextTick));
+      ValidateCompletedSwitchPortStatus(isoBridgeA.GetSwitchPort(1).GetStatus(isoBridgeA.NextTick));
+      
       System.Threading.Thread.Sleep(5000);
 
       // TODO: Create a way to trigger the ETH or SPI endpoints to end gracefully.
       //       Currently, the ETH just crashes
+    }
+
+    private void ValidateEmptySwitchPortStatus(PktLocalGetStatus pktLocalGetStatus)
+    {
+      Assert.IsTrue(pktLocalGetStatus.ResponseReceivedEvent.IsSet);
+
+      PktLocalResponseStatus responseStatus = pktLocalGetStatus.Response;
+      Assert.AreEqual(0U, responseStatus.BC_120_PktCount);
+      Assert.AreEqual(0U, responseStatus.BC_8_PktCount);
+      Assert.AreEqual(0U, responseStatus.ErasedCount);
+      Assert.AreEqual(0U, responseStatus.ExceedMaxEnergyCount);
+      Assert.AreEqual(0UL, responseStatus.Iso0Count);
+      Assert.AreEqual(0U, responseStatus.IsoExceedReplyEnergyCount);
+      Assert.AreEqual(0U, responseStatus.IsoTickExpiredCount);
+      Assert.AreEqual(0U, responseStatus.IsoWordCountMaxExceededCount);
+      Assert.AreEqual(0U, responseStatus.JumbledCount);
+      Assert.AreEqual(0U, responseStatus.LowEnergyCount);
+      Assert.AreEqual(0U, responseStatus.MissedCount);
+      Assert.AreEqual(0UL, responseStatus.ReceiveEnergy.value);
+      Assert.AreEqual(0UL, responseStatus.TransmitEnergy.value);
+    }
+
+    private void ValidateCompletedSwitchPortStatus(PktLocalGetStatus pktLocalGetStatus)
+    {
+      Assert.IsTrue(pktLocalGetStatus.ResponseReceivedEvent.IsSet);
+
+      PktLocalResponseStatus responseStatus = pktLocalGetStatus.Response;
+      Assert.AreEqual(0U, responseStatus.BC_120_PktCount);
+      Assert.AreEqual(16U, responseStatus.BC_8_PktCount);
+      Assert.AreEqual(0U, responseStatus.ErasedCount);
+      Assert.AreEqual(0U, responseStatus.ExceedMaxEnergyCount);
+      Assert.AreEqual(0UL, responseStatus.Iso0Count);
+      Assert.AreEqual(0U, responseStatus.IsoExceedReplyEnergyCount);
+      Assert.AreEqual(0U, responseStatus.IsoTickExpiredCount);
+      Assert.AreEqual(0U, responseStatus.IsoWordCountMaxExceededCount);
+      Assert.AreEqual(0U, responseStatus.JumbledCount);
+      Assert.AreEqual(0U, responseStatus.LowEnergyCount);
+      Assert.AreEqual(0U, responseStatus.MissedCount);
+      Assert.AreEqual(0UL, responseStatus.ReceiveEnergy.value);
+      Assert.AreEqual(0UL, responseStatus.TransmitEnergy.value);
     }
 
     private void ValidateInboundIsoStream(IOutStream outStream, IInStream inStream, UInt32 routeTag)
@@ -227,20 +368,19 @@ namespace IsoSwitchTest
       Assert.AreEqual(PKT_T.INIT_ISO_STREAM_BC_8, pktIsoInitIn.w0_Hdr.PktType);
       Assert.AreEqual(PKT_FULLT.INIT_ISO_STREAM_BC_8, pktIsoInitIn.w0_Hdr.PktFullType);
 
-      Assert.AreEqual(0.1, Math.Round(pktIsoInitIn.w0_Hdr.PktPayment.AsDouble(), 8));
-      Assert.AreEqual(0, pktIsoInitIn.w0_Hdr.Reserved1);
-      Assert.AreEqual(0, pktIsoInitIn.w0_Hdr.Reserved2);
-      Assert.AreEqual(0UL, pktIsoInitIn.w1_Bc.High >> 63);
-      Assert.IsTrue(pktIsoInitIn.w1_Bc.High != 0);
-      Assert.IsTrue(pktIsoInitIn.w1_Bc.Low != 0);
-      Assert.AreEqual(pktIsoInitOut.w3_isoInit.PktId, pktIsoInitIn.w3_isoInit.PktId);
-      Assert.AreEqual(pktIsoInitOut.w2.HopCounter + 3, pktIsoInitIn.w2.HopCounter);
-      Assert.AreEqual(2.3, Math.Round(pktIsoInitIn.w2.ReplyCostAccumulator.AsDouble(), 8));
-      Assert.AreEqual(0.1, Math.Round(pktIsoInitIn.w3_isoInit.IsoPayment.AsDouble(), 8));
-      Assert.AreEqual(0, pktIsoInitIn.w3_isoInit.Reserved1);
-      Assert.AreEqual(20, pktIsoInitIn.w3_isoInit.RouteTagOffset);
-      Assert.AreEqual(32UL, pktIsoInitIn.w3_isoInit.WordCount);
-      Assert.AreEqual(4UL, inStream.TotalChunks);
+      Assert.AreEqual(pktIsoInitIn.w1_isoInit.ReplyEnergy, pktIsoInitIn.w0_Hdr.Energy);
+      Assert.AreEqual(0, pktIsoInitIn.w0_Hdr.Reserved0);
+      Assert.AreEqual(pktIsoInitOut.w1_isoInit.PktId + 3, pktIsoInitIn.w1_isoInit.PktId);
+      Assert.AreEqual(17, pktIsoInitIn.w1_isoInit.WordCount);
+      Assert.AreEqual(20, pktIsoInitIn.w1_isoInit.RouteTagOffset);
+      Assert.AreEqual(pktIsoInitOut.w1_isoInit.Tick, pktIsoInitIn.w1_isoInit.Tick);
+      Assert.AreEqual(pktIsoInitOut.w1_isoInit.Priority, pktIsoInitIn.w1_isoInit.Priority);
+      Assert.AreEqual(2UL, inStream.InitialChunks);
+      Assert.AreEqual(0UL, pktIsoInitIn.w2_bc.High >> 63);
+      Assert.IsTrue(pktIsoInitIn.w2_bc.High != 0);
+      Assert.IsTrue(pktIsoInitIn.w2_bc.Low != 0);
+      Assert.AreEqual(0UL, pktIsoInitIn.w3.Low);
+      Assert.AreEqual(0UL, pktIsoInitIn.w3.High);
       Assert.AreEqual(0UL, pktIsoInitIn.w4.Low);
       Assert.AreEqual(0UL, pktIsoInitIn.w4.High);
       Assert.AreEqual(0UL, pktIsoInitIn.w5.Low);

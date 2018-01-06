@@ -1,0 +1,3318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<export version="D">
+  <design>
+    <source>C:/Users/phase/Source/CrowdSwitch/HW/HW.sch</source>
+    <date>1/5/2018 12:54:46 AM</date>
+    <tool>Eeschema 4.0.7</tool>
+    <sheet number="1" name="/" tstamps="/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>HW.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="2" name="/Tile1/" tstamps="/5A4367AE/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>Tile1.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="3" name="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>EthernetPortX.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="4" name="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>EthernetPortX.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="5" name="/Tile0/" tstamps="/5A436E1B/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>Tile0.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="6" name="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>EthernetPortX.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+    <sheet number="7" name="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/">
+      <title_block>
+        <title/>
+        <company/>
+        <rev/>
+        <date/>
+        <source>EthernetPortX.sch</source>
+        <comment number="1" value=""/>
+        <comment number="2" value=""/>
+        <comment number="3" value=""/>
+        <comment number="4" value=""/>
+      </title_block>
+    </sheet>
+  </design>
+  <components>
+    <comp ref="C1">
+      <value>4.7uF</value>
+      <footprint>Capacitors_SMD:C_0805</footprint>
+      <datasheet>psearch.en.murata.com/capacitor/product/GRM21BR61C475KA88%23.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM21BR61C475KA88L</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 4.7UF, 16V, 10%, X5R, 0805</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR61C475KA88L/490-3338-1-ND/702879</field>
+        <field name="Price10">$0.14</field>
+        <field name="Price1k">$0.038</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4007CD</tstamp>
+    </comp>
+    <comp ref="R1">
+      <value>4.7K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <datasheet>http://www.yageo.com/documents/recent/PYu-RC_Group_51_RoHS_L_8.pdf</datasheet>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-074K7L</field>
+        <field name="Description">CHIP RESISTOR, 4.7K OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A400AF5</tstamp>
+    </comp>
+    <comp ref="R2">
+      <value>18K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <datasheet>www.yageo.com/exep/pages/download/literatures/PYu-R_Marking_2.pdf</datasheet>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0718KL</field>
+        <field name="Description">CHIP RESISTOR, 18K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-0718KL/311-18.0KHRCT-ND/729936</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00233</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A400B44</tstamp>
+    </comp>
+    <comp ref="U3">
+      <value>ST1S06</value>
+      <footprint>Housings_DFN_QFN:DFN-6-1EP_3x3mm_Pitch0.95mm</footprint>
+      <datasheet>www.st.com/content/ccc/resource/technical/document/datasheet/b3/2f/7b/c6/95/7d/40/e8/CD00100211.pdf/files/CD00100211.pdf/jcr:content/translations/en.CD00100211.pdf</datasheet>
+      <fields>
+        <field name="MFG">STMicroelectronics</field>
+        <field name="Description">IC REG BUCK ADJ 1.5A SYNC DFN6 </field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/stmicroelectronics/ST1S06PUR/497-5802-1-ND/1506457</field>
+        <field name="Price10">$1.25</field>
+        <field name="Price1k">$0.64</field>
+      </fields>
+      <libsource lib="CrowdSwitch" part="ST1S06"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A402BBF</tstamp>
+    </comp>
+    <comp ref="L2">
+      <value>3.3uH</value>
+      <footprint>Inductors_SMD:L_Taiyo-Yuden_NR-40xx</footprint>
+      <datasheet>ds.yuden.co.jp/TYCOMPAS/ut/detail.do?productNo=NRS4018T3R3MDGJ&amp;fileName=NRS4018T3R3MDGJ_SS&amp;mode=specSheetDownload</datasheet>
+      <fields>
+        <field name="MFG">Taiyo Yuden</field>
+        <field name="Part">NRS4018T2R2MDGJ</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/taiyo-yuden/NRS4018T3R3MDGJ/587-2892-1-ND/2649012</field>
+        <field name="Price10">$0.27</field>
+        <field name="Price1k">$0.12</field>
+      </fields>
+      <libsource lib="device" part="L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A402BE3</tstamp>
+    </comp>
+    <comp ref="R5">
+      <value>5.6K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <datasheet>www.yageo.com/documents/recent/PYu-RC_Group_51_RoHS_L_8.pdf</datasheet>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-075K6L</field>
+        <field name="Description">CHIP RESISTOR, 5.6K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-075K6L/311-5.60KHRCT-ND/730222</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A402BF2</tstamp>
+    </comp>
+    <comp ref="R3">
+      <value>1K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-071KL</field>
+        <field name="Description">CHIP RESISTOR, 1.0K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-071KL/311-1.00KHRCT-ND/729790</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A40A486</tstamp>
+    </comp>
+    <comp ref="R6">
+      <value>2.2K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-072K2L</field>
+        <field name="Description">CHIP RESISTOR, 2.2K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-072K2L/311-2.20KHRCT-ND/729963</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A40AA3F</tstamp>
+    </comp>
+    <comp ref="U4">
+      <value>APX809S-46SA</value>
+      <footprint>TO_SOT_Packages_SMD:SOT-23</footprint>
+      <datasheet>https://www.diodes.com/assets/Datasheets/APX809S-810S.pdf</datasheet>
+      <fields>
+        <field name="MFG">Diodes Inc</field>
+        <field name="Description">Microprocessor Reset Circuit, 4.6V, Active Low, Push Pull, SOT23</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/diodes-incorporated/APX809S-46SA-7/APX809S-46SA-7DICT-ND/7230307</field>
+        <field name="Price10">$0.303</field>
+        <field name="Price1k">$0.11588</field>
+      </fields>
+      <libsource lib="CrowdSwitch" part="APX809S-46SA"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A40B87E</tstamp>
+    </comp>
+    <comp ref="X1">
+      <value>DSC6001CI2A-025.0000</value>
+      <footprint>Oscillators:Oscillator_SMD_Abracon_ASE-4pin_3.2x2.5mm</footprint>
+      <datasheet>ww1.microchip.com/downloads/en/DeviceDoc/20005625B.pdf</datasheet>
+      <fields>
+        <field name="MFG">Microchip Technology</field>
+        <field name="Description">Mems Oscillator, Ultra Low Power, Lvcmos, -40c-85c, 25ppm, 3.2x2.5mm</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/microchip-technology/DSC6001CI2A-025.0000T/DSC6001CI2A-025.0000T-ND/7795667</field>
+        <field name="Price1k">$0.80</field>
+      </fields>
+      <libsource lib="CrowdSwitch" part="DSC6001CI2A-025.0000"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4174B0</tstamp>
+    </comp>
+    <comp ref="F1">
+      <value>1206L110</value>
+      <footprint>Fuse_Holders_and_Fuses:Fuse_SMD1206_Reflow</footprint>
+      <datasheet>www.littelfuse.com/~/media/electronics/datasheets/resettable_ptcs/littelfuse_ptc_1206l_datasheet.pdf.pdf</datasheet>
+      <fields>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/littelfuse-inc/1206L110THYR/F3371TR-ND/2090976</field>
+        <field name="Price1k">$0.21</field>
+      </fields>
+      <libsource lib="device" part="Polyfuse"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A41A4BF</tstamp>
+    </comp>
+    <comp ref="RV1">
+      <value>V5.5MLA0603</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <datasheet>www.littelfuse.com/~/media/electronics/datasheets/varistors/littelfuse_varistor_mla_datasheet.pdf.pdf</datasheet>
+      <fields>
+        <field name="Description">VARISTOR 8.2V 30A 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/littelfuse-inc/V5.5MLA0603H/F2214CT-ND/428156</field>
+        <field name="Price10">$0.58</field>
+        <field name="Price1k">$0.25</field>
+      </fields>
+      <libsource lib="device" part="Varistor"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A41A667</tstamp>
+    </comp>
+    <comp ref="U1">
+      <value>XL216-512-TQ128_CHIP_VIEW</value>
+      <footprint>Housings_QFP:TQFP-128_14x14mm_Pitch0.4mm</footprint>
+      <datasheet>www.xmos.com/published/xl216-512-tq128-datasheet?version=latest</datasheet>
+      <fields>
+        <field name="MFG">XMOS</field>
+        <field name="Description">IC MCU 32BIT ROMLESS 128TQFP</field>
+        <field name="DigiKey">https://www.digikey.com/products/en?keywords=XL216-512-TQ128-C20</field>
+        <field name="Price1k">$7.70</field>
+      </fields>
+      <libsource lib="CrowdSwitch" part="XL216-512-TQ128_CHIP_VIEW"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A489B01</tstamp>
+    </comp>
+    <comp ref="J2">
+      <value>2x10 Vertical Pin</value>
+      <footprint>Pin_Headers:Pin_Header_Straight_2x10_Pitch2.54mm</footprint>
+      <fields>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/harwin-inc/M20-9971046/952-2327-ND/3906346</field>
+        <field name="Price10">$0.78</field>
+        <field name="Price1k">$0.49</field>
+      </fields>
+      <libsource lib="conn" part="Conn_02x10_Odd_Even"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4D49A7</tstamp>
+    </comp>
+    <comp ref="U5">
+      <value>NCP303LSN10T</value>
+      <footprint>Housings_SSOP:TSOP-5_1.65x3.05mm_Pitch0.95mm</footprint>
+      <datasheet>www.onsemi.com/pub/Collateral/NCP302-D.PDF</datasheet>
+      <fields>
+        <field name="MFG">On Semiconductor</field>
+        <field name="Description">IC VOLT DETECT OD 1.0V 5TSOP </field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/on-semiconductor/NCP303LSN10T1G/NCP303LSN10T1G-ND/1483535</field>
+        <field name="Price1k">$0.20</field>
+      </fields>
+      <libsource lib="CrowdSwitch" part="NCP303LSN10T"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4E412C</tstamp>
+    </comp>
+    <comp ref="R7">
+      <value>47K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0747KL</field>
+        <field name="Description">CHIP RESISTOR, 47K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-0747KL/311-47.0KHRCT-ND/730200</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4EA2EB</tstamp>
+    </comp>
+    <comp ref="C51">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4F0BF5</tstamp>
+    </comp>
+    <comp ref="C7">
+      <value>2.2uF</value>
+      <footprint>Capacitors_SMD:C_0603</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM188R61A225KE34D</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 2.2UF, 10V, 10%, X5R, 0603</field>
+        <field name="Price10">$0.19</field>
+        <field name="Price1k">$0.05819</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4F4C85</tstamp>
+    </comp>
+    <comp ref="J1">
+      <value>10118193-0001LF</value>
+      <footprint>10118193-0001LF:FCI_10118193-0001LF</footprint>
+      <datasheet>cdn.amphenol-icc.com/media/wysiwyg/files/documentation/datasheet/inputoutput/io_usb_micro.pdf</datasheet>
+      <fields>
+        <field name="MFG">Amphenol</field>
+        <field name="Description">Conn Micro USB Type B RCP 5 POS 0.65mm Solder RA SMD 5 Terminal 1 Port T/R</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/amphenol-fci/10118193-0001LF/609-4616-2-ND/2785388</field>
+        <field name="Price10">$0.24</field>
+        <field name="Price1k">$0.20</field>
+      </fields>
+      <libsource lib="10118193-0001LF" part="10118193-0001LF"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A44748A</tstamp>
+    </comp>
+    <comp ref="U2">
+      <value>ST1S06</value>
+      <footprint>Housings_DFN_QFN:DFN-6-1EP_3x3mm_Pitch0.95mm</footprint>
+      <datasheet>www.st.com/content/ccc/resource/technical/document/datasheet/b3/2f/7b/c6/95/7d/40/e8/CD00100211.pdf/files/CD00100211.pdf/jcr:content/translations/en.CD00100211.pdf</datasheet>
+      <fields>
+        <field name="MFG">STMicroelectronics</field>
+        <field name="Description">IC REG BUCK ADJ 1.5A SYNC DFN6 </field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/stmicroelectronics/ST1S06PUR/497-5802-1-ND/1506457</field>
+        <field name="Price10">$1.25</field>
+        <field name="Price1k">$0.64</field>
+      </fields>
+      <libsource lib="CrowdSwitch" part="ST1S06"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A453A5E</tstamp>
+    </comp>
+    <comp ref="L1">
+      <value>3.3uH</value>
+      <footprint>Inductors_SMD:L_Taiyo-Yuden_NR-40xx</footprint>
+      <datasheet>ds.yuden.co.jp/TYCOMPAS/ut/detail.do?productNo=NRS4018T3R3MDGJ&amp;fileName=NRS4018T3R3MDGJ_SS&amp;mode=specSheetDownload</datasheet>
+      <fields>
+        <field name="MFG">Taiyo Yuden</field>
+        <field name="Part">NRS4018T2R2MDGJ</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/taiyo-yuden/NRS4018T3R3MDGJ/587-2892-1-ND/2649012</field>
+        <field name="Price10">$0.27</field>
+        <field name="Price1k">$0.12</field>
+      </fields>
+      <libsource lib="device" part="L"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A45D579</tstamp>
+    </comp>
+    <comp ref="C3">
+      <value>4.7uF</value>
+      <footprint>Capacitors_SMD:C_0805</footprint>
+      <datasheet>psearch.en.murata.com/capacitor/product/GRM21BR61C475KA88%23.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM21BR61C475KA88L</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 4.7UF, 16V, 10%, X5R, 0805</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR61C475KA88L/490-3338-1-ND/702879</field>
+        <field name="Price10">$0.14</field>
+        <field name="Price1k">$0.038</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A462395</tstamp>
+    </comp>
+    <comp ref="C4">
+      <value>22uF</value>
+      <footprint>Capacitors_SMD:C_0805</footprint>
+      <datasheet>psearch.en.murata.com/capacitor/product/GRM21BR60J226ME39%23.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM21BR60J226ME39L</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 22UF, 6.3V, 20%, X5R, 0805</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR60J226ME39L/490-1719-1-ND/587424</field>
+        <field name="Price10">$0.19</field>
+        <field name="Price1k">$0.05819</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A46A101</tstamp>
+    </comp>
+    <comp ref="R4">
+      <value>18K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <datasheet>www.yageo.com/exep/pages/download/literatures/PYu-R_Marking_2.pdf</datasheet>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0718KL</field>
+        <field name="Description">CHIP RESISTOR, 18K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-0718KL/311-18.0KHRCT-ND/729936</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00233</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A477828</tstamp>
+    </comp>
+    <comp ref="R8">
+      <value>4.7R</value>
+      <footprint>Resistors_SMD:R_0201</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0201JR-074R7L</field>
+        <field name="Description">CHIP RESISTOR, 4.7 OHM, 50mW, 5%, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">0.00426</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4797B9</tstamp>
+    </comp>
+    <comp ref="C2">
+      <value>22uF</value>
+      <footprint>Capacitors_SMD:C_0805</footprint>
+      <datasheet>psearch.en.murata.com/capacitor/product/GRM21BR60J226ME39%23.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM21BR60J226ME39L</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 22UF, 6.3V, 20%, X5R, 0805</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR60J226ME39L/490-1719-1-ND/587424</field>
+        <field name="Price10">$0.19</field>
+        <field name="Price1k">$0.05819</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A47EE60</tstamp>
+    </comp>
+    <comp ref="C8">
+      <value>2.2uF</value>
+      <footprint>Capacitors_SMD:C_0603</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM188R61A225KE34D</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 2.2UF, 10V, 10%, X5R, 0603</field>
+        <field name="Price10">$0.19</field>
+        <field name="Price1k">$0.05819</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A490E86</tstamp>
+    </comp>
+    <comp ref="R9">
+      <value>33R</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0733RL</field>
+        <field name="Description">CHIP RESISTOR, 33 OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4A8411</tstamp>
+    </comp>
+    <comp ref="C52">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4B283C</tstamp>
+    </comp>
+    <comp ref="C53">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4B28E1</tstamp>
+    </comp>
+    <comp ref="C54">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4B2997</tstamp>
+    </comp>
+    <comp ref="C55">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4B2A44</tstamp>
+    </comp>
+    <comp ref="C56">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4B2AF6</tstamp>
+    </comp>
+    <comp ref="C57">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4B2BAD</tstamp>
+    </comp>
+    <comp ref="C58">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4B2C71</tstamp>
+    </comp>
+    <comp ref="C59">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4B2D2E</tstamp>
+    </comp>
+    <comp ref="C62">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4B2F7B</tstamp>
+    </comp>
+    <comp ref="C50">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4B7959</tstamp>
+    </comp>
+    <comp ref="C70">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BB1F7</tstamp>
+    </comp>
+    <comp ref="C71">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BB903</tstamp>
+    </comp>
+    <comp ref="C72">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BB9AB</tstamp>
+    </comp>
+    <comp ref="C73">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BBA56</tstamp>
+    </comp>
+    <comp ref="C74">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BBB04</tstamp>
+    </comp>
+    <comp ref="C75">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BBBB5</tstamp>
+    </comp>
+    <comp ref="C76">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BBC69</tstamp>
+    </comp>
+    <comp ref="C77">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BBD20</tstamp>
+    </comp>
+    <comp ref="C78">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BBDDA</tstamp>
+    </comp>
+    <comp ref="C79">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BBE97</tstamp>
+    </comp>
+    <comp ref="C80">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BBF57</tstamp>
+    </comp>
+    <comp ref="C81">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BC04F</tstamp>
+    </comp>
+    <comp ref="C82">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BC14F</tstamp>
+    </comp>
+    <comp ref="C5">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BDAEF</tstamp>
+    </comp>
+    <comp ref="C6">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4BF654</tstamp>
+    </comp>
+    <comp ref="C63">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A49966E</tstamp>
+    </comp>
+    <comp ref="C64">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A499752</tstamp>
+    </comp>
+    <comp ref="C83">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A49D29F</tstamp>
+    </comp>
+    <comp ref="C84">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A49D36B</tstamp>
+    </comp>
+    <comp ref="C85">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4F2110</tstamp>
+    </comp>
+    <comp ref="C86">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/" tstamps="/"/>
+      <tstamp>5A4F99DC</tstamp>
+    </comp>
+    <comp ref="U12">
+      <value>KSZ8081MNX</value>
+      <footprint>Housings_DFN_QFN:QFN-32-1EP_5x5mm_Pitch0.5mm</footprint>
+      <datasheet>www.microchip.com/mymicrochip/filehandler.aspx?ddocname=en581586</datasheet>
+      <fields>
+        <field name="MFG">Microchip Technology</field>
+        <field name="Description">Ethernet Transciever, 10/100, MII/RMII, QFN32</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/microchip-technology/KSZ8081MNXCA-TR/576-4171-2-ND/3728493</field>
+        <field name="Price1k">$0.93</field>
+      </fields>
+      <libsource lib="CrowdSwitch" part="KSZ8081MNX"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A41DF58</tstamp>
+    </comp>
+    <comp ref="R121">
+      <value>6.49K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-076K49L</field>
+        <field name="Description">CHIP RESISTOR, 6.49K OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A41EFD3</tstamp>
+    </comp>
+    <comp ref="FB121">
+      <value>FERRITE BEAD</value>
+      <footprint>Inductors_SMD:L_0603</footprint>
+      <datasheet>https://www.murata.com/en-us/products/productdata/8796747366430/ENFA0021.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Description">FERRITE BEAD 470 OHM 0603 1LN </field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/BLM18EG471SN1D/490-3993-1-ND/1016253</field>
+        <field name="Price1k">$0.072</field>
+        <field name="Price10">$0.18</field>
+      </fields>
+      <libsource lib="device" part="Ferrite_Bead_Small"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A5013D6</tstamp>
+    </comp>
+    <comp ref="C127">
+      <value>22uF</value>
+      <footprint>Capacitors_SMD:C_0805</footprint>
+      <datasheet>psearch.en.murata.com/capacitor/product/GRM21BR60J226ME39%23.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM21BR60J226ME39L</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 22UF, 6.3V, 20%, X5R, 0805</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR60J226ME39L/490-1719-1-ND/587424</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A46EB58</tstamp>
+    </comp>
+    <comp ref="C125">
+      <value>22uF</value>
+      <footprint>Capacitors_SMD:C_0805</footprint>
+      <datasheet>psearch.en.murata.com/capacitor/product/GRM21BR60J226ME39%23.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM21BR60J226ME39L</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 22UF, 6.3V, 20%, X5R, 0805</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR60J226ME39L/490-1719-1-ND/587424</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A46EBCE</tstamp>
+    </comp>
+    <comp ref="C121">
+      <value>2.2uF</value>
+      <footprint>Capacitors_SMD:C_0603</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM188R61A225KE34D</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 2.2UF, 10V, 10%, X5R, 0603</field>
+        <field name="Price10">$0.19</field>
+        <field name="Price1k">$0.05819</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A492DAB</tstamp>
+    </comp>
+    <comp ref="R123">
+      <value>1K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-071KL</field>
+        <field name="Description">CHIP RESISTOR, 1.0K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-071KL/311-1.00KHRCT-ND/729790</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A49EDB0</tstamp>
+    </comp>
+    <comp ref="R122">
+      <value>10K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0710KL</field>
+        <field name="Description">CHIP RESISTOR, 10K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-0710KL/311-10.0KHRCT-ND/729827?utm_adgroup=Supplier_Yageo&amp;utm_source=bing&amp;utm_term=RC0603FR-0710KL&amp;utm_campaign=NB_SKU_E&amp;utm_medium=cpc&amp;utm_content=O4GoPpiD_pcrid_81295146303683_pkw_RC0603FR-0710KL_pmt_be_pdv_c_slid__pgrid_2101804421_ptaid_kwd-24941121926:loc-190_</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A49EDE8</tstamp>
+    </comp>
+    <comp ref="R124">
+      <value>1K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-071KL</field>
+        <field name="Description">CHIP RESISTOR, 1.0K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-071KL/311-1.00KHRCT-ND/729790</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A49F168</tstamp>
+    </comp>
+    <comp ref="R125">
+      <value>33R</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0733RL</field>
+        <field name="Description">CHIP RESISTOR, 33 OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A4A9C17</tstamp>
+    </comp>
+    <comp ref="R126">
+      <value>33R</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0733RL</field>
+        <field name="Description">CHIP RESISTOR, 33 OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A4A9C45</tstamp>
+    </comp>
+    <comp ref="C126">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A4B8335</tstamp>
+    </comp>
+    <comp ref="C128">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A4B85E8</tstamp>
+    </comp>
+    <comp ref="C124">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A4B8B80</tstamp>
+    </comp>
+    <comp ref="C123">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A4B8BB1</tstamp>
+    </comp>
+    <comp ref="C122">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A4BFA86</tstamp>
+    </comp>
+    <comp ref="J12">
+      <value>RJ45_0</value>
+      <footprint>TempRJ45:RJ45_8</footprint>
+      <fields>
+        <field name="TODO">This footprint should be replaced by a single 4port RJ45 connector</field>
+      </fields>
+      <libsource lib="conn" part="RJ45"/>
+      <sheetpath names="/Tile1/EthernetPort2/" tstamps="/5A4367AE/5A432A00/"/>
+      <tstamp>5A42196F</tstamp>
+    </comp>
+    <comp ref="U13">
+      <value>KSZ8081MNX</value>
+      <footprint>Housings_DFN_QFN:QFN-32-1EP_5x5mm_Pitch0.5mm</footprint>
+      <datasheet>www.microchip.com/mymicrochip/filehandler.aspx?ddocname=en581586</datasheet>
+      <fields>
+        <field name="MFG">Microchip Technology</field>
+        <field name="Description">Ethernet Transciever, 10/100, MII/RMII, QFN32</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/microchip-technology/KSZ8081MNXCA-TR/576-4171-2-ND/3728493</field>
+        <field name="Price1k">$0.93</field>
+      </fields>
+      <libsource lib="CrowdSwitch" part="KSZ8081MNX"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A41DF58</tstamp>
+    </comp>
+    <comp ref="R131">
+      <value>6.49K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-076K49L</field>
+        <field name="Description">CHIP RESISTOR, 6.49K OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A41EFD3</tstamp>
+    </comp>
+    <comp ref="FB131">
+      <value>FERRITE BEAD</value>
+      <footprint>Inductors_SMD:L_0603</footprint>
+      <datasheet>https://www.murata.com/en-us/products/productdata/8796747366430/ENFA0021.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Description">FERRITE BEAD 470 OHM 0603 1LN </field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/BLM18EG471SN1D/490-3993-1-ND/1016253</field>
+        <field name="Price1k">$0.072</field>
+        <field name="Price10">$0.18</field>
+      </fields>
+      <libsource lib="device" part="Ferrite_Bead_Small"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A5013D6</tstamp>
+    </comp>
+    <comp ref="C137">
+      <value>22uF</value>
+      <footprint>Capacitors_SMD:C_0805</footprint>
+      <datasheet>psearch.en.murata.com/capacitor/product/GRM21BR60J226ME39%23.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM21BR60J226ME39L</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 22UF, 6.3V, 20%, X5R, 0805</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR60J226ME39L/490-1719-1-ND/587424</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A46EB58</tstamp>
+    </comp>
+    <comp ref="C135">
+      <value>22uF</value>
+      <footprint>Capacitors_SMD:C_0805</footprint>
+      <datasheet>psearch.en.murata.com/capacitor/product/GRM21BR60J226ME39%23.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM21BR60J226ME39L</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 22UF, 6.3V, 20%, X5R, 0805</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR60J226ME39L/490-1719-1-ND/587424</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A46EBCE</tstamp>
+    </comp>
+    <comp ref="C131">
+      <value>2.2uF</value>
+      <footprint>Capacitors_SMD:C_0603</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM188R61A225KE34D</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 2.2UF, 10V, 10%, X5R, 0603</field>
+        <field name="Price10">$0.19</field>
+        <field name="Price1k">$0.05819</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A492DAB</tstamp>
+    </comp>
+    <comp ref="R133">
+      <value>1K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-071KL</field>
+        <field name="Description">CHIP RESISTOR, 1.0K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-071KL/311-1.00KHRCT-ND/729790</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A49EDB0</tstamp>
+    </comp>
+    <comp ref="R132">
+      <value>10K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0710KL</field>
+        <field name="Description">CHIP RESISTOR, 10K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-0710KL/311-10.0KHRCT-ND/729827?utm_adgroup=Supplier_Yageo&amp;utm_source=bing&amp;utm_term=RC0603FR-0710KL&amp;utm_campaign=NB_SKU_E&amp;utm_medium=cpc&amp;utm_content=O4GoPpiD_pcrid_81295146303683_pkw_RC0603FR-0710KL_pmt_be_pdv_c_slid__pgrid_2101804421_ptaid_kwd-24941121926:loc-190_</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A49EDE8</tstamp>
+    </comp>
+    <comp ref="R134">
+      <value>1K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-071KL</field>
+        <field name="Description">CHIP RESISTOR, 1.0K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-071KL/311-1.00KHRCT-ND/729790</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A49F168</tstamp>
+    </comp>
+    <comp ref="R135">
+      <value>33R</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0733RL</field>
+        <field name="Description">CHIP RESISTOR, 33 OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A4A9C17</tstamp>
+    </comp>
+    <comp ref="R136">
+      <value>33R</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0733RL</field>
+        <field name="Description">CHIP RESISTOR, 33 OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A4A9C45</tstamp>
+    </comp>
+    <comp ref="C136">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A4B8335</tstamp>
+    </comp>
+    <comp ref="C138">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A4B85E8</tstamp>
+    </comp>
+    <comp ref="C134">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A4B8B80</tstamp>
+    </comp>
+    <comp ref="C133">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A4B8BB1</tstamp>
+    </comp>
+    <comp ref="C132">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A4BFA86</tstamp>
+    </comp>
+    <comp ref="J13">
+      <value>RJ45_0</value>
+      <footprint>TempRJ45:RJ45_8</footprint>
+      <fields>
+        <field name="TODO">This footprint should be replaced by a single 4port RJ45 connector</field>
+      </fields>
+      <libsource lib="conn" part="RJ45"/>
+      <sheetpath names="/Tile1/EthernetPort3/" tstamps="/5A4367AE/5A44EF51/"/>
+      <tstamp>5A42196F</tstamp>
+    </comp>
+    <comp ref="R10">
+      <value>3.3K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-073K3L</field>
+        <field name="Digikey">https://www.digikey.com/products/en?keywords=RC0603FR-073K3L</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/" tstamps="/5A436E1B/"/>
+      <tstamp>5A4F6719</tstamp>
+    </comp>
+    <comp ref="U10">
+      <value>KSZ8081MNX</value>
+      <footprint>Housings_DFN_QFN:QFN-32-1EP_5x5mm_Pitch0.5mm</footprint>
+      <datasheet>www.microchip.com/mymicrochip/filehandler.aspx?ddocname=en581586</datasheet>
+      <fields>
+        <field name="MFG">Microchip Technology</field>
+        <field name="Description">Ethernet Transciever, 10/100, MII/RMII, QFN32</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/microchip-technology/KSZ8081MNXCA-TR/576-4171-2-ND/3728493</field>
+        <field name="Price1k">$0.93</field>
+      </fields>
+      <libsource lib="CrowdSwitch" part="KSZ8081MNX"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A41DF58</tstamp>
+    </comp>
+    <comp ref="R101">
+      <value>6.49K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-076K49L</field>
+        <field name="Description">CHIP RESISTOR, 6.49K OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A41EFD3</tstamp>
+    </comp>
+    <comp ref="FB101">
+      <value>FERRITE BEAD</value>
+      <footprint>Inductors_SMD:L_0603</footprint>
+      <datasheet>https://www.murata.com/en-us/products/productdata/8796747366430/ENFA0021.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Description">FERRITE BEAD 470 OHM 0603 1LN </field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/BLM18EG471SN1D/490-3993-1-ND/1016253</field>
+        <field name="Price1k">$0.072</field>
+        <field name="Price10">$0.18</field>
+      </fields>
+      <libsource lib="device" part="Ferrite_Bead_Small"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A5013D6</tstamp>
+    </comp>
+    <comp ref="C107">
+      <value>22uF</value>
+      <footprint>Capacitors_SMD:C_0805</footprint>
+      <datasheet>psearch.en.murata.com/capacitor/product/GRM21BR60J226ME39%23.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM21BR60J226ME39L</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 22UF, 6.3V, 20%, X5R, 0805</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR60J226ME39L/490-1719-1-ND/587424</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A46EB58</tstamp>
+    </comp>
+    <comp ref="C105">
+      <value>22uF</value>
+      <footprint>Capacitors_SMD:C_0805</footprint>
+      <datasheet>psearch.en.murata.com/capacitor/product/GRM21BR60J226ME39%23.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM21BR60J226ME39L</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 22UF, 6.3V, 20%, X5R, 0805</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR60J226ME39L/490-1719-1-ND/587424</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A46EBCE</tstamp>
+    </comp>
+    <comp ref="C101">
+      <value>2.2uF</value>
+      <footprint>Capacitors_SMD:C_0603</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM188R61A225KE34D</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 2.2UF, 10V, 10%, X5R, 0603</field>
+        <field name="Price10">$0.19</field>
+        <field name="Price1k">$0.05819</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A492DAB</tstamp>
+    </comp>
+    <comp ref="R103">
+      <value>1K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-071KL</field>
+        <field name="Description">CHIP RESISTOR, 1.0K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-071KL/311-1.00KHRCT-ND/729790</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A49EDB0</tstamp>
+    </comp>
+    <comp ref="R102">
+      <value>10K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0710KL</field>
+        <field name="Description">CHIP RESISTOR, 10K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-0710KL/311-10.0KHRCT-ND/729827?utm_adgroup=Supplier_Yageo&amp;utm_source=bing&amp;utm_term=RC0603FR-0710KL&amp;utm_campaign=NB_SKU_E&amp;utm_medium=cpc&amp;utm_content=O4GoPpiD_pcrid_81295146303683_pkw_RC0603FR-0710KL_pmt_be_pdv_c_slid__pgrid_2101804421_ptaid_kwd-24941121926:loc-190_</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A49EDE8</tstamp>
+    </comp>
+    <comp ref="R104">
+      <value>1K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-071KL</field>
+        <field name="Description">CHIP RESISTOR, 1.0K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-071KL/311-1.00KHRCT-ND/729790</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A49F168</tstamp>
+    </comp>
+    <comp ref="R105">
+      <value>33R</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0733RL</field>
+        <field name="Description">CHIP RESISTOR, 33 OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A4A9C17</tstamp>
+    </comp>
+    <comp ref="R106">
+      <value>33R</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0733RL</field>
+        <field name="Description">CHIP RESISTOR, 33 OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A4A9C45</tstamp>
+    </comp>
+    <comp ref="C106">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A4B8335</tstamp>
+    </comp>
+    <comp ref="C108">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A4B85E8</tstamp>
+    </comp>
+    <comp ref="C104">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A4B8B80</tstamp>
+    </comp>
+    <comp ref="C103">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A4B8BB1</tstamp>
+    </comp>
+    <comp ref="C102">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A4BFA86</tstamp>
+    </comp>
+    <comp ref="J10">
+      <value>RJ45_0</value>
+      <footprint>TempRJ45:RJ45_8</footprint>
+      <fields>
+        <field name="TODO">This footprint should be replaced by a single 4port RJ45 connector</field>
+      </fields>
+      <libsource lib="conn" part="RJ45"/>
+      <sheetpath names="/Tile0/EthernetPort0/" tstamps="/5A436E1B/5A4A28CE/"/>
+      <tstamp>5A42196F</tstamp>
+    </comp>
+    <comp ref="U11">
+      <value>KSZ8081MNX</value>
+      <footprint>Housings_DFN_QFN:QFN-32-1EP_5x5mm_Pitch0.5mm</footprint>
+      <datasheet>www.microchip.com/mymicrochip/filehandler.aspx?ddocname=en581586</datasheet>
+      <fields>
+        <field name="MFG">Microchip Technology</field>
+        <field name="Description">Ethernet Transciever, 10/100, MII/RMII, QFN32</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/microchip-technology/KSZ8081MNXCA-TR/576-4171-2-ND/3728493</field>
+        <field name="Price1k">$0.93</field>
+      </fields>
+      <libsource lib="CrowdSwitch" part="KSZ8081MNX"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A41DF58</tstamp>
+    </comp>
+    <comp ref="R111">
+      <value>6.49K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-076K49L</field>
+        <field name="Description">CHIP RESISTOR, 6.49K OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A41EFD3</tstamp>
+    </comp>
+    <comp ref="FB111">
+      <value>FERRITE BEAD</value>
+      <footprint>Inductors_SMD:L_0603</footprint>
+      <datasheet>https://www.murata.com/en-us/products/productdata/8796747366430/ENFA0021.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Description">FERRITE BEAD 470 OHM 0603 1LN </field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/BLM18EG471SN1D/490-3993-1-ND/1016253</field>
+        <field name="Price1k">$0.072</field>
+        <field name="Price10">$0.18</field>
+      </fields>
+      <libsource lib="device" part="Ferrite_Bead_Small"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A5013D6</tstamp>
+    </comp>
+    <comp ref="C117">
+      <value>22uF</value>
+      <footprint>Capacitors_SMD:C_0805</footprint>
+      <datasheet>psearch.en.murata.com/capacitor/product/GRM21BR60J226ME39%23.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM21BR60J226ME39L</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 22UF, 6.3V, 20%, X5R, 0805</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR60J226ME39L/490-1719-1-ND/587424</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A46EB58</tstamp>
+    </comp>
+    <comp ref="C115">
+      <value>22uF</value>
+      <footprint>Capacitors_SMD:C_0805</footprint>
+      <datasheet>psearch.en.murata.com/capacitor/product/GRM21BR60J226ME39%23.pdf</datasheet>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM21BR60J226ME39L</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 22UF, 6.3V, 20%, X5R, 0805</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/murata-electronics-north-america/GRM21BR60J226ME39L/490-1719-1-ND/587424</field>
+      </fields>
+      <libsource lib="device" part="C"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A46EBCE</tstamp>
+    </comp>
+    <comp ref="C111">
+      <value>2.2uF</value>
+      <footprint>Capacitors_SMD:C_0603</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM188R61A225KE34D</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 2.2UF, 10V, 10%, X5R, 0603</field>
+        <field name="Price10">$0.19</field>
+        <field name="Price1k">$0.05819</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A492DAB</tstamp>
+    </comp>
+    <comp ref="R113">
+      <value>1K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-071KL</field>
+        <field name="Description">CHIP RESISTOR, 1.0K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-071KL/311-1.00KHRCT-ND/729790</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A49EDB0</tstamp>
+    </comp>
+    <comp ref="R112">
+      <value>10K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0710KL</field>
+        <field name="Description">CHIP RESISTOR, 10K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-0710KL/311-10.0KHRCT-ND/729827?utm_adgroup=Supplier_Yageo&amp;utm_source=bing&amp;utm_term=RC0603FR-0710KL&amp;utm_campaign=NB_SKU_E&amp;utm_medium=cpc&amp;utm_content=O4GoPpiD_pcrid_81295146303683_pkw_RC0603FR-0710KL_pmt_be_pdv_c_slid__pgrid_2101804421_ptaid_kwd-24941121926:loc-190_</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A49EDE8</tstamp>
+    </comp>
+    <comp ref="R114">
+      <value>1K</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-071KL</field>
+        <field name="Description">CHIP RESISTOR, 1.0K OHM, 0.1W, 1%, 0603</field>
+        <field name="DigiKey">https://www.digikey.com/product-detail/en/yageo/RC0603FR-071KL/311-1.00KHRCT-ND/729790</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">$0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A49F168</tstamp>
+    </comp>
+    <comp ref="R115">
+      <value>33R</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0733RL</field>
+        <field name="Description">CHIP RESISTOR, 33 OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A4A9C17</tstamp>
+    </comp>
+    <comp ref="R116">
+      <value>33R</value>
+      <footprint>Resistors_SMD:R_0603</footprint>
+      <fields>
+        <field name="MFG">Yageo</field>
+        <field name="Part">RC0603FR-0733RL</field>
+        <field name="Description">CHIP RESISTOR, 33 OHM, 0.1W, 1%, 0603</field>
+        <field name="Price10">$0.015</field>
+        <field name="Price1k">0.00268</field>
+      </fields>
+      <libsource lib="device" part="R"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A4A9C45</tstamp>
+    </comp>
+    <comp ref="C116">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A4B8335</tstamp>
+    </comp>
+    <comp ref="C118">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A4B85E8</tstamp>
+    </comp>
+    <comp ref="C114">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A4B8B80</tstamp>
+    </comp>
+    <comp ref="C113">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0402</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM155R71C104KA88J </field>
+        <field name="Decouple">3v3</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 16V, 10%, X7R, 0402</field>
+        <field name="Price10">$0.014</field>
+        <field name="Price1k">$0.00348</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A4B8BB1</tstamp>
+    </comp>
+    <comp ref="C112">
+      <value>100nF</value>
+      <footprint>Capacitors_SMD:C_0201</footprint>
+      <fields>
+        <field name="MFG">Murata</field>
+        <field name="Part">GRM033R60J104KE19D</field>
+        <field name="Decouple">1v0</field>
+        <field name="Description">CHIP CAPACITOR, CERAMIC, 100NF, 6.3V, 10%, X5R, 0201</field>
+        <field name="Price10">$0.033</field>
+        <field name="Price1k">$0.00835</field>
+      </fields>
+      <libsource lib="device" part="C_Small"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A4BFA86</tstamp>
+    </comp>
+    <comp ref="J11">
+      <value>RJ45_0</value>
+      <footprint>TempRJ45:RJ45_8</footprint>
+      <fields>
+        <field name="TODO">This footprint should be replaced by a single 4port RJ45 connector</field>
+      </fields>
+      <libsource lib="conn" part="RJ45"/>
+      <sheetpath names="/Tile0/EthernetPort1/" tstamps="/5A436E1B/5A4A1B41/"/>
+      <tstamp>5A42196F</tstamp>
+    </comp>
+  </components>
+  <libparts>
+    <libpart lib="10118193-0001LF" part="10118193-0001LF">
+      <fields>
+        <field name="Reference">P</field>
+        <field name="Value">10118193-0001LF</field>
+        <field name="Footprint">FCI_10118193-0001LF</field>
+        <field name="Datasheet">10118193-0001LF</field>
+        <field name="Field4">Conn Micro USB Type B RCP 5 POS 0.65mm Solder RA SMD 5 Terminal 1 Port T/R</field>
+        <field name="Field5">None</field>
+        <field name="Field6">Amphenol</field>
+        <field name="Field7">Good</field>
+        <field name="Field8">0.24 USD</field>
+      </fields>
+      <pins>
+        <pin num="1" name="VCC" type="input"/>
+        <pin num="2" name="D" type="BiDi"/>
+        <pin num="3" name="D+" type="BiDi"/>
+        <pin num="4" name="ID" type="BiDi"/>
+        <pin num="5" name="GND" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="CrowdSwitch" part="APX809S-46SA">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">APX809S-46SA</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND" type="power_in"/>
+        <pin num="2" name="RESET_N" type="output"/>
+        <pin num="3" name="VCC" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="C">
+      <description>Unpolarized capacitor</description>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="C_Small">
+      <description>Unpolarized capacitor</description>
+      <footprints>
+        <fp>C_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">C</field>
+        <field name="Value">C_Small</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="Conn_02x10_Odd_Even">
+      <description>Generic connector, double row, 02x10, odd/even pin numbering scheme (row 1 odd numbers, row 2 even numbers)</description>
+      <docs>~</docs>
+      <footprints>
+        <fp>Connector*:*2x??x*mm*</fp>
+        <fp>Connector*:*2x???Pitch*</fp>
+        <fp>Pin_Header_Straight_2X*</fp>
+        <fp>Pin_Header_Angled_2X*</fp>
+        <fp>Socket_Strip_Straight_2X*</fp>
+        <fp>Socket_Strip_Angled_2X*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">Conn_02x10_Odd_Even</field>
+      </fields>
+      <pins>
+        <pin num="1" name="Pin_1" type="passive"/>
+        <pin num="2" name="Pin_2" type="passive"/>
+        <pin num="3" name="Pin_3" type="passive"/>
+        <pin num="4" name="Pin_4" type="passive"/>
+        <pin num="5" name="Pin_5" type="passive"/>
+        <pin num="6" name="Pin_6" type="passive"/>
+        <pin num="7" name="Pin_7" type="passive"/>
+        <pin num="8" name="Pin_8" type="passive"/>
+        <pin num="9" name="Pin_9" type="passive"/>
+        <pin num="10" name="Pin_10" type="passive"/>
+        <pin num="11" name="Pin_11" type="passive"/>
+        <pin num="12" name="Pin_12" type="passive"/>
+        <pin num="13" name="Pin_13" type="passive"/>
+        <pin num="14" name="Pin_14" type="passive"/>
+        <pin num="15" name="Pin_15" type="passive"/>
+        <pin num="16" name="Pin_16" type="passive"/>
+        <pin num="17" name="Pin_17" type="passive"/>
+        <pin num="18" name="Pin_18" type="passive"/>
+        <pin num="19" name="Pin_19" type="passive"/>
+        <pin num="20" name="Pin_20" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="CrowdSwitch" part="DSC6001CI2A-025.0000">
+      <fields>
+        <field name="Reference">X</field>
+        <field name="Value">DSC6001CI2A-025.0000</field>
+      </fields>
+      <pins>
+        <pin num="1" name="OE" type="input"/>
+        <pin num="2" name="GND" type="power_in"/>
+        <pin num="3" name="OUT" type="output"/>
+        <pin num="4" name="VDD" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="Ferrite_Bead_Small">
+      <description>Ferrite bead, small symbol</description>
+      <footprints>
+        <fp>Inductor_*</fp>
+        <fp>L_*</fp>
+        <fp>*Ferrite*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">L</field>
+        <field name="Value">Ferrite_Bead_Small</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="CrowdSwitch" part="KSZ8081MNX">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">KSZ8081MNX</field>
+      </fields>
+      <pins>
+        <pin num="1" name="GND" type="power_in"/>
+        <pin num="2" name="VDD_1.2" type="power_out"/>
+        <pin num="3" name="VDDA_3.3" type="passive"/>
+        <pin num="4" name="RXM" type="BiDi"/>
+        <pin num="5" name="RXP" type="BiDi"/>
+        <pin num="6" name="TXM" type="BiDi"/>
+        <pin num="7" name="TXP" type="BiDi"/>
+        <pin num="8" name="XO" type="output"/>
+        <pin num="9" name="XI" type="input"/>
+        <pin num="10" name="REXT" type="passive"/>
+        <pin num="11" name="MDIO" type="BiDi"/>
+        <pin num="12" name="MDC" type="input"/>
+        <pin num="13" name="RXD3/PHYAD0" type="output"/>
+        <pin num="14" name="RXD2/PHYAD1" type="output"/>
+        <pin num="15" name="RXD1/PHYAD2" type="output"/>
+        <pin num="16" name="RXD0/DUPLEX" type="output"/>
+        <pin num="17" name="VDDIO" type="power_in"/>
+        <pin num="18" name="RXDV/CFG2" type="output"/>
+        <pin num="19" name="RXC/B-CAST_OFF" type="output"/>
+        <pin num="20" name="RXER/ISO" type="output"/>
+        <pin num="21" name="INTRP/NAND_TREE" type="output"/>
+        <pin num="22" name="TXC" type="output"/>
+        <pin num="23" name="TXEN" type="input"/>
+        <pin num="24" name="TXD0" type="input"/>
+        <pin num="25" name="TXD1" type="input"/>
+        <pin num="26" name="TXD2" type="input"/>
+        <pin num="27" name="TXD3" type="input"/>
+        <pin num="28" name="COL/CFG0" type="output"/>
+        <pin num="29" name="CRS/CFG1" type="output"/>
+        <pin num="30" name="LED0/NWAYEN" type="output"/>
+        <pin num="31" name="LED1/SPEED" type="output"/>
+        <pin num="32" name="nRST" type="input"/>
+        <pin num="33" name="GND_(PAD)" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="L">
+      <description>Inductor</description>
+      <footprints>
+        <fp>Choke_*</fp>
+        <fp>*Coil*</fp>
+        <fp>Inductor_*</fp>
+        <fp>L_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">L</field>
+        <field name="Value">L</field>
+      </fields>
+      <pins>
+        <pin num="1" name="1" type="passive"/>
+        <pin num="2" name="2" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="CrowdSwitch" part="NCP303LSN10T">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">NCP303LSN10T</field>
+      </fields>
+      <pins>
+        <pin num="1" name="RST_N" type="output"/>
+        <pin num="2" name="VCC" type="power_in"/>
+        <pin num="3" name="GND" type="power_in"/>
+        <pin num="4" name="NC" type="NotConnected"/>
+        <pin num="6" name="CDELAY" type="input"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="Polyfuse">
+      <description>resettable fuse, polymeric positive temperature coefficient (PPTC)</description>
+      <footprints>
+        <fp>*polyfuse*</fp>
+        <fp>*PTC*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">F</field>
+        <field name="Value">Polyfuse</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="R">
+      <description>Resistor</description>
+      <footprints>
+        <fp>R_*</fp>
+        <fp>R_*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">R</field>
+        <field name="Value">R</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="conn" part="RJ45">
+      <description>RJ45 connector with shield</description>
+      <fields>
+        <field name="Reference">J</field>
+        <field name="Value">RJ45</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+        <pin num="3" name="~" type="passive"/>
+        <pin num="4" name="~" type="passive"/>
+        <pin num="5" name="~" type="passive"/>
+        <pin num="6" name="~" type="passive"/>
+        <pin num="7" name="~" type="passive"/>
+        <pin num="8" name="~" type="passive"/>
+        <pin num="9" name="SHIELD" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="CrowdSwitch" part="ST1S06">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">ST1S06</field>
+      </fields>
+      <pins>
+        <pin num="1" name="FB" type="input"/>
+        <pin num="2" name="GND" type="power_in"/>
+        <pin num="3" name="SW" type="power_out"/>
+        <pin num="4" name="VIN_SW" type="power_in"/>
+        <pin num="5" name="VIN_A" type="power_in"/>
+        <pin num="6" name="INH_N" type="input"/>
+        <pin num="7" name="GND_PAD" type="power_in"/>
+      </pins>
+    </libpart>
+    <libpart lib="device" part="Varistor">
+      <description>Voltage dependent resistor</description>
+      <footprints>
+        <fp>RV_*</fp>
+        <fp>Varistor*</fp>
+      </footprints>
+      <fields>
+        <field name="Reference">RV</field>
+        <field name="Value">Varistor</field>
+      </fields>
+      <pins>
+        <pin num="1" name="~" type="passive"/>
+        <pin num="2" name="~" type="passive"/>
+      </pins>
+    </libpart>
+    <libpart lib="CrowdSwitch" part="XL216-512-TQ128_CHIP_VIEW">
+      <fields>
+        <field name="Reference">U</field>
+        <field name="Value">XL216-512-TQ128_CHIP_VIEW</field>
+      </fields>
+      <pins>
+        <pin num="0" name="GND" type="power_in"/>
+        <pin num="1" name="TDO" type="output"/>
+        <pin num="2" name="0_1M" type="BiDi"/>
+        <pin num="3" name="0_1N" type="BiDi"/>
+        <pin num="4" name="VDDIOL" type="power_in"/>
+        <pin num="5" name="0_1O" type="BiDi"/>
+        <pin num="6" name="0_1P" type="BiDi"/>
+        <pin num="7" name="XL0I1" type="input"/>
+        <pin num="8" name="XL0I0" type="input"/>
+        <pin num="9" name="VDD" type="power_in"/>
+        <pin num="10" name="XL0O0" type="output"/>
+        <pin num="11" name="XL0O1" type="output"/>
+        <pin num="12" name="1_1K" type="BiDi"/>
+        <pin num="13" name="VDDIOL" type="power_in"/>
+        <pin num="14" name="1_1L" type="BiDi"/>
+        <pin num="15" name="1_1M" type="BiDi"/>
+        <pin num="16" name="VDD" type="power_in"/>
+        <pin num="17" name="VDD" type="power_in"/>
+        <pin num="18" name="1_1N" type="BiDi"/>
+        <pin num="19" name="VDDIOL" type="power_in"/>
+        <pin num="20" name="1_1O" type="BiDi"/>
+        <pin num="21" name="1_1P" type="BiDi"/>
+        <pin num="22" name="1_4D0" type="BiDi"/>
+        <pin num="23" name="1_4D1" type="BiDi"/>
+        <pin num="24" name="VDD" type="power_in"/>
+        <pin num="25" name="1_4D2" type="BiDi"/>
+        <pin num="26" name="1_4D3" type="BiDi"/>
+        <pin num="27" name="0_1B" type="BiDi"/>
+        <pin num="28" name="0_1C" type="BiDi"/>
+        <pin num="29" name="VDDIOL" type="power_in"/>
+        <pin num="30" name="1_1G" type="BiDi"/>
+        <pin num="31" name="1_1H" type="BiDi"/>
+        <pin num="32" name="0_1A" type="BiDi"/>
+        <pin num="33" name="0_1D" type="BiDi"/>
+        <pin num="34" name="0_4B0" type="BiDi"/>
+        <pin num="35" name="0_4B1" type="BiDi"/>
+        <pin num="36" name="0_4B2" type="BiDi"/>
+        <pin num="37" name="0_4B3" type="BiDi"/>
+        <pin num="38" name="VDD" type="power_in"/>
+        <pin num="39" name="0_4A0" type="BiDi"/>
+        <pin num="40" name="0_4A1" type="BiDi"/>
+        <pin num="41" name="0_4A2" type="BiDi"/>
+        <pin num="42" name="VDD" type="power_in"/>
+        <pin num="43" name="0_4A3" type="BiDi"/>
+        <pin num="44" name="1_1E" type="BiDi"/>
+        <pin num="45" name="1_1F" type="BiDi"/>
+        <pin num="46" name="VDDIOL" type="power_in"/>
+        <pin num="47" name="VDD" type="power_in"/>
+        <pin num="48" name="VDDIOR" type="power_in"/>
+        <pin num="49" name="1_4C0" type="BiDi"/>
+        <pin num="50" name="1_4C1" type="BiDi"/>
+        <pin num="51" name="1_4C2" type="BiDi"/>
+        <pin num="52" name="1_4C3" type="BiDi"/>
+        <pin num="53" name="1_1I" type="BiDi"/>
+        <pin num="54" name="1_1J" type="BiDi"/>
+        <pin num="55" name="VDD" type="power_in"/>
+        <pin num="56" name="0_4C0" type="BiDi"/>
+        <pin num="57" name="0_4C1" type="BiDi"/>
+        <pin num="58" name="0_4C2" type="BiDi"/>
+        <pin num="59" name="VDD" type="power_in"/>
+        <pin num="60" name="0_4C3" type="BiDi"/>
+        <pin num="61" name="0-1E" type="BiDi"/>
+        <pin num="62" name="0_1F" type="BiDi"/>
+        <pin num="63" name="0_1G" type="BiDi"/>
+        <pin num="64" name="0_1H" type="BiDi"/>
+        <pin num="65" name="NC" type="NotConnected"/>
+        <pin num="66" name="VDDIOR" type="power_in"/>
+        <pin num="67" name="0_4D0" type="BiDi"/>
+        <pin num="68" name="0_4D1" type="BiDi"/>
+        <pin num="69" name="0_4D2" type="BiDi"/>
+        <pin num="70" name="0_4D3" type="BiDi"/>
+        <pin num="71" name="1_4A0" type="BiDi"/>
+        <pin num="72" name="VDD" type="power_in"/>
+        <pin num="73" name="1_4A1" type="BiDi"/>
+        <pin num="74" name="1_4B0" type="BiDi"/>
+        <pin num="75" name="1_4B1" type="BiDi"/>
+        <pin num="76" name="1_4B2" type="BiDi"/>
+        <pin num="77" name="VDDIOR" type="power_in"/>
+        <pin num="78" name="1_4B3" type="BiDi"/>
+        <pin num="79" name="VDD" type="power_in"/>
+        <pin num="80" name="VDD" type="power_in"/>
+        <pin num="81" name="1_4A2" type="BiDi"/>
+        <pin num="82" name="VDDIOR" type="power_in"/>
+        <pin num="83" name="1_4A3" type="BiDi"/>
+        <pin num="84" name="1_1A" type="BiDi"/>
+        <pin num="85" name="1_1B" type="BiDi"/>
+        <pin num="86" name="VDD" type="power_in"/>
+        <pin num="87" name="0_1I" type="BiDi"/>
+        <pin num="88" name="0_1J" type="BiDi"/>
+        <pin num="89" name="0_1K" type="BiDi"/>
+        <pin num="90" name="0_1L" type="BiDi"/>
+        <pin num="91" name="VDDIOR" type="power_in"/>
+        <pin num="92" name="0_4E0" type="BiDi"/>
+        <pin num="93" name="0_4E1" type="BiDi"/>
+        <pin num="94" name="0_4E2" type="BiDi"/>
+        <pin num="95" name="0_4F0" type="BiDi"/>
+        <pin num="96" name="0_4E3" type="BiDi"/>
+        <pin num="97" name="0_4F1" type="BiDi"/>
+        <pin num="98" name="0_4F2" type="BiDi"/>
+        <pin num="99" name="0_4F3" type="BiDi"/>
+        <pin num="100" name="VDD" type="power_in"/>
+        <pin num="101" name="VDD" type="power_in"/>
+        <pin num="102" name="PLL_AVDD" type="input"/>
+        <pin num="103" name="PLL_AGND" type="power_in"/>
+        <pin num="104" name="OTP_VCC" type="power_in"/>
+        <pin num="105" name="X1D40" type="BiDi"/>
+        <pin num="106" name="X1D41" type="BiDi"/>
+        <pin num="107" name="X1D42" type="input"/>
+        <pin num="108" name="X1D43" type="input"/>
+        <pin num="109" name="VDDIOT" type="power_in"/>
+        <pin num="110" name="VDDIOT" type="power_in"/>
+        <pin num="111" name="1_1E0" type="BiDi"/>
+        <pin num="112" name="1_1E1" type="BiDi"/>
+        <pin num="113" name="1_1F0" type="BiDi"/>
+        <pin num="114" name="1_1F1" type="BiDi"/>
+        <pin num="115" name="1_1F2" type="BiDi"/>
+        <pin num="116" name="1_1F3" type="BiDi"/>
+        <pin num="117" name="1_4E2" type="BiDi"/>
+        <pin num="118" name="1_4E3" type="BiDi"/>
+        <pin num="119" name="VDD" type="power_in"/>
+        <pin num="120" name="1_1C" type="BiDi"/>
+        <pin num="121" name="1_1D" type="BiDi"/>
+        <pin num="122" name="TRST_N" type="input"/>
+        <pin num="123" name="RST_N" type="input"/>
+        <pin num="124" name="CLK" type="input"/>
+        <pin num="125" name="VDD" type="power_in"/>
+        <pin num="126" name="TMS" type="input"/>
+        <pin num="127" name="TCK" type="input"/>
+        <pin num="128" name="TDI" type="input"/>
+      </pins>
+    </libpart>
+  </libparts>
+  <libraries>
+    <library logical="10118193-0001LF">
+      <uri>C:\Users\phase\Source\CrowdSwitch\HW\SnapEda\10118193-0001LF.lib</uri>
+    </library>
+    <library logical="conn">
+      <uri>C:\Program Files\KiCad\share\kicad\library\conn.lib</uri>
+    </library>
+    <library logical="device">
+      <uri>C:\Program Files\KiCad\share\kicad\library\device.lib</uri>
+    </library>
+    <library logical="CrowdSwitch">
+      <uri>C:\Users\phase\Source\CrowdSwitch\HW\CrowdSwitch.lib</uri>
+    </library>
+  </libraries>
+  <nets>
+    <net code="1" name="GND">
+      <node ref="U12" pin="1"/>
+      <node ref="J12" pin="8"/>
+      <node ref="J12" pin="9"/>
+      <node ref="C121" pin="2"/>
+      <node ref="R121" pin="2"/>
+      <node ref="C4" pin="2"/>
+      <node ref="C3" pin="2"/>
+      <node ref="U2" pin="7"/>
+      <node ref="U2" pin="2"/>
+      <node ref="C54" pin="2"/>
+      <node ref="C53" pin="2"/>
+      <node ref="U12" pin="33"/>
+      <node ref="C52" pin="2"/>
+      <node ref="C124" pin="2"/>
+      <node ref="C107" pin="2"/>
+      <node ref="C105" pin="2"/>
+      <node ref="C128" pin="2"/>
+      <node ref="C8" pin="2"/>
+      <node ref="C123" pin="2"/>
+      <node ref="C122" pin="2"/>
+      <node ref="RV1" pin="2"/>
+      <node ref="C126" pin="2"/>
+      <node ref="J1" pin="5"/>
+      <node ref="U13" pin="1"/>
+      <node ref="C64" pin="2"/>
+      <node ref="C63" pin="2"/>
+      <node ref="C131" pin="2"/>
+      <node ref="C125" pin="2"/>
+      <node ref="C2" pin="2"/>
+      <node ref="C127" pin="2"/>
+      <node ref="C7" pin="2"/>
+      <node ref="C108" pin="2"/>
+      <node ref="C106" pin="2"/>
+      <node ref="U4" pin="1"/>
+      <node ref="R6" pin="2"/>
+      <node ref="J10" pin="9"/>
+      <node ref="R3" pin="2"/>
+      <node ref="C104" pin="2"/>
+      <node ref="C103" pin="2"/>
+      <node ref="C102" pin="2"/>
+      <node ref="J10" pin="8"/>
+      <node ref="U5" pin="3"/>
+      <node ref="J2" pin="8"/>
+      <node ref="J2" pin="20"/>
+      <node ref="J2" pin="12"/>
+      <node ref="J2" pin="16"/>
+      <node ref="U1" pin="0"/>
+      <node ref="U3" pin="7"/>
+      <node ref="U3" pin="2"/>
+      <node ref="U10" pin="33"/>
+      <node ref="U1" pin="103"/>
+      <node ref="J2" pin="4"/>
+      <node ref="X1" pin="2"/>
+      <node ref="C101" pin="2"/>
+      <node ref="R2" pin="2"/>
+      <node ref="R101" pin="2"/>
+      <node ref="C1" pin="2"/>
+      <node ref="U10" pin="1"/>
+      <node ref="R5" pin="2"/>
+      <node ref="C132" pin="2"/>
+      <node ref="C133" pin="2"/>
+      <node ref="C6" pin="2"/>
+      <node ref="C134" pin="2"/>
+      <node ref="C138" pin="2"/>
+      <node ref="C136" pin="2"/>
+      <node ref="U11" pin="33"/>
+      <node ref="R111" pin="2"/>
+      <node ref="C116" pin="2"/>
+      <node ref="U11" pin="1"/>
+      <node ref="C112" pin="2"/>
+      <node ref="C50" pin="2"/>
+      <node ref="C62" pin="2"/>
+      <node ref="C81" pin="2"/>
+      <node ref="C58" pin="2"/>
+      <node ref="U13" pin="33"/>
+      <node ref="C57" pin="2"/>
+      <node ref="C113" pin="2"/>
+      <node ref="C56" pin="2"/>
+      <node ref="C55" pin="2"/>
+      <node ref="C59" pin="2"/>
+      <node ref="C80" pin="2"/>
+      <node ref="C79" pin="2"/>
+      <node ref="C117" pin="2"/>
+      <node ref="C78" pin="2"/>
+      <node ref="C77" pin="2"/>
+      <node ref="C5" pin="2"/>
+      <node ref="C135" pin="2"/>
+      <node ref="C82" pin="2"/>
+      <node ref="C118" pin="2"/>
+      <node ref="C137" pin="2"/>
+      <node ref="C86" pin="2"/>
+      <node ref="C85" pin="2"/>
+      <node ref="C84" pin="2"/>
+      <node ref="C83" pin="2"/>
+      <node ref="C71" pin="2"/>
+      <node ref="C114" pin="2"/>
+      <node ref="C70" pin="2"/>
+      <node ref="C72" pin="2"/>
+      <node ref="C73" pin="2"/>
+      <node ref="R131" pin="2"/>
+      <node ref="C115" pin="2"/>
+      <node ref="C51" pin="2"/>
+      <node ref="C111" pin="2"/>
+      <node ref="C76" pin="2"/>
+      <node ref="J11" pin="8"/>
+      <node ref="C75" pin="2"/>
+      <node ref="J13" pin="8"/>
+      <node ref="J11" pin="9"/>
+      <node ref="C74" pin="2"/>
+      <node ref="J13" pin="9"/>
+    </net>
+    <net code="2" name="+3V3">
+      <node ref="R122" pin="1"/>
+      <node ref="R103" pin="1"/>
+      <node ref="R102" pin="1"/>
+      <node ref="FB111" pin="2"/>
+      <node ref="C117" pin="1"/>
+      <node ref="C108" pin="1"/>
+      <node ref="U13" pin="17"/>
+      <node ref="U12" pin="17"/>
+      <node ref="R114" pin="1"/>
+      <node ref="R124" pin="1"/>
+      <node ref="R134" pin="1"/>
+      <node ref="C128" pin="1"/>
+      <node ref="U11" pin="17"/>
+      <node ref="R113" pin="1"/>
+      <node ref="C118" pin="1"/>
+      <node ref="C137" pin="1"/>
+      <node ref="FB131" pin="2"/>
+      <node ref="R112" pin="1"/>
+      <node ref="C127" pin="1"/>
+      <node ref="FB101" pin="2"/>
+      <node ref="FB121" pin="2"/>
+      <node ref="R132" pin="1"/>
+      <node ref="R133" pin="1"/>
+      <node ref="U10" pin="17"/>
+      <node ref="R104" pin="1"/>
+      <node ref="R10" pin="1"/>
+      <node ref="C107" pin="1"/>
+      <node ref="R123" pin="1"/>
+      <node ref="C138" pin="1"/>
+      <node ref="C51" pin="1"/>
+      <node ref="C56" pin="1"/>
+      <node ref="C57" pin="1"/>
+      <node ref="C58" pin="1"/>
+      <node ref="C59" pin="1"/>
+      <node ref="C62" pin="1"/>
+      <node ref="C50" pin="1"/>
+      <node ref="X1" pin="4"/>
+      <node ref="C64" pin="1"/>
+      <node ref="L2" pin="2"/>
+      <node ref="R7" pin="1"/>
+      <node ref="U1" pin="19"/>
+      <node ref="C4" pin="1"/>
+      <node ref="R4" pin="1"/>
+      <node ref="U1" pin="48"/>
+      <node ref="U1" pin="46"/>
+      <node ref="U1" pin="66"/>
+      <node ref="U1" pin="77"/>
+      <node ref="U1" pin="29"/>
+      <node ref="U1" pin="110"/>
+      <node ref="U1" pin="4"/>
+      <node ref="U1" pin="91"/>
+      <node ref="U1" pin="82"/>
+      <node ref="U1" pin="13"/>
+      <node ref="C63" pin="1"/>
+      <node ref="C55" pin="1"/>
+      <node ref="C7" pin="1"/>
+      <node ref="U1" pin="109"/>
+      <node ref="U1" pin="104"/>
+      <node ref="C52" pin="1"/>
+      <node ref="C53" pin="1"/>
+      <node ref="C54" pin="1"/>
+      <node ref="R6" pin="1"/>
+    </net>
+    <net code="3" name="+1V0">
+      <node ref="U5" pin="2"/>
+      <node ref="C81" pin="1"/>
+      <node ref="U1" pin="125"/>
+      <node ref="C2" pin="1"/>
+      <node ref="U1" pin="119"/>
+      <node ref="C80" pin="1"/>
+      <node ref="C85" pin="1"/>
+      <node ref="C83" pin="1"/>
+      <node ref="C86" pin="1"/>
+      <node ref="C71" pin="1"/>
+      <node ref="C70" pin="1"/>
+      <node ref="C82" pin="1"/>
+      <node ref="C84" pin="1"/>
+      <node ref="U1" pin="42"/>
+      <node ref="U1" pin="59"/>
+      <node ref="U1" pin="79"/>
+      <node ref="U1" pin="100"/>
+      <node ref="U1" pin="101"/>
+      <node ref="U1" pin="9"/>
+      <node ref="U1" pin="80"/>
+      <node ref="U1" pin="72"/>
+      <node ref="U1" pin="24"/>
+      <node ref="R3" pin="1"/>
+      <node ref="L1" pin="2"/>
+      <node ref="R8" pin="1"/>
+      <node ref="C8" pin="1"/>
+      <node ref="U1" pin="16"/>
+      <node ref="U1" pin="86"/>
+      <node ref="U1" pin="17"/>
+      <node ref="U1" pin="47"/>
+      <node ref="U1" pin="38"/>
+      <node ref="U1" pin="55"/>
+      <node ref="C78" pin="1"/>
+      <node ref="R1" pin="1"/>
+      <node ref="C79" pin="1"/>
+      <node ref="C77" pin="1"/>
+      <node ref="C73" pin="1"/>
+      <node ref="C72" pin="1"/>
+      <node ref="C76" pin="1"/>
+      <node ref="C74" pin="1"/>
+      <node ref="C75" pin="1"/>
+    </net>
+    <net code="4" name="Net-(C6-Pad1)">
+      <node ref="U5" pin="6"/>
+      <node ref="C6" pin="1"/>
+    </net>
+    <net code="5" name="Net-(J2-Pad14)">
+      <node ref="J2" pin="14"/>
+      <node ref="U1" pin="8"/>
+    </net>
+    <net code="6" name="Net-(J2-Pad18)">
+      <node ref="U1" pin="7"/>
+      <node ref="J2" pin="18"/>
+    </net>
+    <net code="7" name="Net-(R7-Pad2)">
+      <node ref="U1" pin="122"/>
+      <node ref="R7" pin="2"/>
+      <node ref="U1" pin="123"/>
+      <node ref="U5" pin="1"/>
+    </net>
+    <net code="8" name="Net-(J2-Pad13)">
+      <node ref="U1" pin="1"/>
+      <node ref="J2" pin="13"/>
+    </net>
+    <net code="9" name="Net-(J2-Pad6)">
+      <node ref="J2" pin="6"/>
+      <node ref="U1" pin="11"/>
+    </net>
+    <net code="10" name="Net-(J2-Pad10)">
+      <node ref="J2" pin="10"/>
+      <node ref="U1" pin="10"/>
+    </net>
+    <net code="11" name="Net-(F1-Pad1)">
+      <node ref="F1" pin="1"/>
+      <node ref="J1" pin="1"/>
+    </net>
+    <net code="12" name="Net-(C5-Pad1)">
+      <node ref="U1" pin="102"/>
+      <node ref="C5" pin="1"/>
+      <node ref="R8" pin="2"/>
+    </net>
+    <net code="13" name="Net-(J1-Pad2)">
+      <node ref="J1" pin="2"/>
+    </net>
+    <net code="14" name="Net-(J1-Pad3)">
+      <node ref="J1" pin="3"/>
+    </net>
+    <net code="15" name="Net-(J1-Pad4)">
+      <node ref="J1" pin="4"/>
+    </net>
+    <net code="16" name="+5V">
+      <node ref="F1" pin="2"/>
+      <node ref="U3" pin="5"/>
+      <node ref="U3" pin="4"/>
+      <node ref="RV1" pin="1"/>
+      <node ref="U4" pin="3"/>
+      <node ref="C1" pin="1"/>
+      <node ref="C3" pin="1"/>
+      <node ref="U2" pin="4"/>
+      <node ref="U2" pin="5"/>
+    </net>
+    <net code="17" name="Net-(L1-Pad1)">
+      <node ref="U2" pin="3"/>
+      <node ref="L1" pin="1"/>
+    </net>
+    <net code="18" name="Net-(U1-Pad65)">
+      <node ref="U1" pin="65"/>
+    </net>
+    <net code="19" name="Net-(U1-Pad105)">
+      <node ref="U1" pin="105"/>
+    </net>
+    <net code="20" name="Net-(J2-Pad1)">
+      <node ref="J2" pin="1"/>
+    </net>
+    <net code="21" name="Net-(J2-Pad2)">
+      <node ref="J2" pin="2"/>
+    </net>
+    <net code="22" name="Net-(J2-Pad3)">
+      <node ref="J2" pin="3"/>
+    </net>
+    <net code="23" name="Net-(U1-Pad107)">
+      <node ref="U1" pin="107"/>
+    </net>
+    <net code="24" name="Net-(U1-Pad106)">
+      <node ref="U1" pin="106"/>
+    </net>
+    <net code="25" name="Net-(J2-Pad7)">
+      <node ref="J2" pin="7"/>
+      <node ref="U1" pin="126"/>
+    </net>
+    <net code="26" name="Net-(J2-Pad9)">
+      <node ref="J2" pin="9"/>
+      <node ref="U1" pin="127"/>
+    </net>
+    <net code="27" name="Net-(U1-Pad108)">
+      <node ref="U1" pin="108"/>
+    </net>
+    <net code="28" name="Net-(J2-Pad5)">
+      <node ref="J2" pin="5"/>
+      <node ref="U1" pin="128"/>
+    </net>
+    <net code="29" name="Net-(L2-Pad1)">
+      <node ref="L2" pin="1"/>
+      <node ref="U3" pin="3"/>
+    </net>
+    <net code="30" name="Net-(R4-Pad2)">
+      <node ref="R5" pin="1"/>
+      <node ref="U3" pin="1"/>
+      <node ref="R4" pin="2"/>
+    </net>
+    <net code="31" name="Net-(R1-Pad2)">
+      <node ref="R2" pin="1"/>
+      <node ref="R1" pin="2"/>
+      <node ref="U2" pin="1"/>
+    </net>
+    <net code="32" name="25M">
+      <node ref="U11" pin="9"/>
+      <node ref="U10" pin="9"/>
+      <node ref="U13" pin="9"/>
+      <node ref="U1" pin="124"/>
+      <node ref="R9" pin="1"/>
+      <node ref="U12" pin="9"/>
+    </net>
+    <net code="33" name="Net-(R9-Pad2)">
+      <node ref="X1" pin="3"/>
+      <node ref="R9" pin="2"/>
+    </net>
+    <net code="34" name="Net-(X1-Pad1)">
+      <node ref="X1" pin="1"/>
+    </net>
+    <net code="35" name="/PG_5V">
+      <node ref="U2" pin="6"/>
+      <node ref="U3" pin="6"/>
+      <node ref="U4" pin="2"/>
+    </net>
+    <net code="36" name="Net-(J2-Pad17)">
+      <node ref="J2" pin="17"/>
+    </net>
+    <net code="37" name="Net-(J2-Pad15)">
+      <node ref="J2" pin="15"/>
+    </net>
+    <net code="38" name="Net-(J2-Pad11)">
+      <node ref="J2" pin="11"/>
+    </net>
+    <net code="39" name="Net-(J2-Pad19)">
+      <node ref="J2" pin="19"/>
+    </net>
+    <net code="40" name="Net-(U5-Pad4)">
+      <node ref="U5" pin="4"/>
+    </net>
+    <net code="41" name="/Tile1/EthernetPort3/TXC">
+      <node ref="R135" pin="2"/>
+      <node ref="U1" pin="85"/>
+    </net>
+    <net code="42" name="/Tile1/EthernetPort3/RXERR">
+      <node ref="U1" pin="71"/>
+      <node ref="U13" pin="20"/>
+    </net>
+    <net code="43" name="/Tile1/EthernetPort3/COL">
+      <node ref="U1" pin="73"/>
+      <node ref="U13" pin="28"/>
+    </net>
+    <net code="44" name="/Tile1/EthernetPort3/CRS">
+      <node ref="U1" pin="81"/>
+      <node ref="U13" pin="29"/>
+    </net>
+    <net code="45" name="/Tile1/EthernetPort3/TXEN">
+      <node ref="U13" pin="23"/>
+      <node ref="U1" pin="84"/>
+    </net>
+    <net code="46" name="/Tile1/EthernetPort3/TXD2">
+      <node ref="U1" pin="76"/>
+      <node ref="U13" pin="26"/>
+    </net>
+    <net code="47" name="/Tile1/EthernetPort3/TXD3">
+      <node ref="U13" pin="27"/>
+      <node ref="U1" pin="78"/>
+    </net>
+    <net code="48" name="/Tile1/EthernetPort3/TXD1">
+      <node ref="U1" pin="75"/>
+      <node ref="U13" pin="25"/>
+    </net>
+    <net code="49" name="/Tile1/EthernetPort3/RXDV">
+      <node ref="U13" pin="18"/>
+      <node ref="U1" pin="121"/>
+    </net>
+    <net code="50" name="/Tile1/EthernetPort3/MDC">
+      <node ref="U13" pin="12"/>
+      <node ref="R132" pin="2"/>
+      <node ref="U1" pin="14"/>
+    </net>
+    <net code="51" name="/Tile1/EthernetPort3/RXD3">
+      <node ref="U13" pin="13"/>
+      <node ref="U1" pin="116"/>
+    </net>
+    <net code="52" name="/Tile1/EthernetPort3/RXD2">
+      <node ref="U13" pin="14"/>
+      <node ref="U1" pin="115"/>
+    </net>
+    <net code="53" name="/Tile1/EthernetPort3/RXD1">
+      <node ref="U13" pin="15"/>
+      <node ref="U1" pin="114"/>
+    </net>
+    <net code="54" name="/Tile1/EthernetPort3/RXD0">
+      <node ref="U1" pin="113"/>
+      <node ref="U13" pin="16"/>
+    </net>
+    <net code="55" name="/Tile1/EthernetPort3/RXC">
+      <node ref="R136" pin="2"/>
+      <node ref="U1" pin="120"/>
+    </net>
+    <net code="56" name="/Tile1/EthernetPort3/INT">
+      <node ref="U1" pin="12"/>
+      <node ref="U13" pin="21"/>
+      <node ref="R134" pin="2"/>
+    </net>
+    <net code="57" name="/Tile1/EthernetPort3/NWAYEN">
+      <node ref="U1" pin="83"/>
+      <node ref="U13" pin="30"/>
+    </net>
+    <net code="58" name="/Tile1/EthernetPort2/COL">
+      <node ref="U1" pin="25"/>
+      <node ref="U12" pin="28"/>
+    </net>
+    <net code="59" name="/Tile1/EthernetPort3/TXD0">
+      <node ref="U13" pin="24"/>
+      <node ref="U1" pin="74"/>
+    </net>
+    <net code="60" name="/Tile1/EthernetPort2/TXD3">
+      <node ref="U1" pin="118"/>
+      <node ref="U12" pin="27"/>
+    </net>
+    <net code="61" name="/Tile1/EthernetPort2/RST_N">
+      <node ref="U1" pin="20"/>
+      <node ref="U12" pin="32"/>
+    </net>
+    <net code="62" name="/Tile1/EthernetPort2/TXEN">
+      <node ref="U1" pin="30"/>
+      <node ref="U12" pin="23"/>
+    </net>
+    <net code="63" name="/Tile1/EthernetPort3/RST_N">
+      <node ref="U1" pin="18"/>
+      <node ref="U13" pin="32"/>
+    </net>
+    <net code="64" name="/Tile1/EthernetPort2/TXC">
+      <node ref="R125" pin="2"/>
+      <node ref="U1" pin="31"/>
+    </net>
+    <net code="65" name="/Tile1/EthernetPort2/NWAYEN">
+      <node ref="U1" pin="22"/>
+      <node ref="U12" pin="30"/>
+    </net>
+    <net code="66" name="/Tile1/EthernetPort2/CRS">
+      <node ref="U1" pin="23"/>
+      <node ref="U12" pin="29"/>
+    </net>
+    <net code="67" name="/Tile1/EthernetPort2/RXC">
+      <node ref="U1" pin="44"/>
+      <node ref="R126" pin="2"/>
+    </net>
+    <net code="68" name="/Tile1/EthernetPort2/MDIO">
+      <node ref="U1" pin="54"/>
+      <node ref="U12" pin="11"/>
+      <node ref="R123" pin="2"/>
+    </net>
+    <net code="69" name="/Tile1/EthernetPort2/MDC">
+      <node ref="U1" pin="53"/>
+      <node ref="R122" pin="2"/>
+      <node ref="U12" pin="12"/>
+    </net>
+    <net code="70" name="/Tile1/EthernetPort2/RXD3">
+      <node ref="U1" pin="52"/>
+      <node ref="U12" pin="13"/>
+    </net>
+    <net code="71" name="/Tile1/EthernetPort2/RXD2">
+      <node ref="U12" pin="14"/>
+      <node ref="U1" pin="51"/>
+    </net>
+    <net code="72" name="/Tile1/EthernetPort2/RXD1">
+      <node ref="U12" pin="15"/>
+      <node ref="U1" pin="50"/>
+    </net>
+    <net code="73" name="/Tile1/EthernetPort2/RXD0">
+      <node ref="U12" pin="16"/>
+      <node ref="U1" pin="49"/>
+    </net>
+    <net code="74" name="/Tile1/EthernetPort2/RXDV">
+      <node ref="U1" pin="45"/>
+      <node ref="U12" pin="18"/>
+    </net>
+    <net code="75" name="/Tile1/EthernetPort2/INT">
+      <node ref="U1" pin="21"/>
+      <node ref="R124" pin="2"/>
+      <node ref="U12" pin="21"/>
+    </net>
+    <net code="76" name="/Tile1/EthernetPort2/TXD1">
+      <node ref="U1" pin="112"/>
+      <node ref="U12" pin="25"/>
+    </net>
+    <net code="77" name="/Tile1/EthernetPort2/TXD2">
+      <node ref="U12" pin="26"/>
+      <node ref="U1" pin="117"/>
+    </net>
+    <net code="78" name="/Tile1/EthernetPort3/MDIO">
+      <node ref="U1" pin="15"/>
+      <node ref="R133" pin="2"/>
+      <node ref="U13" pin="11"/>
+    </net>
+    <net code="79" name="/Tile1/EthernetPort2/TXD0">
+      <node ref="U1" pin="111"/>
+      <node ref="U12" pin="24"/>
+    </net>
+    <net code="80" name="/Tile1/EthernetPort2/RXERR">
+      <node ref="U1" pin="26"/>
+      <node ref="U12" pin="20"/>
+    </net>
+    <net code="81" name="/Tile0/EthernetPort1/RXD1">
+      <node ref="U1" pin="93"/>
+      <node ref="U11" pin="15"/>
+    </net>
+    <net code="82" name="/Tile0/EthernetPort1/RXD2">
+      <node ref="U11" pin="14"/>
+      <node ref="U1" pin="94"/>
+    </net>
+    <net code="83" name="/Tile0/EthernetPort1/RXD3">
+      <node ref="U11" pin="13"/>
+      <node ref="U1" pin="96"/>
+    </net>
+    <net code="84" name="/Tile0/EthernetPort0/RXERR">
+      <node ref="U10" pin="20"/>
+      <node ref="U1" pin="56"/>
+    </net>
+    <net code="85" name="/Tile0/EthernetPort1/RXC">
+      <node ref="U1" pin="89"/>
+      <node ref="R116" pin="2"/>
+    </net>
+    <net code="86" name="/Tile0/EthernetPort1/RXDV">
+      <node ref="U1" pin="90"/>
+      <node ref="U11" pin="18"/>
+    </net>
+    <net code="87" name="/Tile0/EthernetPort1/RXD0">
+      <node ref="U1" pin="92"/>
+      <node ref="U11" pin="16"/>
+    </net>
+    <net code="88" name="/Tile0/EthernetPort1/CRS">
+      <node ref="U1" pin="98"/>
+      <node ref="U11" pin="29"/>
+    </net>
+    <net code="89" name="/Tile0/EthernetPort1/TXEN">
+      <node ref="U11" pin="23"/>
+      <node ref="U1" pin="61"/>
+    </net>
+    <net code="90" name="/Tile0/EthernetPort0/TXD1">
+      <node ref="U1" pin="35"/>
+      <node ref="U10" pin="25"/>
+    </net>
+    <net code="91" name="/Tile0/EthernetPort1/RST_N">
+      <node ref="U11" pin="32"/>
+      <node ref="U1" pin="64"/>
+    </net>
+    <net code="92" name="/Tile0/EthernetPort0/TXD0">
+      <node ref="U10" pin="24"/>
+      <node ref="U1" pin="34"/>
+    </net>
+    <net code="93" name="/Tile0/EthernetPort1/INT">
+      <node ref="U11" pin="21"/>
+      <node ref="R114" pin="2"/>
+      <node ref="U1" pin="63"/>
+    </net>
+    <net code="94" name="/Tile0/EthernetPort0/RXD3">
+      <node ref="U1" pin="43"/>
+      <node ref="U10" pin="13"/>
+    </net>
+    <net code="95" name="/Tile0/EthernetPort0/TXEN">
+      <node ref="U1" pin="33"/>
+      <node ref="U10" pin="23"/>
+    </net>
+    <net code="96" name="/Tile0/EthernetPort1/TXC">
+      <node ref="R115" pin="2"/>
+      <node ref="U1" pin="62"/>
+    </net>
+    <net code="97" name="/Tile0/EthernetPort0/TXC">
+      <node ref="U1" pin="32"/>
+      <node ref="R105" pin="2"/>
+    </net>
+    <net code="98" name="/Tile0/EthernetPort1/RXERR">
+      <node ref="U1" pin="95"/>
+      <node ref="U11" pin="20"/>
+    </net>
+    <net code="99" name="/Tile0/EthernetPort0/RXD2">
+      <node ref="U1" pin="41"/>
+      <node ref="U10" pin="14"/>
+    </net>
+    <net code="100" name="/Tile0/EthernetPort1/TXD3">
+      <node ref="U11" pin="27"/>
+      <node ref="U1" pin="70"/>
+    </net>
+    <net code="101" name="/Tile0/EthernetPort0/NWAYEN">
+      <node ref="U10" pin="30"/>
+      <node ref="U1" pin="60"/>
+    </net>
+    <net code="102" name="/Tile0/EthernetPort0/RXD1">
+      <node ref="U10" pin="15"/>
+      <node ref="U1" pin="40"/>
+    </net>
+    <net code="103" name="/Tile0/EthernetPort0/INT">
+      <node ref="R104" pin="2"/>
+      <node ref="U10" pin="21"/>
+      <node ref="U1" pin="6"/>
+    </net>
+    <net code="104" name="/Tile0/EthernetPort0/RST_N">
+      <node ref="U1" pin="2"/>
+      <node ref="U10" pin="32"/>
+    </net>
+    <net code="105" name="/Tile0/EthernetPort0/CRS">
+      <node ref="U1" pin="58"/>
+      <node ref="U10" pin="29"/>
+    </net>
+    <net code="106" name="/Tile0/EthernetPort0/MDC">
+      <node ref="U10" pin="12"/>
+      <node ref="R102" pin="2"/>
+      <node ref="U1" pin="5"/>
+    </net>
+    <net code="107" name="/Tile0/EthernetPort0/MDIO">
+      <node ref="R103" pin="2"/>
+      <node ref="U10" pin="11"/>
+      <node ref="U1" pin="3"/>
+    </net>
+    <net code="108" name="/Tile0/EthernetPort1/NWAYEN">
+      <node ref="U1" pin="99"/>
+      <node ref="U11" pin="30"/>
+    </net>
+    <net code="109" name="/Tile0/EthernetPort0/RXD0">
+      <node ref="U1" pin="39"/>
+      <node ref="U10" pin="16"/>
+    </net>
+    <net code="110" name="/Tile0/EthernetPort1/MDIO">
+      <node ref="U11" pin="11"/>
+      <node ref="U1" pin="88"/>
+      <node ref="R113" pin="2"/>
+    </net>
+    <net code="111" name="/Tile0/EthernetPort1/TXD1">
+      <node ref="U11" pin="25"/>
+      <node ref="U1" pin="68"/>
+    </net>
+    <net code="112" name="/Tile0/EthernetPort0/RXC">
+      <node ref="U1" pin="28"/>
+      <node ref="R106" pin="2"/>
+    </net>
+    <net code="113" name="/Tile0/EthernetPort1/COL">
+      <node ref="U1" pin="97"/>
+      <node ref="U11" pin="28"/>
+    </net>
+    <net code="114" name="/Tile0/EthernetPort1/MDC">
+      <node ref="R112" pin="2"/>
+      <node ref="U1" pin="87"/>
+      <node ref="U11" pin="12"/>
+    </net>
+    <net code="115" name="/Tile0/EthernetPort1/TXD0">
+      <node ref="U1" pin="67"/>
+      <node ref="U11" pin="24"/>
+    </net>
+    <net code="116" name="/Tile0/EthernetPort0/COL">
+      <node ref="U10" pin="28"/>
+      <node ref="U1" pin="57"/>
+    </net>
+    <net code="117" name="/Tile0/EthernetPort0/TXD3">
+      <node ref="U10" pin="27"/>
+      <node ref="U1" pin="37"/>
+    </net>
+    <net code="118" name="/Tile0/EthernetPort0/RXDV">
+      <node ref="U10" pin="18"/>
+      <node ref="U1" pin="27"/>
+    </net>
+    <net code="119" name="/Tile0/EthernetPort0/TXD2">
+      <node ref="U1" pin="36"/>
+      <node ref="R10" pin="2"/>
+      <node ref="U10" pin="26"/>
+    </net>
+    <net code="120" name="/Tile0/EthernetPort1/TXD2">
+      <node ref="U11" pin="26"/>
+      <node ref="U1" pin="69"/>
+    </net>
+    <net code="121" name="Net-(C124-Pad1)">
+      <node ref="C124" pin="1"/>
+      <node ref="J12" pin="5"/>
+    </net>
+    <net code="122" name="Net-(C123-Pad1)">
+      <node ref="J12" pin="2"/>
+      <node ref="C123" pin="1"/>
+    </net>
+    <net code="123" name="Net-(C125-Pad1)">
+      <node ref="U12" pin="3"/>
+      <node ref="FB121" pin="1"/>
+      <node ref="C125" pin="1"/>
+      <node ref="C126" pin="1"/>
+    </net>
+    <net code="124" name="Net-(R121-Pad1)">
+      <node ref="R121" pin="1"/>
+      <node ref="U12" pin="10"/>
+    </net>
+    <net code="125" name="Net-(C121-Pad1)">
+      <node ref="U12" pin="2"/>
+      <node ref="C122" pin="1"/>
+      <node ref="C121" pin="1"/>
+    </net>
+    <net code="126" name="Net-(J12-Pad3)">
+      <node ref="U12" pin="4"/>
+      <node ref="J12" pin="3"/>
+    </net>
+    <net code="127" name="Net-(J12-Pad6)">
+      <node ref="J12" pin="6"/>
+      <node ref="U12" pin="6"/>
+    </net>
+    <net code="128" name="Net-(J12-Pad1)">
+      <node ref="U12" pin="5"/>
+      <node ref="J12" pin="1"/>
+    </net>
+    <net code="129" name="Net-(J12-Pad4)">
+      <node ref="U12" pin="7"/>
+      <node ref="J12" pin="4"/>
+    </net>
+    <net code="130" name="Net-(J12-Pad7)">
+      <node ref="J12" pin="7"/>
+    </net>
+    <net code="131" name="Net-(R125-Pad1)">
+      <node ref="R125" pin="1"/>
+      <node ref="U12" pin="22"/>
+    </net>
+    <net code="132" name="Net-(R126-Pad1)">
+      <node ref="R126" pin="1"/>
+      <node ref="U12" pin="19"/>
+    </net>
+    <net code="133" name="Net-(U12-Pad31)">
+      <node ref="U12" pin="31"/>
+    </net>
+    <net code="134" name="Net-(U12-Pad8)">
+      <node ref="U12" pin="8"/>
+    </net>
+    <net code="135" name="Net-(J13-Pad7)">
+      <node ref="J13" pin="7"/>
+    </net>
+    <net code="136" name="Net-(C131-Pad1)">
+      <node ref="C131" pin="1"/>
+      <node ref="C132" pin="1"/>
+      <node ref="U13" pin="2"/>
+    </net>
+    <net code="137" name="Net-(R135-Pad1)">
+      <node ref="R135" pin="1"/>
+      <node ref="U13" pin="22"/>
+    </net>
+    <net code="138" name="Net-(U13-Pad31)">
+      <node ref="U13" pin="31"/>
+    </net>
+    <net code="139" name="Net-(U13-Pad8)">
+      <node ref="U13" pin="8"/>
+    </net>
+    <net code="140" name="Net-(R131-Pad1)">
+      <node ref="R131" pin="1"/>
+      <node ref="U13" pin="10"/>
+    </net>
+    <net code="141" name="Net-(R136-Pad1)">
+      <node ref="R136" pin="1"/>
+      <node ref="U13" pin="19"/>
+    </net>
+    <net code="142" name="Net-(J13-Pad6)">
+      <node ref="J13" pin="6"/>
+      <node ref="U13" pin="6"/>
+    </net>
+    <net code="143" name="Net-(J13-Pad4)">
+      <node ref="J13" pin="4"/>
+      <node ref="U13" pin="7"/>
+    </net>
+    <net code="144" name="Net-(J13-Pad3)">
+      <node ref="J13" pin="3"/>
+      <node ref="U13" pin="4"/>
+    </net>
+    <net code="145" name="Net-(J13-Pad1)">
+      <node ref="J13" pin="1"/>
+      <node ref="U13" pin="5"/>
+    </net>
+    <net code="146" name="Net-(C133-Pad1)">
+      <node ref="C133" pin="1"/>
+      <node ref="J13" pin="2"/>
+    </net>
+    <net code="147" name="Net-(C134-Pad1)">
+      <node ref="J13" pin="5"/>
+      <node ref="C134" pin="1"/>
+    </net>
+    <net code="148" name="Net-(C135-Pad1)">
+      <node ref="C135" pin="1"/>
+      <node ref="FB131" pin="1"/>
+      <node ref="U13" pin="3"/>
+      <node ref="C136" pin="1"/>
+    </net>
+    <net code="149" name="Net-(J11-Pad7)">
+      <node ref="J11" pin="7"/>
+    </net>
+    <net code="150" name="Net-(C111-Pad1)">
+      <node ref="C111" pin="1"/>
+      <node ref="C112" pin="1"/>
+      <node ref="U11" pin="2"/>
+    </net>
+    <net code="151" name="Net-(R115-Pad1)">
+      <node ref="R115" pin="1"/>
+      <node ref="U11" pin="22"/>
+    </net>
+    <net code="152" name="Net-(U11-Pad31)">
+      <node ref="U11" pin="31"/>
+    </net>
+    <net code="153" name="Net-(U11-Pad8)">
+      <node ref="U11" pin="8"/>
+    </net>
+    <net code="154" name="Net-(R111-Pad1)">
+      <node ref="R111" pin="1"/>
+      <node ref="U11" pin="10"/>
+    </net>
+    <net code="155" name="Net-(R116-Pad1)">
+      <node ref="U11" pin="19"/>
+      <node ref="R116" pin="1"/>
+    </net>
+    <net code="156" name="Net-(J11-Pad6)">
+      <node ref="J11" pin="6"/>
+      <node ref="U11" pin="6"/>
+    </net>
+    <net code="157" name="Net-(C114-Pad1)">
+      <node ref="C114" pin="1"/>
+      <node ref="J11" pin="5"/>
+    </net>
+    <net code="158" name="Net-(J11-Pad4)">
+      <node ref="U11" pin="7"/>
+      <node ref="J11" pin="4"/>
+    </net>
+    <net code="159" name="Net-(J11-Pad3)">
+      <node ref="J11" pin="3"/>
+      <node ref="U11" pin="4"/>
+    </net>
+    <net code="160" name="Net-(J11-Pad1)">
+      <node ref="U11" pin="5"/>
+      <node ref="J11" pin="1"/>
+    </net>
+    <net code="161" name="Net-(C113-Pad1)">
+      <node ref="C113" pin="1"/>
+      <node ref="J11" pin="2"/>
+    </net>
+    <net code="162" name="Net-(C115-Pad1)">
+      <node ref="FB111" pin="1"/>
+      <node ref="C115" pin="1"/>
+      <node ref="C116" pin="1"/>
+      <node ref="U11" pin="3"/>
+    </net>
+    <net code="163" name="Net-(J10-Pad7)">
+      <node ref="J10" pin="7"/>
+    </net>
+    <net code="164" name="Net-(C101-Pad1)">
+      <node ref="C102" pin="1"/>
+      <node ref="U10" pin="2"/>
+      <node ref="C101" pin="1"/>
+    </net>
+    <net code="165" name="Net-(R105-Pad1)">
+      <node ref="U10" pin="22"/>
+      <node ref="R105" pin="1"/>
+    </net>
+    <net code="166" name="Net-(U10-Pad31)">
+      <node ref="U10" pin="31"/>
+    </net>
+    <net code="167" name="Net-(U10-Pad8)">
+      <node ref="U10" pin="8"/>
+    </net>
+    <net code="168" name="Net-(R101-Pad1)">
+      <node ref="R101" pin="1"/>
+      <node ref="U10" pin="10"/>
+    </net>
+    <net code="169" name="Net-(R106-Pad1)">
+      <node ref="U10" pin="19"/>
+      <node ref="R106" pin="1"/>
+    </net>
+    <net code="170" name="Net-(J10-Pad6)">
+      <node ref="U10" pin="6"/>
+      <node ref="J10" pin="6"/>
+    </net>
+    <net code="171" name="Net-(J10-Pad4)">
+      <node ref="U10" pin="7"/>
+      <node ref="J10" pin="4"/>
+    </net>
+    <net code="172" name="Net-(J10-Pad3)">
+      <node ref="J10" pin="3"/>
+      <node ref="U10" pin="4"/>
+    </net>
+    <net code="173" name="Net-(J10-Pad1)">
+      <node ref="J10" pin="1"/>
+      <node ref="U10" pin="5"/>
+    </net>
+    <net code="174" name="Net-(C103-Pad1)">
+      <node ref="J10" pin="2"/>
+      <node ref="C103" pin="1"/>
+    </net>
+    <net code="175" name="Net-(C104-Pad1)">
+      <node ref="J10" pin="5"/>
+      <node ref="C104" pin="1"/>
+    </net>
+    <net code="176" name="Net-(C105-Pad1)">
+      <node ref="U10" pin="3"/>
+      <node ref="FB101" pin="1"/>
+      <node ref="C105" pin="1"/>
+      <node ref="C106" pin="1"/>
+    </net>
+  </nets>
+</export>
