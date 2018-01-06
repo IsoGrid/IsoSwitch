@@ -1,17 +1,16 @@
-
+ 
 # IsoSwitch.201801
 IsoSwitch.201801 is a point-in-time release of the GPLv3-licensed source code and HW design for the CrowdSwitch product.
 Please do not use the CrowdSwitch name for anything switch-like. 
 The CrowdSwitch name is claimed by Travis and Lindsey Martin.
 
 # Status
-This code is under active development; it's only being released to demonstrate our commitment to free/libre software. 
-It's not ready for use as there are major missing features and missing tests. Please consider not judging the code quality until we declare a stable release :-)
+This code is under active development; it's only being released to demonstrate our commitment to free/libre software. It's not ready for use as there are major missing features and missing tests. Please consider not judging the code quality until we declare a stable release :-)
 
 This code is not yet useful as a switch: It only runs under an XMOS simulator.
 
 # CrowdSwitch
-![CrowdSwitch PCB Layout](/images/CrowdSwitchLayout_700.png =408x331) ![CrowdSwitch Top-Down Render](/images/CrowdSwitchRenderTopDown_700.png =374x343)
+<img src="images/CrowdSwitchLayout_700.png" alt="CrowdSwitch PCB Layout" width="50%" height="50%"> <img src="images/CrowdSwitchRenderTopDown_700.png" alt="CrowdSwitch Top-Down Render" width="50%" height="50%">
 CrowdSwitch is an open hardware product built using the [IsoGrid](http://www.isogrid.org) protocol. When wired together they form a streaming, scalable, mesh network.  
 The full hardware design files (i.e. mechanical drawings, schematics, bill of materials, PCB layout data) are included in this release.
 
@@ -34,7 +33,7 @@ The Wi-Fi on the PC/SoC will be able to work in one of two modes:
 The IsoGrid formed by the interconnected mesh of CrowdSwitches provides a redundant multi-path backbone
 to connect nodes operating in Mode (1) to nodes operating in Mode (2).
 
-![CrowdSwitch Perspective Render](/images/CrowdSwitchPerspective_700.png) 
+<img src="/images/CrowdSwitchPerspective_700.png" alt="CrowdSwitch Perspective Render">
 
 # Declaration & Dedication
     Copyright (2017) Travis J Martin
