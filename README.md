@@ -1,4 +1,3 @@
- 
 # IsoSwitch.201801
 IsoSwitch.201801 is a point-in-time release of the GPLv3-licensed source code and HW design for the CrowdSwitch product.
 Please do not use the CrowdSwitch name for anything switch-like. 
@@ -10,7 +9,17 @@ This code is under active development; it's only being released to demonstrate o
 This code is not yet useful as a switch: It only runs under an XMOS simulator.
 
 # CrowdSwitch
-<img src="images/CrowdSwitchLayout_700.png" alt="CrowdSwitch PCB Layout" width="50%" height="50%"> <img src="images/CrowdSwitchRenderTopDown_700.png" alt="CrowdSwitch Top-Down Render" width="50%" height="50%">
+<table>
+ <tr>
+  <td>
+   <img src="images/CrowdSwitchLayout_700.png" alt="CrowdSwitch PCB Layout">
+  </td>
+  <td>
+   <img src="images/CrowdSwitchRenderTopDown_700.png" alt="CrowdSwitch Top-Down Render">
+  </td>
+ </tr>
+</table>
+
 CrowdSwitch is an open hardware product built using the [IsoGrid](http://www.isogrid.org) protocol. When wired together they form a streaming, scalable, mesh network.  
 The full hardware design files (i.e. mechanical drawings, schematics, bill of materials, PCB layout data) are included in this release.
 
@@ -33,7 +42,7 @@ The Wi-Fi on the PC/SoC will be able to work in one of two modes:
 The IsoGrid formed by the interconnected mesh of CrowdSwitches provides a redundant multi-path backbone
 to connect nodes operating in Mode (1) to nodes operating in Mode (2).
 
-<img src="/images/CrowdSwitchPerspective_700.png" alt="CrowdSwitch Perspective Render">
+<img src="images/CrowdSwitchPerspective_700.PNG" alt="CrowdSwitch Perspective Render">
 
 # Declaration & Dedication
     Copyright (2017) Travis J Martin
