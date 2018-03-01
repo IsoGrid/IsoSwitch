@@ -1,19 +1,19 @@
 /*
 Copyright (c) 2018 Travis J Martin (travis.martin) [at} isogrid.org)
 
-This file is part of IsoSwitch.201801
+This file is part of IsoSwitch.201802
 
-IsoSwitch.201801 is free software: you can redistribute it and/or modify
+IsoSwitch.201802 is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as published
 by the Free Software Foundation.
 
-IsoSwitch.201801 is distributed in the hope that it will be useful,
+IsoSwitch.201802 is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License version 3 for more details.
 
 You should have received a copy of the GNU General Public License version 3
-along with IsoSwitch.201801.  If not, see <http://www.gnu.org/licenses/>.
+along with IsoSwitch.201802.  If not, see <http://www.gnu.org/licenses/>.
 
 A) We, the undersigned contributors to this file, declare that our
    contribution was created by us as individuals, on our own time, entirely for
@@ -68,7 +68,7 @@ extern "C" {
 
 /*
 *
-Star(1) and Square(3) slot port mappings
+Star(0) and (2) slot port mappings
 port p_eth_rxclk  = on tile[0 1]: XS1_PORT_1B; - X.D01
 port p_eth_rxd    = on tile[0 1]: XS1_PORT_4A; - X.D02 - X.D03 - X.D08 - X.D09
 port p_eth_rxdv   = on tile[0 1]: XS1_PORT_1C; - X.D10
@@ -77,7 +77,7 @@ port p_eth_txen   = on tile[0 1]: XS1_PORT_1F; - X.D13
 port p_eth_txclk  = on tile[0 1]: XS1_PORT_1G; - X.D22
 port p_eth_rxerr  = on tile[0 1]: XS1_PORT_4D; (bit 0) - X.D16
 
-Circle(2) slot port mappings
+Triangle(1) and (3) slot port mappings
 port p_eth_rxclk  = on tile[1]: XS1_PORT_1J; - X1D25
 port p_eth_rxd    = on tile[1]: XS1_PORT_4E; - X1D26 - X1D27 - X1D32 - X1D33
 port p_eth_rxdv   = on tile[1]: XS1_PORT_1K; - X1D34
@@ -87,7 +87,25 @@ port p_eth_txclk  = on tile[1]: XS1_PORT_1I; - X1D24
 port p_eth_rxerr  = on tile[1]: XS1_PORT_1P; - X1D39
 */
 
-#ifdef PORT1
+#ifdef PORT3
+#define rxclk "X0D25"
+#define rxd0  "X0D26"
+#define rxd1  "X0D27"
+#define rxd2  "X0D32"
+#define rxd3  "X0D33"
+#define rxdv  "X0D34"
+#define txd0  "X0D28"
+#define txd1  "X0D29"
+#define txd2  "X0D30"
+#define txd3  "X0D31"
+#define txen  "X0D35"
+#define txclk "X0D24"
+#define txerr "X0D39"
+#define PORT 3
+#define DBGPRINT(...)
+#endif
+
+#ifdef PORT2
 #define rxclk "X0D01"
 #define rxd0  "X0D02"
 #define rxd1  "X0D03"
@@ -101,10 +119,11 @@ port p_eth_rxerr  = on tile[1]: XS1_PORT_1P; - X1D39
 #define txen  "X0D13"
 #define txclk "X0D22"
 #define txerr "X0D16"
-#define PORT 1
+#define PORT 2
+#define DBGPRINT(...)
 #endif
 
-#ifdef PORT2
+#ifdef PORT1
 #define rxclk "X1D25"
 #define rxd0  "X1D26"
 #define rxd1  "X1D27"
@@ -118,10 +137,11 @@ port p_eth_rxerr  = on tile[1]: XS1_PORT_1P; - X1D39
 #define txen  "X1D35"
 #define txclk "X1D24"
 #define txerr "X1D39"
-#define PORT 2
+#define PORT 1
+#define DBGPRINT(...)
 #endif
 
-#ifdef PORT3
+#ifdef PORT0
 #define rxclk "X1D01"
 #define rxd0  "X1D02"
 #define rxd1  "X1D03"
@@ -135,7 +155,8 @@ port p_eth_rxerr  = on tile[1]: XS1_PORT_1P; - X1D39
 #define txen  "X1D13"
 #define txclk "X1D22"
 #define txerr "X1D16"
-#define PORT 3
+#define PORT 0
+#define DBGPRINT(...) printf(__VA_ARGS__)
 #endif
 
 
@@ -169,15 +190,15 @@ enum TXSTATE
   TXSTATE_INITIAL,
   TXSTATE_INITIAL2,
   TXSTATE_DISABLED,
-  TXSTATE_ENABLED_CLOCK_HIGH,
-  TXSTATE_ENABLED_CLOCK_LOW,
-  TXSTATE_WAIT_FOR_DISABLE_CLOCK_HIGH,
-  TXSTATE_WAIT_FOR_DISABLE_CLOCK_LOW,
+  TXSTATE_ENABLED,
+  TXSTATE_WAIT_FOR_DISABLE,
+  TXSTATE_GAP,
 };
 
 enum RXSTATE
 {
   RXSTATE_GAP,
+  RXSTATE_INACTIVE_GAP,
   RXSTATE_INACTIVE,
   RXSTATE_BUFFERING,
   RXSTATE_PREAMBLE,
@@ -192,7 +213,7 @@ TXSTATE       g_txState = TXSTATE_INITIAL;
 UINT32   g_clock = 0;
 UINT32   g_lastkClockTicks;
 
-UINT32     g_rxBuf[3][SUBFRAME_UINT32_COUNT] = {};
+UINT32     g_rxBuf[NUM_SUBFRAMES][SUBFRAME_UINT32_COUNT] = {};
 UINT32*    g_rxCurBuf = g_rxBuf[0];
 OVERLAPPED g_rxOv = {};
 UINT32     g_rxBit = 0;
@@ -200,13 +221,12 @@ UINT32     g_rxUint32 = 0;
 UINT32     g_rxSubframe = 0;
 UINT32     g_rxFrame = 0;
 UINT32     g_rxLastClock = 0;
+UINT32     g_rxPreamble = 0;
 
-UINT32     g_txBuf0[SUBFRAME_UINT32_COUNT] = {};
-UINT32     g_txBuf1[SUBFRAME_UINT32_COUNT] = {};
-UINT32*    g_txCurBuf = g_txBuf0;
-UINT32*    g_txBackBuf = g_txBuf1;
+UINT32     g_txBuf[NUM_SUBFRAMES][SUBFRAME_UINT32_COUNT] = {};
+UINT32*    g_txCurBuf = g_txBuf[0];
 OVERLAPPED g_txOv = {};
-bool       g_txPreambleSeen = false;
+UINT32     g_txPreambleUint32 = 0;
 UINT32     g_txBit = 0;
 UINT32     g_txUint32 = 0;
 UINT32     g_txSubframe = 0;
@@ -218,6 +238,7 @@ bool       g_isConnected = false;
 bool       g_isDoubleInit = false;
 
 HANDLE     g_hTimePipe = INVALID_HANDLE_VALUE;
+bool       g_isServer = false;
 
 static void print_usage();
 static XsiStatus split_args(const char* args, char* argv[]);
@@ -232,6 +253,7 @@ __inline void Init()
 
     ResetEvent(g_rxOv.hEvent);
     ReadFile(g_hPipe, g_rxCurBuf, SUBFRAME_UINT32_COUNT * sizeof(UINT32), nullptr, &g_rxOv);
+    VERIFY(GetLastError() == ERROR_IO_PENDING, "i");
 
     SetEvent(g_txOv.hEvent);
     g_txOv.InternalHigh = SUBFRAME_UINT32_COUNT * sizeof(UINT32);
@@ -310,14 +332,16 @@ XsiStatus plugin_create(void** instance, XsiCallbacks* xsi, const char* argument
   }
   else if (argv[0][0] == 's' || argv[0][0] == 'd')
   {
+    g_isServer = true;
+
     printf("EthPlugin Server Starting Pipe: %s\n", szPipeName);
 
     g_hPipe = CreateNamedPipe(szPipeName,
       PIPE_ACCESS_DUPLEX | FILE_FLAG_FIRST_PIPE_INSTANCE | FILE_FLAG_OVERLAPPED,
       PIPE_TYPE_MESSAGE | PIPE_READMODE_MESSAGE | PIPE_ACCEPT_REMOTE_CLIENTS,
       2,
-      SUBFRAME_UINT32_COUNT * sizeof(UINT32),
-      SUBFRAME_UINT32_COUNT * sizeof(UINT32),
+      NUM_SUBFRAMES * SUBFRAME_UINT32_COUNT * sizeof(UINT32),
+      NUM_SUBFRAMES * SUBFRAME_UINT32_COUNT * sizeof(UINT32),
       0,
       nullptr);
 
@@ -375,6 +399,8 @@ XsiStatus plugin_clock(void* instance)
 
   g_clock++;
 
+  /*
+   * This could be used to implement SIM_MIN_TICKS_PER_KCLOCK
   if ((g_clock % 1024 == 0) && (g_hTimePipe == INVALID_HANDLE_VALUE))
   {
     g_lastkClockTicks += SIM_MIN_TICKS_PER_KCLOCK;
@@ -389,10 +415,13 @@ XsiStatus plugin_clock(void* instance)
       curTickCount = GetTickCount();
     }
   }
+  */
+
+  UINT32 txEnabledPin;
 
   if (g_clock % (4) == 0)
   {
-    if (g_rxState == RXSTATE_GAP)
+    if ((g_rxState == RXSTATE_GAP) || (g_rxState == RXSTATE_INACTIVE_GAP))
     {
       g_rxBit += 4;
       if (g_rxBit == 32)
@@ -400,17 +429,11 @@ XsiStatus plugin_clock(void* instance)
         g_rxBit = 0;
         g_rxUint32++;
 
-        if (g_rxUint32 == SUBFRAME_UINT32_COUNT)
+        // Gap is 12 octets = (3 * 32 bits)
+        if (g_rxUint32 == 3)
         {
           g_rxUint32 = 0;
-          g_rxSubframe++;
-
-          // GAP should be 1 subframe worth of time
-          if (g_rxSubframe == 1)
-          {
-            g_rxSubframe = 0;
-            g_rxState = RXSTATE_INACTIVE;
-          }
+          g_rxState = (g_rxState == RXSTATE_INACTIVE_GAP) ? RXSTATE_INACTIVE : RXSTATE_PREAMBLE;
         }
       }
     }
@@ -423,12 +446,13 @@ XsiStatus plugin_clock(void* instance)
 
         VERIFY(g_rxOv.Internal == ERROR_SUCCESS, "");
         VERIFY(g_rxOv.InternalHigh == SUBFRAME_UINT32_COUNT * sizeof(UINT32), "");
-        printf("    ETH First Complete %d\n", g_rxSubframe);
+        DBGPRINT("    ETH First Complete %d\n", g_rxSubframe);
         g_rxLastClock = g_clock;
 
         // Start a new read on the next buffer
         ResetEvent(g_rxOv.hEvent);
         ReadFile(g_hPipe, g_rxBuf[1], SUBFRAME_UINT32_COUNT * sizeof(UINT32), nullptr, &g_rxOv);
+        VERIFY(GetLastError() == ERROR_IO_PENDING, "1");
       }
     }
 
@@ -436,37 +460,71 @@ XsiStatus plugin_clock(void* instance)
     {
       if (WaitForSingleObject(g_rxOv.hEvent, 0) == WAIT_OBJECT_0)
       {
-        printf("    ETH Read: %d\n", g_clock - g_rxLastClock);
+        DBGPRINT("    ETH Read: %d\n", g_clock - g_rxLastClock);
         g_rxLastClock = g_clock;
 
         g_rxState = RXSTATE_PREAMBLE;
-        g_xsi->drive_pin("0", rxdv, 1);
       }
     }
-
+    
     if (g_rxState == RXSTATE_PREAMBLE)
     {
+      if (g_rxBit == 0)
+      {
+        g_xsi->drive_pin("0", rxdv, 1);
+
+        switch (g_rxUint32)
+        {
+        case 0: g_rxPreamble = 0x55555555; break; // Beginning of Preamble
+        case 1: g_rxPreamble = 0xFFFFD555; break; // End Preamble - Start Frame Delimiter - Beginning of Dest MAC address field
+        case 2: g_rxPreamble = 0xFFFFFFFF; break; // End of Dest MAC address field
+        case 3: g_rxPreamble = 0x00000000; break; // Beginning of Source MAC address field
+        case 4: g_rxPreamble = 0x00650000; break; // End of Source MAC address field - 0x6500 IsoSwitch EtherType
+        }
+      }
+
+      g_xsi->drive_pin("0", rxd0, g_rxPreamble & 0x1);
+      g_rxPreamble >>= 1;
+      g_xsi->drive_pin("0", rxd1, g_rxPreamble & 0x1);
+      g_rxPreamble >>= 1;
+      g_xsi->drive_pin("0", rxd2, g_rxPreamble & 0x1);
+      g_rxPreamble >>= 1;
+      g_xsi->drive_pin("0", rxd3, g_rxPreamble & 0x1);
+      g_rxPreamble >>= 1;
+
       g_rxBit += 4;
       if (g_rxBit == 32)
       {
-        g_xsi->drive_pin("0", rxd0, 1);
-        g_xsi->drive_pin("0", rxd1, 0);
-        g_xsi->drive_pin("0", rxd2, 1);
-        g_xsi->drive_pin("0", rxd3, 1);
         g_rxBit = 0;
-        g_rxState = RXSTATE_ACTIVE;
-      }
-      else
-      {
-        g_xsi->drive_pin("0", rxd0, 1);
-        g_xsi->drive_pin("0", rxd1, 0);
-        g_xsi->drive_pin("0", rxd2, 1);
-        g_xsi->drive_pin("0", rxd3, 0);
+        g_rxUint32++;
+
+        if (g_rxUint32 == 5)
+        {
+          g_rxUint32 = 0;
+          g_rxState = RXSTATE_ACTIVE;
+        }
       }
     }
     else if (g_rxState == RXSTATE_ACTIVE)
     {
-      VERIFY(g_rxCurBuf[g_rxUint32] != 0xBADDF00D, "XMOS Unintialized Memory!");
+      if (g_rxBit == 0)
+      {
+        VERIFY(g_rxCurBuf[g_rxUint32] != 0xBADDF00D, "XMOS Unintialized Memory!");
+
+        if (g_rxUint32 == 0)
+        {
+#ifdef PRINT_RECEIVED
+          // Note, the CRC for an empty frame is 0x7647C33C
+
+          printf("Port: %d, Subframe: %d\n", PORT, g_rxSubframe);
+          for (int i = 0; i < SUBFRAME_UINT32_COUNT; i++)
+          {
+            printf("%X ", g_rxCurBuf[i]);
+          }
+          printf("\n");
+#endif
+        }
+      }
 
       g_xsi->drive_pin("0", rxd0, g_rxCurBuf[g_rxUint32] & 0x1);
       g_rxCurBuf[g_rxUint32] >>= 1;
@@ -489,7 +547,9 @@ XsiStatus plugin_clock(void* instance)
           g_rxSubframe++;
 
           // Increment rxBuf
-          g_rxCurBuf = g_rxBuf[g_rxSubframe % 3];
+          g_rxCurBuf = g_rxBuf[g_rxSubframe];
+
+          g_rxState = RXSTATE_GAP;
           
           if (g_rxSubframe == NUM_SUBFRAMES)
           {
@@ -497,102 +557,72 @@ XsiStatus plugin_clock(void* instance)
             g_rxCurBuf = g_rxBuf[0];
             g_rxFrame++;
 
-            g_rxState = RXSTATE_GAP;
             g_rxLastClock = g_clock;
 
             // Queue up a read on the next frame
             ResetEvent(g_rxOv.hEvent);
             ReadFile(g_hPipe, g_rxCurBuf, SUBFRAME_UINT32_COUNT * sizeof(UINT32), nullptr, &g_rxOv);
+            VERIFY(GetLastError() == ERROR_IO_PENDING, "0");
 
-            printf("    ETH Queue Next Frame Read\n");
+            DBGPRINT("    ETH Queue Next Frame Read\n");
+            g_rxState = RXSTATE_INACTIVE_GAP;
           }
           else if (g_rxSubframe == 1)
           {
-            printf("    ETH Read: %d  1\n", g_clock - g_rxLastClock);
+            DBGPRINT("    ETH Read: %d  1\n", g_clock - g_rxLastClock);
             g_rxLastClock = g_clock;
           }
           else
           {
-            printf("    ETH Read: %d ", g_clock - g_rxLastClock);
+            DBGPRINT("    ETH Read: %d ", g_clock - g_rxLastClock);
             g_rxLastClock = g_clock;
 
+
+            // Start a new read on the next buffer
+            ResetEvent(g_rxOv.hEvent);
+            ReadFile(g_hPipe, g_rxBuf[g_rxSubframe], SUBFRAME_UINT32_COUNT * sizeof(UINT32), nullptr, &g_rxOv);
+            VERIFY(GetLastError() == ERROR_IO_PENDING, "n");
+
+            // If this hangs, it likely means that the RX is being driven faster than the pipe is 
+            // able to deliver subframes.
             WaitForSingleObject(g_rxOv.hEvent, INFINITE);
 
             VERIFY(g_rxOv.Internal == ERROR_SUCCESS, "");
             VERIFY(g_rxOv.InternalHigh == SUBFRAME_UINT32_COUNT * sizeof(UINT32), "");
-            printf(" %d\n", g_rxSubframe);
-
-            // Start a new read on the next buffer
-            ResetEvent(g_rxOv.hEvent);
-            ReadFile(g_hPipe, g_rxBuf[g_rxSubframe % 3], SUBFRAME_UINT32_COUNT * sizeof(UINT32), nullptr, &g_rxOv);
+            DBGPRINT(" %d\n", g_rxSubframe);
           }
         }
       }
     }
 
-    status = g_xsi->drive_pin("0", rxclk, 1);
-    CHECK_STATUS();
-  }
-  else if (g_clock % (4) == (2))
-  {
-    status = g_xsi->drive_pin("0", rxclk, 0);
-    CHECK_STATUS();
-    
-    if (g_rxState == RXSTATE_GAP)
+    switch (g_txState)
     {
-      status = g_xsi->drive_pin("0", rxdv, 0);
-      CHECK_STATUS();
-    }
-  }
+    case TXSTATE_INITIAL:
+      g_xsi->sample_pin("0", txen, &txEnabledPin);
+      if (txEnabledPin)
+      {
+        g_txState = TXSTATE_INITIAL2;
+      }
+      break;
 
-  UINT32 txEnabledPin;
-  UINT32 txClockPin;
+    case TXSTATE_INITIAL2:
+      g_xsi->sample_pin("0", txen, &txEnabledPin);
+      if (!txEnabledPin)
+      {
+        g_txState = TXSTATE_DISABLED;
+      }
+      break;
 
-  switch (g_txState)
-  {
-  case TXSTATE_INITIAL:
-    g_xsi->sample_pin("0", txen, &txEnabledPin);
-    if (txEnabledPin)
-    {
-      g_txState = TXSTATE_INITIAL2;
-    }
-    break;
+    case TXSTATE_DISABLED:
+      g_xsi->sample_pin("0", txen, &txEnabledPin);
+      if (!txEnabledPin)
+      {
+        break;
+      }
+      g_txState = TXSTATE_ENABLED;
+      __fallthrough;
 
-  case TXSTATE_INITIAL2:
-    g_xsi->sample_pin("0", txen, &txEnabledPin);
-    if (!txEnabledPin)
-    {
-      g_txState = TXSTATE_DISABLED;
-    }
-    break;
-  
-  case TXSTATE_DISABLED:
-    g_xsi->sample_pin("0", txen, &txEnabledPin);
-    if (txEnabledPin)
-    {
-      g_txState = TXSTATE_ENABLED_CLOCK_LOW;
-    }
-    break;
-
-  case TXSTATE_ENABLED_CLOCK_HIGH:
-    g_xsi->sample_pin("0", txclk, &txClockPin);
-    if (!txClockPin) // Falling clock edge
-    {
-      g_txState = TXSTATE_ENABLED_CLOCK_LOW;
-    }
-
-    g_xsi->sample_pin("0", txen, &txEnabledPin);
-
-    // This often indicates that the TX_FUNC wasn't able to keep up
-    VERIFY(txEnabledPin, "TXSTATE_ENABLED_CLOCK_HIGH (TX_FUNC wasn't able to keep up)");
-    break;
-
-  case TXSTATE_ENABLED_CLOCK_LOW:
-    g_xsi->sample_pin("0", txclk, &txClockPin);
-    if (txClockPin) // Rising clock edge
-    {
-      g_txState = TXSTATE_ENABLED_CLOCK_HIGH;
-
+    case TXSTATE_ENABLED:
       UINT32 pinVal;
       g_xsi->sample_pin("0", txd0, &pinVal);
       g_txCurBuf[g_txUint32] = (g_txCurBuf[g_txUint32] >> 1) | (pinVal << 31);
@@ -603,50 +633,66 @@ XsiStatus plugin_clock(void* instance)
       g_xsi->sample_pin("0", txd3, &pinVal);
       g_txCurBuf[g_txUint32] = (g_txCurBuf[g_txUint32] >> 1) | (pinVal << 31);
 
-
       g_txBit += 4;
       if (g_txBit == 32)
       {
         VERIFY(g_txCurBuf[g_txUint32] != 0xBADDF00D, "XMOS Unintialized Memory!");
 
         g_txBit = 0;
-        
-        if (g_txPreambleSeen)
+
+        switch (g_txPreambleUint32++)
         {
-          g_txUint32++;
-        }
-        else
-        {
-          VERIFY(g_txCurBuf[0] == 0xD5555555, "");
-          g_txPreambleSeen = true;
+        case 0:
+          VERIFY(g_txCurBuf[0] == 0x55555555, ""); // Beginning of Preamble
+          g_txCurBuf[0] = 0;
+          break;
+        case 1:
+          VERIFY(g_txCurBuf[0] == 0xFFFFD555, ""); // End Preamble - Start Frame Delimiter - Beginning of Dest MAC address
+          g_txCurBuf[0] = 0;
+          break;
+        case 2:
+          VERIFY(g_txCurBuf[0] == 0xFFFFFFFF, ""); // End of Dest MAC address
+          g_txCurBuf[0] = 0;
+          break;
+        case 3:
+          VERIFY(g_txCurBuf[0] == 0x00000000, ""); // Beginning of Source MAC address
+          g_txCurBuf[0] = 0;
+          break;
+        case 4:
+          VERIFY(g_txCurBuf[0] == 0x00650000, ""); // End of Source MAC address - 0x6500 IsoSwitch EtherType
           g_txCurBuf[0] = 0;
           g_txUint32 = 0;
+          break;
+
+        default:
+          g_txUint32++;
+          break;
         }
 
         if (g_txUint32 == SUBFRAME_UINT32_COUNT)
         {
-          VERIFY(g_txCurBuf[SUBFRAME_UINT32_COUNT - 1] == -1, "**** ETHTX BAD CRC!");
-          if (g_txCurBuf[SUBFRAME_UINT32_COUNT - 3] != 0)
+          g_txUint32 = 0;
+
+          if (g_txCurBuf[SUBFRAME_UINT32_COUNT - 2] != 0)
           {
             printf("**** #%d Erased Words in Frame! 0x%X\n", PORT, g_txCurBuf[SUBFRAME_UINT32_COUNT - 2]);
           }
 
-          // Swap txBuf
-          UINT32* txLastBuf = g_txCurBuf;
-          g_txCurBuf = g_txBackBuf;
-          g_txBackBuf = txLastBuf;
-          g_txUint32 = 0;
-
-          printf("    ETH Write: %d ", g_clock - g_txLastClock);
+          DBGPRINT("    ETH Write: %d ", g_clock - g_txLastClock);
           g_txLastClock = g_clock;
-          
+
           // Wait for the previous write to complete
           WaitForSingleObject(g_txOv.hEvent, INFINITE);
           VERIFY(g_txOv.Internal == ERROR_SUCCESS, "");
           VERIFY(g_txOv.InternalHigh == SUBFRAME_UINT32_COUNT * sizeof(UINT32), "");
 
-          printf("            %d\n", g_txSubframe);
-          g_txSubframe++;
+          DBGPRINT("            %d\n", g_txSubframe);
+
+          g_txSubframe = (g_txSubframe + 1) % NUM_SUBFRAMES;
+
+          // Swap txBuf
+          UINT32* txLastBuf = g_txCurBuf;
+          g_txCurBuf = g_txBuf[g_txSubframe];
 
           if (g_hTimePipe != INVALID_HANDLE_VALUE)
           {
@@ -655,54 +701,95 @@ XsiStatus plugin_clock(void* instance)
             VERIFY(ReadFile(g_hTimePipe, reply, 4, nullptr, nullptr), "");
           }
 
-          // Start a new write on the back buffer
+          // Start a new write using the most recent buffer
           ResetEvent(g_txOv.hEvent);
-          WriteFile(g_hPipe, g_txBackBuf, SUBFRAME_UINT32_COUNT * sizeof(UINT32), nullptr, &g_txOv);
+          VERIFY(WriteFile(g_hPipe, txLastBuf, SUBFRAME_UINT32_COUNT * sizeof(UINT32), nullptr, &g_txOv), "");
 
-          if (g_txSubframe == NUM_SUBFRAMES)
+#ifdef PRINT_TRANSMITTED
+          // Note, the CRC for an empty frame is 0x7647C33C\
+
+          printf("Port: %d, Subframe: %d\n", PORT, (g_txSubframe == 0) ? 19 : (g_txSubframe - 1) % NUM_SUBFRAMES);
+          for (int i = 0; i < SUBFRAME_UINT32_COUNT; i++)
           {
-            g_txSubframe = 0;
-            g_txPreambleSeen = false;
-            g_txState = TXSTATE_WAIT_FOR_DISABLE_CLOCK_HIGH;
+            printf("%X ", txLastBuf[i]);
           }
+          printf("\n");
+#endif
+
+          g_txPreambleUint32 = 0;
+          g_txState = TXSTATE_WAIT_FOR_DISABLE;
+        }
+
+        g_xsi->sample_pin("0", txen, &txEnabledPin);
+        VERIFY(txEnabledPin, "TXSTATE_ENABLED_* RISING");
+      }
+      break;
+
+    case TXSTATE_WAIT_FOR_DISABLE:
+      g_xsi->sample_pin("0", txen, &txEnabledPin);
+      if (!txEnabledPin) // Disabled
+      {
+        g_txState = TXSTATE_GAP;
+        break;
+      }
+      break;
+
+    case TXSTATE_GAP:
+      g_xsi->sample_pin("0", txen, &txEnabledPin);
+      VERIFY(!txEnabledPin, "Interframe Gap too small!");
+
+      g_txBit += 4;
+      if (g_txBit == 32)
+      {
+        g_txBit = 0;
+        g_txUint32++;
+        if (g_txUint32 == 3)
+        {
+          g_txUint32 = 0;
+          g_txState = TXSTATE_DISABLED;
         }
       }
+      break;
 
+    default:
+      break;
+    }
+
+    status = g_xsi->drive_pin("0", rxclk, 1);
+    status = g_xsi->drive_pin("0", txclk, 1);
+    CHECK_STATUS();
+  }
+  else if (g_clock % (4) == (2))
+  {
+    status = g_xsi->drive_pin("0", rxclk, 0);
+    status = g_xsi->drive_pin("0", txclk, 0);
+    CHECK_STATUS();
+
+    if ((g_rxState == RXSTATE_GAP) || (g_rxState == RXSTATE_INACTIVE_GAP))
+    {
+      status = g_xsi->drive_pin("0", rxdv, 0);
+      CHECK_STATUS();
+    }
+
+    switch (g_txState)
+    {
+    case TXSTATE_ENABLED:
       g_xsi->sample_pin("0", txen, &txEnabledPin);
-      VERIFY(txEnabledPin, "TXSTATE_ENABLED_* RISING");
-    }
-    break;
 
-  case TXSTATE_WAIT_FOR_DISABLE_CLOCK_HIGH:
-    g_xsi->sample_pin("0", txen, &txEnabledPin);
-    if (!txEnabledPin) // Disabled
-    {
-      g_txState = TXSTATE_DISABLED;
+      // If txen goes low in the middle of a frame, 
+      // it often indicates that the TX_FUNC wasn't able to keep up
+      VERIFY(txEnabledPin, "TXSTATE_ENABLED txen fall (TX_FUNC wasn't able to keep up)");
+      break;
+
+    case TXSTATE_WAIT_FOR_DISABLE:
+      g_xsi->sample_pin("0", txen, &txEnabledPin);
+      if (!txEnabledPin) // Disabled
+      {
+        g_txState = TXSTATE_GAP;
+        break;
+      }
       break;
     }
-
-    UINT32 txClockPin;
-    g_xsi->sample_pin("0", txclk, &txClockPin);
-    if (!txClockPin) // Falling clock edge
-    {
-      g_txState = TXSTATE_WAIT_FOR_DISABLE_CLOCK_LOW;
-    }
-    break;
-
-  case TXSTATE_WAIT_FOR_DISABLE_CLOCK_LOW:
-    g_xsi->sample_pin("0", txen, &txEnabledPin);
-    if (!txEnabledPin) // Disabled
-    {
-      g_txState = TXSTATE_DISABLED;
-      break;
-    }
-
-    g_xsi->sample_pin("0", txclk, &txClockPin);
-    VERIFY(txClockPin = 0, "");
-    break;
-
-  default:
-    break;
   }
 
   return XSI_STATUS_OK;
@@ -777,6 +864,7 @@ static XsiStatus split_args(const char *args, char *argv[])
   else
     return XSI_STATUS_OK;
 }
+
 
 #endif /* _EthPlugin_H_ */
 

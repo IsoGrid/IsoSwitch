@@ -1,3 +1,6 @@
 (fp_lib_table
+  (lib (name RJ45_LINK-PP)(type KiCad)(uri "$(KIPRJMOD)/RJ45_LINK-PP.pretty")(options "")(descr ""))
+  (lib (name ST1S06)(type KiCad)(uri "$(KIPRJMOD)/ST1S06.pretty")(options "")(descr ""))
   (lib (name TempRJ45)(type KiCad)(uri "$(KIPRJMOD)/TempRJ45.pretty")(options "")(descr ""))
+  (lib (name APX811-46UG-7)(type KiCad)(uri "$(KIPRJMOD)/APX811-46UG-7.pretty")(options "")(descr ""))
 )

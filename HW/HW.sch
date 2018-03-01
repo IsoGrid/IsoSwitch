@@ -32,8 +32,6 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:10118193-0001LF
-LIBS:615032137821
 LIBS:HW-cache
 EELAYER 25 0
 EELAYER END
@@ -174,10 +172,11 @@ F 1 "ST1S06" H 7500 1650 60  0000 C CNN
 F 2 "Housings_DFN_QFN:DFN-6-1EP_3x3mm_Pitch0.95mm" H 7750 1150 60  0001 C CNN
 F 3 "www.st.com/content/ccc/resource/technical/document/datasheet/b3/2f/7b/c6/95/7d/40/e8/CD00100211.pdf/files/CD00100211.pdf/jcr:content/translations/en.CD00100211.pdf" H 7750 1150 60  0001 C CNN
 F 4 "STMicroelectronics" H 7750 1150 60  0001 C CNN "MFG"
-F 5 "IC REG BUCK ADJ 1.5A SYNC DFN6 " H 7750 1150 60  0001 C CNN "Description"
-F 6 "https://www.digikey.com/product-detail/en/stmicroelectronics/ST1S06PUR/497-5802-1-ND/1506457" H 7750 1150 60  0001 C CNN "DigiKey"
-F 7 "$1.25" H 7750 1150 60  0001 C CNN "Price10"
-F 8 "$0.64" H 7750 1150 60  0001 C CNN "Price1k"
+F 5 "ST1S06PUR" H 7750 1150 60  0001 C CNN "Part"
+F 6 "IC REG BUCK ADJ 1.5A SYNC DFN6 " H 7750 1150 60  0001 C CNN "Description"
+F 7 "https://www.digikey.com/product-detail/en/stmicroelectronics/ST1S06PUR/497-5802-1-ND/1506457" H 7750 1150 60  0001 C CNN "DigiKey"
+F 8 "$1.05" H 7750 1150 60  0001 C CNN "Price10"
+F 9 "$0.54" H 7750 1150 60  0001 C CNN "Price1k"
 	1    7750 1150
 	1    0    0    -1  
 $EndComp
@@ -326,44 +325,28 @@ F 3 "" H 9350 1400 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L APX809S-46SA U4
-U 1 1 5A40B87E
-P 10250 1250
-F 0 "U4" H 10250 1750 60  0000 C CNN
-F 1 "APX809S-46SA" H 10250 1250 60  0000 C CNN
-F 2 "TO_SOT_Packages_SMD:SOT-23" H 10250 1250 60  0001 C CNN
-F 3 "https://www.diodes.com/assets/Datasheets/APX809S-810S.pdf" H 10250 1250 60  0001 C CNN
-F 4 "Diodes Inc" H 10250 1250 60  0001 C CNN "MFG"
-F 5 "Microprocessor Reset Circuit, 4.6V, Active Low, Push Pull, SOT23" H 10250 1250 60  0001 C CNN "Description"
-F 6 "https://www.digikey.com/product-detail/en/diodes-incorporated/APX809S-46SA-7/APX809S-46SA-7DICT-ND/7230307" H 10250 1250 60  0001 C CNN "DigiKey"
-F 7 "$0.303" H 10250 1250 60  0001 C CNN "Price10"
-F 8 "$0.11588" H 10250 1250 60  0001 C CNN "Price1k"
-	1    10250 1250
-	1    0    0    -1  
-$EndComp
-$Comp
 L +5V #PWR014
 U 1 1 5A40B8F0
-P 9750 900
-F 0 "#PWR014" H 9750 750 50  0001 C CNN
-F 1 "+5V" H 9750 1040 50  0000 C CNN
-F 2 "" H 9750 900 50  0001 C CNN
-F 3 "" H 9750 900 50  0001 C CNN
-	1    9750 900 
+P 11050 800
+F 0 "#PWR014" H 11050 650 50  0001 C CNN
+F 1 "+5V" H 11050 940 50  0000 C CNN
+F 2 "" H 11050 800 50  0001 C CNN
+F 3 "" H 11050 800 50  0001 C CNN
+	1    11050 800 
 	1    0    0    -1  
 $EndComp
 $Comp
 L GND #PWR015
 U 1 1 5A40B924
-P 9750 1100
-F 0 "#PWR015" H 9750 850 50  0001 C CNN
-F 1 "GND" H 9750 950 50  0000 C CNN
-F 2 "" H 9750 1100 50  0001 C CNN
-F 3 "" H 9750 1100 50  0001 C CNN
-	1    9750 1100
+P 9900 700
+F 0 "#PWR015" H 9900 450 50  0001 C CNN
+F 1 "GND" H 9900 550 50  0000 C CNN
+F 2 "" H 9900 700 50  0001 C CNN
+F 3 "" H 9900 700 50  0001 C CNN
+	1    9900 700 
 	1    0    0    -1  
 $EndComp
-Text Label 10750 1000 0    60   ~ 0
+Text Label 9600 1000 0    60   ~ 0
 PG_5V
 $Comp
 L DSC6001CI2A-025.0000 X1
@@ -439,8 +422,10 @@ F 0 "F1" V 1500 800 50  0000 C CNN
 F 1 "1206L110" V 1700 800 50  0000 C CNN
 F 2 "Fuse_Holders_and_Fuses:Fuse_SMD1206_Reflow" H 1650 600 50  0001 L CNN
 F 3 "www.littelfuse.com/~/media/electronics/datasheets/resettable_ptcs/littelfuse_ptc_1206l_datasheet.pdf.pdf" H 1600 800 50  0001 C CNN
-F 4 "https://www.digikey.com/product-detail/en/littelfuse-inc/1206L110THYR/F3371TR-ND/2090976" V 1600 800 60  0001 C CNN "DigiKey"
-F 5 "$0.21" V 1600 800 60  0001 C CNN "Price1k"
+F 4 "Littelfuse" V 1600 800 60  0001 C CNN "MFG"
+F 5 "1206L110THYR" V 1600 800 60  0001 C CNN "Part"
+F 6 "https://www.digikey.com/product-detail/en/littelfuse-inc/1206L110THYR/F3371TR-ND/2090976" V 1600 800 60  0001 C CNN "DigiKey"
+F 7 "$0.21" V 1600 800 60  0001 C CNN "Price1k"
 	1    1600 800 
 	0    -1   -1   0   
 $EndComp
@@ -449,13 +434,15 @@ L Varistor RV1
 U 1 1 5A41A667
 P 1950 1100
 F 0 "RV1" V 2075 1100 50  0000 C CNN
-F 1 "V5.5MLA0603" V 1825 1100 50  0000 C CNN
+F 1 "V5.5MLA0603H" V 1825 1100 50  0000 C CNN
 F 2 "Resistors_SMD:R_0603" V 1880 1100 50  0001 C CNN
 F 3 "www.littelfuse.com/~/media/electronics/datasheets/varistors/littelfuse_varistor_mla_datasheet.pdf.pdf" H 1950 1100 50  0001 C CNN
-F 4 "VARISTOR 8.2V 30A 0603" V 1950 1100 60  0001 C CNN "Description"
-F 5 "https://www.digikey.com/product-detail/en/littelfuse-inc/V5.5MLA0603H/F2214CT-ND/428156" V 1950 1100 60  0001 C CNN "DigiKey"
-F 6 "$0.58" V 1950 1100 60  0001 C CNN "Price10"
-F 7 "$0.25" V 1950 1100 60  0001 C CNN "Price1k"
+F 4 "Littelfuse" V 1950 1100 60  0001 C CNN "MFG"
+F 5 "V5.5MLA0603H" V 1950 1100 60  0001 C CNN "Part"
+F 6 "VARISTOR 8.2V 30A 0603" V 1950 1100 60  0001 C CNN "Description"
+F 7 "https://www.digikey.com/product-detail/en/littelfuse-inc/V5.5MLA0603H/F2214CT-ND/428156" V 1950 1100 60  0001 C CNN "DigiKey"
+F 8 "$0.58" V 1950 1100 60  0001 C CNN "Price10"
+F 9 "$0.25" V 1950 1100 60  0001 C CNN "Price1k"
 	1    1950 1100
 	1    0    0    -1  
 $EndComp
@@ -583,9 +570,6 @@ F 3 "" H 1350 4100 50  0001 C CNN
 	1    1350 4100
 	1    0    0    -1  
 $EndComp
-NoConn ~ 2050 3850
-NoConn ~ 2050 3750
-NoConn ~ 2050 3650
 NoConn ~ 2050 3450
 NoConn ~ 2050 3050
 NoConn ~ 2050 2950
@@ -677,7 +661,7 @@ Wire Wire Line
 	9050 750  9050 950 
 Connection ~ 9050 800 
 Wire Wire Line
-	10750 1000 11050 1000
+	9550 1000 10000 1000
 Wire Wire Line
 	8100 2450 8300 2450
 Wire Wire Line
@@ -1635,10 +1619,11 @@ F 1 "ST1S06" H 4100 1650 60  0000 C CNN
 F 2 "Housings_DFN_QFN:DFN-6-1EP_3x3mm_Pitch0.95mm" H 4350 1150 60  0001 C CNN
 F 3 "www.st.com/content/ccc/resource/technical/document/datasheet/b3/2f/7b/c6/95/7d/40/e8/CD00100211.pdf/files/CD00100211.pdf/jcr:content/translations/en.CD00100211.pdf" H 4350 1150 60  0001 C CNN
 F 4 "STMicroelectronics" H 4350 1150 60  0001 C CNN "MFG"
-F 5 "IC REG BUCK ADJ 1.5A SYNC DFN6 " H 4350 1150 60  0001 C CNN "Description"
-F 6 "https://www.digikey.com/product-detail/en/stmicroelectronics/ST1S06PUR/497-5802-1-ND/1506457" H 4350 1150 60  0001 C CNN "DigiKey"
-F 7 "$1.25" H 4350 1150 60  0001 C CNN "Price10"
-F 8 "$0.64" H 4350 1150 60  0001 C CNN "Price1k"
+F 5 "ST1S06PUR" H 4350 1150 60  0001 C CNN "Part"
+F 6 "IC REG BUCK ADJ 1.5A SYNC DFN6 " H 4350 1150 60  0001 C CNN "Description"
+F 7 "https://www.digikey.com/product-detail/en/stmicroelectronics/ST1S06PUR/497-5802-1-ND/1506457" H 4350 1150 60  0001 C CNN "DigiKey"
+F 8 "$1.05" H 4350 1150 60  0001 C CNN "Price10"
+F 9 "$0.54" H 4350 1150 60  0001 C CNN "Price1k"
 	1    4350 1150
 	1    0    0    -1  
 $EndComp
@@ -2382,10 +2367,10 @@ F 9 "$0.00835" H 8300 6150 60  0001 C CNN "Price1k"
 	1    0    0    -1  
 $EndComp
 $Comp
-L +1V0 #PWR?
+L +1V0 #PWR094
 U 1 1 5A4F9AE6
 P 8300 6050
-F 0 "#PWR?" H 8300 5900 50  0001 C CNN
+F 0 "#PWR094" H 8300 5900 50  0001 C CNN
 F 1 "+1V0" H 8300 6190 50  0000 C CNN
 F 2 "" H 8300 6050 50  0001 C CNN
 F 3 "" H 8300 6050 50  0001 C CNN
@@ -2393,14 +2378,41 @@ F 3 "" H 8300 6050 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L GND #PWR?
+L GND #PWR095
 U 1 1 5A4F9BA2
 P 8300 6250
-F 0 "#PWR?" H 8300 6000 50  0001 C CNN
+F 0 "#PWR095" H 8300 6000 50  0001 C CNN
 F 1 "GND" H 8300 6100 50  0000 C CNN
 F 2 "" H 8300 6250 50  0001 C CNN
 F 3 "" H 8300 6250 50  0001 C CNN
 	1    8300 6250
 	1    0    0    -1  
 $EndComp
+Text GLabel 2050 3850 2    60   Input ~ 0
+NWAYEN0
+Text GLabel 2050 3750 2    60   Input ~ 0
+CRS0
+Text GLabel 2050 3650 2    60   Input ~ 0
+COL0
+$Comp
+L APX811-46UG-7 U4
+U 1 1 5A743176
+P 10550 900
+F 0 "U4" H 10500 1150 60  0000 C CNN
+F 1 "APX811-46UG-7" H 10550 650 60  0000 C CNN
+F 2 "TO_SOT_Packages_SMD:SOT-143" H 10550 900 60  0001 C CNN
+F 3 "https://www.diodes.com/assets/Datasheets/APX811_812.pdf" H 10550 900 60  0001 C CNN
+F 4 "Diodes Incorporated" H 10550 900 60  0001 C CNN "MFG"
+F 5 "APX811-46UG-7" H 10550 900 60  0001 C CNN "Part"
+F 6 "https://www.digikey.com/product-detail/en/diodes-incorporated/APX811-46UG-7/APX811-46UG-7DICT-ND/2182546" H 10550 900 60  0001 C CNN "DigiKey"
+F 7 "$0.29" H 10550 900 60  0001 C CNN "Price10"
+F 8 "$0.10" H 10550 900 60  0001 C CNN "Price1k"
+	1    10550 900 
+	1    0    0    -1  
+$EndComp
+NoConn ~ 11050 1000
+Wire Wire Line
+	10000 800  10000 700 
+Wire Wire Line
+	10000 700  9900 700 
 $EndSCHEMATC

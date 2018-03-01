@@ -1,32 +1,32 @@
 /*
-Copyright (c) 2017 Travis J Martin (travis.martin) [at} isogrid.org)
+Copyright (c) 2018 Travis J Martin (travis.martin) [at} isogrid.org)
 
-This file is part of IsoSwitch.201709
+This file is part of IsoSwitch.201802
 
-IsoSwitch.201709 is free software: you can redistribute it and/or modify
+IsoSwitch.201802 is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as published
 by the Free Software Foundation.
 
-IsoSwitch.201709 is distributed in the hope that it will be useful,
+IsoSwitch.201802 is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License version 3 for more details.
 
 You should have received a copy of the GNU General Public License version 3
-along with IsoSwitch.201709.  If not, see <http://www.gnu.org/licenses/>.
+along with IsoSwitch.201802.  If not, see <http://www.gnu.org/licenses/>.
 
 A) We, the undersigned contributors to this file, declare that our
    contribution was created by us as individuals, on our own time, entirely for
    altruistic reasons, with the expectation and desire that the Copyright for our
-   contribution would expire in the year 2037 and enter the public domain.
+   contribution would expire in the year 2038 and enter the public domain.
 B) At the time when you first read this declaration, you are hereby granted a license
    to use this file under the terms of the GNU General Public License, v3.
-C) Additionally, for all uses of this file after Jan 1st 2037, we hereby waive
+C) Additionally, for all uses of this file after Jan 1st 2038, we hereby waive
    all copyright and related or neighboring rights together with all associated claims
    and causes of action with respect to this work to the extent possible under law.
 D) We have read and understand the terms and intended legal effect of CC0, and hereby
    voluntarily elect to apply it to this file for all uses or copies that occur
-   after Jan 1st 2037.
+   after Jan 1st 2038.
 E) To the extent that this file embodies any of our patentable inventions, we
    hearby grant you a worldwide, royalty-free, non-exclusive, perpetual license to
    those inventions.
@@ -67,15 +67,16 @@ E) To the extent that this file embodies any of our patentable inventions, we
 #define SLOT_ALLOC_REQUESTED         0x8000
 #define SLOT_ALLOC_STATE_MASK        0x7FFF
 
-#define NUM_LINKS       4
-#define NUM_SUBFRAMES   20 //23   // This currently MUST be divisible by 4
-#define NUM_SLOTS       (32 * NUM_SUBFRAMES)
-#define NUM_SLOTREFS    (4 * NUM_SUBFRAMES)
+#define NUM_LINKS         4
+#define NUM_SUBFRAMES     20   // This currently MUST be divisible by NEX_NUM_SUBFRAMES
+#define NUM_SLOTS         (32 * NUM_SUBFRAMES)
+#define NUM_SLOTREFS      (4 * NUM_SUBFRAMES)
+
+// TODO: This could be moved to 5 with careful adjustments to slotAlloc(Scan,Next,Last)
+//       Another option could be 7, with NUM_SUBFRAMES moved to 21
+#define NEX_NUM_SUBFRAMES 4
 
 #define NUM_UINT32_PER_SUBFRAME ((32 * 4) + 3)
-
-// Remove this to build a switch that only has ETH ports
-#define USE_SPI_TRANSPORT
 
 #define PKT_WORD_COUNT 8
 #define PKT_ISO_ARRAY_SIZE (NUM_SUBFRAMES * 2) // 50% of a frame worth of IsoInit PKT
@@ -90,21 +91,21 @@ E) To the extent that this file embodies any of our patentable inventions, we
 #define BITS_CRUMB_EPOCHS         7
 #define NUM_CRUMB_EPOCHS          (1 << BITS_CRUMB_EPOCHS)
 
-#define ETH_BITS_CRUMBS_PER_EPOCH 4
+#define ETH_BITS_CRUMBS_PER_EPOCH 5
 #define ETH_NUM_CRUMBS_PER_EPOCH  (1 << ETH_BITS_CRUMBS_PER_EPOCH)
 #define ETH_NUM_CRUMBS            (NUM_CRUMB_EPOCHS * ETH_NUM_CRUMBS_PER_EPOCH)
 
+#define NEX_BITS_CRUMBS_PER_EPOCH 4
+#define NEX_NUM_CRUMBS_PER_EPOCH  (1 << NEX_BITS_CRUMBS_PER_EPOCH)
+#define NEX_NUM_CRUMBS            (NUM_CRUMB_EPOCHS * NEX_NUM_CRUMBS_PER_EPOCH)
+
+// NUM_SUBFRAMES MUST be evenly divisible by NEX_NUM_SUBFRAMES
+#define NEX_NUM_SUBFRAMES         4
+#define NEX_PKT_ISO_ARRAY_SIZE    ((NEX_NUM_SUBFRAMES) * 2) // 50% of a frame worth of IsoInit PKT
+#define NEX_PKT_ARRAY_SIZE        ((NEX_NUM_SUBFRAMES) * 8) // 200% of a frame worth of PKT
+
 // Keep this number 8 * (the highest number of crumbs per epoch)
 #define NUM_CACHED_CRUMBS         (ETH_NUM_CRUMBS_PER_EPOCH * 8)
-
-#define SPI_BITS_CRUMBS_PER_EPOCH 1
-#define SPI_NUM_CRUMBS_PER_EPOCH  (1 << SPI_BITS_CRUMBS_PER_EPOCH)
-#define SPI_NUM_CRUMBS            (NUM_CRUMB_EPOCHS * SPI_NUM_CRUMBS_PER_EPOCH)
-
-// NUM_SUBFRAMES MUST be evenly divisible by SPI_NUM_SUBFRAMES
-#define SPI_NUM_SUBFRAMES         4
-#define SPI_PKT_ISO_ARRAY_SIZE    ((SPI_NUM_SUBFRAMES) * 2) // 50% of a frame worth of IsoInit PKT
-#define SPI_PKT_ARRAY_SIZE        ((SPI_NUM_SUBFRAMES) * 8) // 200% of a frame worth of PKT
 
 #ifdef DEBUG_PRINTS
   #define DBGPRINT(...) printf(...)
@@ -147,10 +148,10 @@ typedef struct
   UINT8 frameReadyFlag;
 
   UINT16 crumbCache8s[NUM_CACHED_CRUMBS];
-  UINT16 crumbCache8sHead; // The next cached crumb to be used (or dropped because it fell behind the time)
+  UINT32 crumbCache8sHead; // The next cached crumb to be used (or dropped because it fell behind the time)
 
   UINT16 crumbCache120s[NUM_CACHED_CRUMBS];
-  UINT16 crumbCache120sHead; // The next cached crumb to be used (or dropped because it fell behind the time)
+  UINT32 crumbCache120sHead; // The next cached crumb to be used (or dropped because it fell behind the time)
 } OUTPUT_CONTEXT;
 
 typedef struct
@@ -183,7 +184,7 @@ interface ITxBufInit
   OUTPUT_CONTEXT* unsafe GetOutputContext();
 };
 
-// Client: tx_SPI_ & rx_ETH
+// Client: rx_ETH
 // Server: frame_task
 // Only called at initialization
 interface IRxBufInit
@@ -208,7 +209,7 @@ interface IFrameFill
   // Use a SlotRef to send a word and return the actual slot
   UINT16 SendWordViaSlotRef(UINT8 slotRef, WORD& word, UINT8 validityFlag);
 
-  void SendWord(UINT16 slotState, WORD& word, UINT8 validityFlag);
+  void SendWord(UINT16 slotState, WORD& word, UINT32 validityFlag);
 
   UINT16 TryContinue(UINT16 slotState, WORD& wordRef, UINT8 validityFlag);
 
@@ -229,6 +230,9 @@ interface IFrameFill
   // Allocate an IsoStream for local use (not routable) and return a slotRef
   UINT16 AllocLocalIsoStream(WORD pkt[PKT_BUF_WORD_COUNT], WORD& lastWord);
 
+#ifdef SUPER_DEBUG
+  void NotifyFrameComplete();
+#endif
 };
 
 typedef enum

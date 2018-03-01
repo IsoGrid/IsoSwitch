@@ -1,32 +1,32 @@
 /*
-Copyright (c) 2017 Travis J Martin (travis.martin) [at} isogrid.org)
+Copyright (c) 2018 Travis J Martin (travis.martin) [at} isogrid.org)
 
-This file is part of IsoSwitch.201709
+This file is part of IsoSwitch.201802
 
-IsoSwitch.201709 is free software: you can redistribute it and/or modify
+IsoSwitch.201802 is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as published
 by the Free Software Foundation.
 
-IsoSwitch.201709 is distributed in the hope that it will be useful,
+IsoSwitch.201802 is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License version 3 for more details.
 
 You should have received a copy of the GNU General Public License version 3
-along with IsoSwitch.201709.  If not, see <http://www.gnu.org/licenses/>.
+along with IsoSwitch.201802.  If not, see <http://www.gnu.org/licenses/>.
 
 A) We, the undersigned contributors to this file, declare that our
    contribution was created by us as individuals, on our own time, entirely for
    altruistic reasons, with the expectation and desire that the Copyright for our
-   contribution would expire in the year 2037 and enter the public domain.
+   contribution would expire in the year 2038 and enter the public domain.
 B) At the time when you first read this declaration, you are hereby granted a license
    to use this file under the terms of the GNU General Public License, v3.
-C) Additionally, for all uses of this file after Jan 1st 2037, we hereby waive
+C) Additionally, for all uses of this file after Jan 1st 2038, we hereby waive
    all copyright and related or neighboring rights together with all associated claims
    and causes of action with respect to this work to the extent possible under law.
 D) We have read and understand the terms and intended legal effect of CC0, and hereby
    voluntarily elect to apply it to this file for all uses or copies that occur
-   after Jan 1st 2037.
+   after Jan 1st 2038.
 E) To the extent that this file embodies any of our patentable inventions, we
    hearby grant you a worldwide, royalty-free, non-exclusive, perpetual license to
    those inventions.
@@ -44,24 +44,6 @@ E) To the extent that this file embodies any of our patentable inventions, we
 #include <string.h>
 
 #include "common.h"
-
-/*
-static const UINT8 ParityTable256[256] =
-{
-#   define P2(n) n, n^1, n^1, n
-#   define P4(n) P2(n), P2(n^1), P2(n^1), P2(n)
-#   define P6(n) P4(n), P4(n^1), P4(n^1), P4(n)
-    P6(0), P6(1), P6(1), P6(0)
-};
-
-UINT32 CalculateParity(UINT64 v)
-{
-  v ^= v >> 32;
-  v ^= v >> 16;
-  v ^= v >> 8;
-  return ParityTable256[v & 0xff];
-}
-*/
 
 // States for uPkt decoder
 typedef enum
@@ -210,8 +192,6 @@ void rx_decoder(
     }
   }
 
-  printf("Receiving%d!\n", linkId);
-
   unsafe
   {
     // Verify it didn't flip in the time it took to print above
@@ -229,11 +209,15 @@ void rx_decoder(
     {
       subframeId = 0;
       pSlot = (SLOT_STATE* unsafe)(slots);
+
+#ifdef SUPER_DEBUG
+      iFrameSelf.NotifyFrameComplete();
+#endif
     }
 
     rxSubframeReadyFlag = !rxSubframeReadyFlag;
 
-    set_core_high_priority_off();
+    // set_core_high_priority_off();
 
     UINT32 x = 0;
     while (rxSubframeReadyFlag != *pRxBufSubframeReadyFlag)
@@ -241,20 +225,19 @@ void rx_decoder(
       x++;
     }
 
-    set_core_high_priority_on(); // Allocate a full 100MIPS to the rx task
+    // set_core_high_priority_on(); // Allocate a full 100MIPS to the rx task
 
     // At 100MHz, we have 128 cycles per slot to complete on time
-    if (x < 5)
+    //if (x < 5)
     {
-      printf("%d Exceeded Rx %d %d\n", linkId, subframeId, x);
+      //printf("%d Exceeded Rx %d %d\n", linkId, subframeId, x);
     }
 
-    SUBFRAME& subframe = rxSubframeReadyFlag ? pRxBuf->s[1] : pRxBuf->s[0];
-    if (subframe.crc != -1)
-    {
-      printf("****%dCRC%d(%x)!!!\n", linkId, subframeId, subframe.crc);
+    SUBFRAME& subframe = rxSubframeReadyFlag ? pRxBuf->s[0] : pRxBuf->s[1];
 
-      subframe.slotValidityFlags = 0;
+    if (subframe.slotValidityFlags == 0) // CRC failed!
+    {
+      printf("****%dCRC%d!!!\n", linkId, subframeId);
     }
 
     for (UINT32 inSlotId = 0; inSlotId < 32;
@@ -381,7 +364,8 @@ void rx_decoder(
 
       if (subframe.slotAllocatedFlags & 1)
       {
-        printf("****%dMissed%X (%x, %x, %x, %x)!!!\n", linkId, inSlotId, word.i32[0], word.i32[1], word.i32[2], word.i32[3]);
+        // TODO: Should this be printed when debugging?
+        //printf("****%dMissed%X (%x, %x, %x, %x)!!!\n", linkId, inSlotId, word.i32[0], word.i32[1], word.i32[2], word.i32[3]);
 
         // The input switch thinks this slot is allocated, we must have missed an InitIsoStream
         pRxBuf->status[(pRxBuf->nextTick - 2) % 4].MissedCount++;
@@ -390,7 +374,7 @@ void rx_decoder(
 
       if ((subframe.slotValidityFlags & 1) == 0)
       {
-        printf("****%dErased%X %d!!!\n", linkId, subframe.slotAllocatedFlags, inSlotId);
+        printf("****%dErased%X %d!!!\n", linkId, subframe.slotValidityFlags, inSlotId);
 
         // The input switch thinks this slot is erased
         pRxBuf->status[(pRxBuf->nextTick - 2) % 4].ErasedCount++;

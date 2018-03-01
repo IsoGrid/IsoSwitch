@@ -32,8 +32,6 @@ LIBS:opto
 LIBS:atmel
 LIBS:contrib
 LIBS:valves
-LIBS:10118193-0001LF
-LIBS:615032137821
 LIBS:HW-cache
 EELAYER 25 0
 EELAYER END
@@ -65,8 +63,8 @@ L GND #PWR0117
 U 1 1 5A49BC89
 P 5800 3150
 AR Path="/5A49BC89" Ref="#PWR0117"  Part="1" 
-AR Path="/5A436E1B/5A49BC89" Ref="#PWR0123"  Part="1" 
-F 0 "#PWR0123" H 5800 2900 50  0001 C CNN
+AR Path="/5A436E1B/5A49BC89" Ref="#PWR0125"  Part="1" 
+F 0 "#PWR0125" H 5800 2900 50  0001 C CNN
 F 1 "GND" H 5800 3000 50  0000 C CNN
 F 2 "" H 5800 3150 50  0001 C CNN
 F 3 "" H 5800 3150 50  0001 C CNN
@@ -329,10 +327,10 @@ F 8 "$0.00268" V 4300 7400 60  0001 C CNN "Price1k"
 	1    0    0    -1  
 $EndComp
 $Comp
-L +3V3 #PWR0124
+L +3V3 #PWR0126
 U 1 1 5A4F6830
 P 4300 7250
-F 0 "#PWR0124" H 4300 7100 50  0001 C CNN
+F 0 "#PWR0126" H 4300 7100 50  0001 C CNN
 F 1 "+3V3" H 4300 7390 50  0000 C CNN
 F 2 "" H 4300 7250 50  0001 C CNN
 F 3 "" H 4300 7250 50  0001 C CNN
@@ -341,4 +339,49 @@ F 3 "" H 4300 7250 50  0001 C CNN
 $EndComp
 Text Notes 4550 7400 0    60   ~ 0
 Pull-Up to enable boot from XTAG
+$Comp
+L TEST_1P J9
+U 1 1 5A6AA219
+P 7900 750
+F 0 "J9" H 7900 1020 50  0000 C CNN
+F 1 "COL_TP" H 7900 950 50  0000 C CNN
+F 2 "Measurement_Points:Measurement_Point_Square-SMD-Pad_Small" H 8100 750 50  0001 C CNN
+F 3 "" H 8100 750 50  0001 C CNN
+	1    7900 750 
+	-1   0    0    1   
+$EndComp
+$Comp
+L TEST_1P J8
+U 1 1 5A6AA35A
+P 7600 850
+F 0 "J8" H 7600 1120 50  0000 C CNN
+F 1 "CRS_TP" H 7600 1050 50  0000 C CNN
+F 2 "Measurement_Points:Measurement_Point_Square-SMD-Pad_Small" H 7800 850 50  0001 C CNN
+F 3 "" H 7800 850 50  0001 C CNN
+	1    7600 850 
+	-1   0    0    1   
+$EndComp
+$Comp
+L TEST_1P J7
+U 1 1 5A6AE453
+P 7300 950
+F 0 "J7" H 7300 1220 50  0000 C CNN
+F 1 "NWAY_TP" H 7300 1150 50  0000 C CNN
+F 2 "Measurement_Points:Measurement_Point_Square-SMD-Pad_Small" H 7500 950 50  0001 C CNN
+F 3 "" H 7500 950 50  0001 C CNN
+	1    7300 950 
+	-1   0    0    1   
+$EndComp
+Connection ~ 7300 950 
+Connection ~ 7600 850 
+Connection ~ 7900 750 
+Text GLabel 3050 6850 3    60   Input ~ 0
+NWAYEN0
+Connection ~ 3050 6850
+Connection ~ 3350 6750
+Connection ~ 3650 6650
+Text GLabel 3350 6750 3    60   Input ~ 0
+CRS0
+Text GLabel 3650 6650 3    60   Input ~ 0
+COL0
 $EndSCHEMATC

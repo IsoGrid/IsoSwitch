@@ -1,18 +1,18 @@
 Copyright (c) 2018 Travis J Martin (travis.martin) [at} isogrid.org)
 
-These Hardware Design files are part of IsoSwitch.201801
+These Hardware Design files are part of IsoSwitch.201802
 
-IsoSwitch.201801 is free software: you can redistribute it and/or modify
+IsoSwitch.201802 is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as published
 by the Free Software Foundation.
 
-IsoSwitch.201801 is distributed in the hope that it will be useful,
+IsoSwitch.201802 is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License version 3 for more details.
 
 You should have received a copy of the GNU General Public License version 3
-along with IsoSwitch.201801.  If not, see <http://www.gnu.org/licenses/>.
+along with IsoSwitch.201802.  If not, see <http://www.gnu.org/licenses/>.
 
 A) We, the undersigned contributors to this file, declare that our
    contribution was created by us as individuals, on our own time, entirely for

@@ -1,6 +1,10 @@
-update=12/30/2017 10:55:01 AM
+update=2/1/2018 6:50:08 PM
 version=1
 last_client=kicad
+[general]
+version=1
+RootSch=
+BoardNm=
 [pcbnew]
 version=1
 LastNetListRead=
@@ -23,11 +27,9 @@ ModuleOutlineThickness=0.150000000000
 [cvpcb]
 version=1
 NetIExt=net
-[general]
-version=1
 [eeschema]
 version=1
-LibDir=../HW;SnapEda
+LibDir=
 [eeschema/libraries]
 LibName1=CrowdSwitch
 LibName2=power
@@ -62,15 +64,3 @@ LibName30=opto
 LibName31=atmel
 LibName32=contrib
 LibName33=valves
-LibName34=SnapEda/10118193-0001LF
-LibName35=SnapEda/615032137821
-[schematic_editor]
-version=1
-PageLayoutDescrFile=
-PlotDirectoryName=
-SubpartIdSeparator=0
-SubpartFirstId=65
-NetFmtName=
-SpiceForceRefPrefix=0
-SpiceUseNetNumbers=0
-LabSize=60

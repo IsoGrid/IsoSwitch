@@ -1,32 +1,32 @@
 /*
-Copyright (c) 2017 Travis J Martin (travis.martin) [at} isogrid.org)
+Copyright (c) 2018 Travis J Martin (travis.martin) [at} isogrid.org)
 
-This file is part of IsoSwitch.201709
+This file is part of IsoSwitch.201802
 
-IsoSwitch.201709 is free software: you can redistribute it and/or modify
+IsoSwitch.201802 is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as published
 by the Free Software Foundation.
 
-IsoSwitch.201709 is distributed in the hope that it will be useful,
+IsoSwitch.201802 is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License version 3 for more details.
 
 You should have received a copy of the GNU General Public License version 3
-along with IsoSwitch.201709.  If not, see <http://www.gnu.org/licenses/>.
+along with IsoSwitch.201802.  If not, see <http://www.gnu.org/licenses/>.
 
 A) We, the undersigned contributors to this file, declare that our
    contribution was created by us as individuals, on our own time, entirely for
    altruistic reasons, with the expectation and desire that the Copyright for our
-   contribution would expire in the year 2037 and enter the public domain.
+   contribution would expire in the year 2038 and enter the public domain.
 B) At the time when you first read this declaration, you are hereby granted a license
    to use this file under the terms of the GNU General Public License, v3.
-C) Additionally, for all uses of this file after Jan 1st 2037, we hereby waive
+C) Additionally, for all uses of this file after Jan 1st 2038, we hereby waive
    all copyright and related or neighboring rights together with all associated claims
    and causes of action with respect to this work to the extent possible under law.
 D) We have read and understand the terms and intended legal effect of CC0, and hereby
    voluntarily elect to apply it to this file for all uses or copies that occur
-   after Jan 1st 2037.
+   after Jan 1st 2038.
 E) To the extent that this file embodies any of our patentable inventions, we
    hearby grant you a worldwide, royalty-free, non-exclusive, perpetual license to
    those inventions.
@@ -189,10 +189,8 @@ typedef struct
 {
   WORD slots[32];
 
-  UINT32 slotValidityFlags;
   UINT32 slotAllocatedFlags;
-  UINT32 crc;
-  UINT32 spi_ignore_zero;
+  UINT32 slotValidityFlags;
 } SUBFRAME;
 
 // NOTE: This structure should be a power of 2 bytes for perf reasons (accessing an array is easier)

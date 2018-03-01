@@ -1,32 +1,32 @@
 /*
-Copyright (c) 2017 Travis J Martin (travis.martin) [at} isogrid.org)
+Copyright (c) 2018 Travis J Martin (travis.martin) [at} isogrid.org)
 
-This file is part of IsoSwitch.201709
+This file is part of IsoSwitch.201802
 
-IsoSwitch.201709 is free software: you can redistribute it and/or modify
+IsoSwitch.201802 is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as published
 by the Free Software Foundation.
 
-IsoSwitch.201709 is distributed in the hope that it will be useful,
+IsoSwitch.201802 is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License version 3 for more details.
 
 You should have received a copy of the GNU General Public License version 3
-along with IsoSwitch.201709.  If not, see <http://www.gnu.org/licenses/>.
+along with IsoSwitch.201802.  If not, see <http://www.gnu.org/licenses/>.
 
 A) We, the undersigned contributors to this file, declare that our
    contribution was created by us as individuals, on our own time, entirely for
    altruistic reasons, with the expectation and desire that the Copyright for our
-   contribution would expire in the year 2037 and enter the public domain.
+   contribution would expire in the year 2038 and enter the public domain.
 B) At the time when you first read this declaration, you are hereby granted a license
    to use this file under the terms of the GNU General Public License, v3.
-C) Additionally, for all uses of this file after Jan 1st 2037, we hereby waive
+C) Additionally, for all uses of this file after Jan 1st 2038, we hereby waive
    all copyright and related or neighboring rights together with all associated claims
    and causes of action with respect to this work to the extent possible under law.
 D) We have read and understand the terms and intended legal effect of CC0, and hereby
    voluntarily elect to apply it to this file for all uses or copies that occur
-   after Jan 1st 2037.
+   after Jan 1st 2038.
 E) To the extent that this file embodies any of our patentable inventions, we
    hearby grant you a worldwide, royalty-free, non-exclusive, perpetual license to
    those inventions.
@@ -68,6 +68,8 @@ void frame_task(LINKID linkId,
 {
   OUTPUT_CONTEXT txBuf = {};
   RX_SUBFRAME_BUFFER rxBuf = {};
+
+  //set_core_high_priority_on();
 
   unsafe
   {
@@ -166,23 +168,28 @@ void frame_task(LINKID linkId,
   UINT8 slotAllocNext = 12;  // The earliest possible slotAlloc
   UINT8 slotAllocScan = 12;  // A slotAlloc between the earliest and the subframe before the last one (inclusive)
   UINT8 slotAllocLast = (NUM_SLOTREFS - 4);  // A slotAlloc in the last subframe
-  BOOL isSpiFraming = FALSE;
+  BOOL isNexusFraming = FALSE;
 
-  if (numSubframes == SPI_NUM_SUBFRAMES)
+  if (numSubframes == NEX_NUM_SUBFRAMES)
   {
     slotAllocNext = 20;
     slotAllocScan = 20;
     slotAllocLast = (NUM_SLOTREFS - 20);
-    isSpiFraming = TRUE;
+    isNexusFraming = TRUE;
   }
 
   const UINT8 slotAllocMaxSize = slotAllocLast - slotAllocScan;
+
+#ifdef SUPER_DEBUG
+  UINT32 numGoodRxFrames = 0;
+  UINT32 lastRxFrameCompleteTime = 0;
+#endif
 
   UINT32 nextTxFrameTime;
   UINT32 nextTxSubframeTime;
   timer t;
 
-  UINT32 maxSlotAllocCount = (32 * numSubframes) / 2; // Half the slots can be allocated
+  UINT32 maxSlotAllocCount = (40 * numSubframes) / 2; // Just over half the slots can be allocated
 
   // This value tracks the timing offset of the last frame relative to
   // the expected timing based on the local RefClk.
@@ -224,23 +231,24 @@ void frame_task(LINKID linkId,
 
         nextTxFrameTime += FRAME_PERIOD_TICKS;
 
-        cyclerOut <: rxBuf.timingOffset;
-        cyclerIn :> InputTimingOffset1;
-        cyclerOut <: InputTimingOffset1;
-        cyclerIn :> InputTimingOffset2;
-        cyclerOut <: InputTimingOffset2;
-        cyclerIn :> InputTimingOffset3;
+        // TODO: Is this timing working right?
+        //cyclerOut <: rxBuf.timingOffset;
+        //cyclerIn :> InputTimingOffset1;
+        //cyclerOut <: InputTimingOffset1;
+        //cyclerIn :> InputTimingOffset2;
+        //cyclerOut <: InputTimingOffset2;
+        //cyclerIn :> InputTimingOffset3;
 
-        INT32 timingOffset = ((rxBuf.timingOffset + InputTimingOffset1 +
-                               InputTimingOffset2 + InputTimingOffset3));
+        //INT32 timingOffset = ((rxBuf.timingOffset + InputTimingOffset1 +
+        //                       InputTimingOffset2 + InputTimingOffset3));
 
-        if (timingOffset > 4)
+        //if (timingOffset > 4)
         {
-          nextTxFrameTime--;
+        //  nextTxFrameTime--;
         }
-        else if (timingOffset < -4)
+        //else if (timingOffset < -4)
         {
-          nextTxFrameTime++;
+        //  nextTxFrameTime++;
         }
 
         nextTxSubframeTime += subframePeriod;
@@ -255,17 +263,39 @@ void frame_task(LINKID linkId,
         nextTxSubframeTime = nextTxFrameTime;
         curSubframeIndex = 0;
 
-        if (curFrameIndex++ == (1024 * 8))
+        // Switch on the current second of time
+        switch (curFrameIndex >> 10)
         {
-          curFrameIndex = 0;
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+          curFrameIndex++;
+          break;
+
+        case 7:
+          UINT32* unsafe pFinalStatusClear = (UINT32* unsafe)pFinalStatus;
+
+          // 16 UINT32 covered by first 4 bits. This strategy does a lot of redundant clears,
+          // but it's faster in the worst case.
+          pFinalStatusClear[curFrameIndex & 0xF] = 0;
+          curFrameIndex++;
+          break;
+
+        case 8:
+          curFrameIndex = 1;
 
           rxBuf.nextTick = (rxBuf.nextTick + 1) % 4;
           pNextConfig = (UINT8* unsafe)&rxBuf.config[rxBuf.nextTick];
           pFinalStatus = (UINT8* unsafe)&rxBuf.status[rxBuf.nextTick];
+          break;
         }
       }
 
-      if (isSpiFraming)
+      if (isNexusFraming)
       {
         slotAllocNext = (slotAllocNext + 20) % NUM_SLOTREFS;
         slotAllocLast = (slotAllocLast + 20) % NUM_SLOTREFS;
@@ -280,6 +310,19 @@ void frame_task(LINKID linkId,
       {
         slotAllocScan = slotAllocNext;
       }
+      break;
+
+    case f[int i].SendWord(UINT16 slotState, WORD& word, UINT32 validityFlag):
+      SUBFRAMEID subframeId = (slotState & 0x1FE0) >> 5;
+      SLOTID slotId = (slotState & 0x1F);
+
+      DBGPRINT("***SW(%x,%x)\n", subframeId, slotId);
+
+      UINT32 validityFlags32 = validityFlag;
+      subframes[subframeId].s.slotValidityFlags |= (validityFlags32 << slotId);
+
+      WORD* unsafe slots = subframes[subframeId].s.slots;
+      CopyWord(slots[slotId], word);
       break;
 
     case f[int i].SendWordViaSlotRef(UINT8 slotRef, WORD& word, UINT8 validityFlag) -> UINT16 slotState:
@@ -308,20 +351,7 @@ void frame_task(LINKID linkId,
       SUBFRAMEID subframeId = slotState >> 5;
       SLOTID slotId = (slotState & 0x1F);
 
-      DBGPRINT("***SWvSR %x (%x, %x, %x)-(%x,%x)\n", slotRef, slotAllocNext, slotAllocScan, slotAllocLast, subframeId, slotId);
-
-      UINT32 validityFlags32 = validityFlag;
-      subframes[subframeId].s.slotValidityFlags |= (validityFlags32 << slotId);
-
-      WORD* unsafe slots = subframes[subframeId].s.slots;
-      CopyWord(slots[slotId], word);
-      break;
-
-    case f[int i].SendWord(UINT16 slotState, WORD& word, UINT8 validityFlag):
-      SUBFRAMEID subframeId = (slotState & 0x1FE0) >> 5;
-      SLOTID slotId = (slotState & 0x1F);
-      
-      DBGPRINT("***SW(%x,%x)\n", subframeId, slotId);
+      DBGPRINT("***%dSWvSR %x (%x, %x, %x)-(%x,%x)\n", linkId, slotRef, slotAllocNext, slotAllocScan, slotAllocLast, subframeId, slotId);
 
       UINT32 validityFlags32 = validityFlag;
       subframes[subframeId].s.slotValidityFlags |= (validityFlags32 << slotId);
@@ -680,7 +710,7 @@ void frame_task(LINKID linkId,
       pPkt[2].i16[0] &= LINKID_MASK;
       pPkt[2].i16[0] |= (crumb & 0x3FFF);
 
-      if (isSpiFraming)
+      if (isNexusFraming)
       {
         slotRef = (slotAllocScan + 5) % NUM_SLOTREFS;
       }
@@ -730,7 +760,7 @@ void frame_task(LINKID linkId,
         break;
       }
 
-      if (isSpiFraming)
+      if (isNexusFraming)
       {
         slotRef = (slotAllocScan + 5) % NUM_SLOTREFS;
       }
@@ -752,6 +782,33 @@ void frame_task(LINKID linkId,
       txBuf.pktIsoTail = nextPktIsoTail;
       slotAllocCount++;
       break;
+
+#ifdef SUPER_DEBUG
+    case f[int i].NotifyFrameComplete():
+      if (lastRxFrameCompleteTime < 100)
+      {
+        lastRxFrameCompleteTime++;
+        break;
+      }
+
+      UINT32 rxFrameCompleteTime;
+      t :> rxFrameCompleteTime;
+
+      if (lastRxFrameCompleteTime == 100)
+      {
+        lastRxFrameCompleteTime = rxFrameCompleteTime;
+        break;
+      }
+
+      if ((rxFrameCompleteTime - lastRxFrameCompleteTime) > (FRAME_PERIOD_TICKS + (FRAME_PERIOD_TICKS / 2)) && (numGoodRxFrames > 90000))
+      {
+        printf("****%dRxFrame non-Isochronous: %d vs %d  NumGood: %d!\n", linkId, rxFrameCompleteTime - lastRxFrameCompleteTime, FRAME_PERIOD_TICKS, numGoodRxFrames);
+      }
+      numGoodRxFrames++;
+
+      lastRxFrameCompleteTime = rxFrameCompleteTime;
+      break;
+#endif
     }
   }
 }
@@ -791,7 +848,7 @@ void frame_ETH(LINKID linkId,
   }
 }
 
-void frame_SPI(LINKID linkId,
+void frame_NEX(LINKID linkId,
                server interface ITxBufInit iTxBufInit,
                server interface IRxBufInit iRxBufInit,
                server interface IFrameRxInit iFrameRxInit,
@@ -799,28 +856,28 @@ void frame_SPI(LINKID linkId,
                streaming chanend cyclerIn,
                streaming chanend cyclerOut)
 {
-  SUBFRAME_CONTEXT subframes[SPI_NUM_SUBFRAMES] = {};
+  SUBFRAME_CONTEXT subframes[NEX_NUM_SUBFRAMES] = {};
   SUBFRAME_CONTEXT* restrict pSubframes = subframes;
 
-  UINT8 deallocs[SPI_NUM_SUBFRAMES * 32] = {};
+  UINT8 deallocs[NEX_NUM_SUBFRAMES * 32] = {};
   UINT8* restrict pDeallocs = deallocs;
 
-  UINT16 outputCrumbs[SPI_NUM_CRUMBS + 4] = {}; // add a bit extra to protect against minor overflow
+  UINT16 outputCrumbs[NEX_NUM_CRUMBS + 4] = {}; // add a bit extra to protect against minor overflow
   UINT16* restrict pOutputCrumbs = outputCrumbs;
 
-  UINT16 inputCrumbs[SPI_NUM_CRUMBS + 4] = {}; // add a bit extra to protect against minor overflow
+  UINT16 inputCrumbs[NEX_NUM_CRUMBS + 4] = {}; // add a bit extra to protect against minor overflow
   UINT16* restrict pInputCrumbs = inputCrumbs;
 
-  WORD pktIsoArray[SPI_PKT_ISO_ARRAY_SIZE][PKT_WORD_COUNT] = {};
+  WORD pktIsoArray[NEX_PKT_ISO_ARRAY_SIZE][PKT_WORD_COUNT] = {};
   WORD* restrict pPktIsoArray = (WORD* restrict)pktIsoArray;
 
-  WORD pktArray[SPI_PKT_ARRAY_SIZE][PKT_WORD_COUNT] = {};
+  WORD pktArray[NEX_PKT_ARRAY_SIZE][PKT_WORD_COUNT] = {};
   WORD* restrict pPktArray = (WORD* restrict)pktArray;
 
   unsafe
   {
     frame_task(linkId, iTxBufInit, iRxBufInit, iFrameRxInit, iFrameFill, cyclerIn, cyclerOut,
-               (pSubframes), (pDeallocs), SPI_NUM_SUBFRAMES, (pOutputCrumbs), (pInputCrumbs), SPI_NUM_CRUMBS,
-               pPktIsoArray, SPI_PKT_ISO_ARRAY_SIZE, pPktArray, SPI_PKT_ARRAY_SIZE);
+               (pSubframes), (pDeallocs), NEX_NUM_SUBFRAMES, (pOutputCrumbs), (pInputCrumbs), NEX_NUM_CRUMBS,
+               pPktIsoArray, NEX_PKT_ISO_ARRAY_SIZE, pPktArray, NEX_PKT_ARRAY_SIZE);
   }
 }

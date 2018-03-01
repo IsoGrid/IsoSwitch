@@ -1,19 +1,19 @@
 ﻿/*
 Copyright (c) 2018 Travis J Martin (travis.martin) [at} isogrid.org)
 
-This file is part of IsoSwitch.201801
+This file is part of IsoSwitch.201802
 
-IsoSwitch.201801 is free software: you can redistribute it and/or modify
+IsoSwitch.201802 is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as published
 by the Free Software Foundation.
 
-IsoSwitch.201801 is distributed in the hope that it will be useful,
+IsoSwitch.201802 is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License version 3 for more details.
 
 You should have received a copy of the GNU General Public License version 3
-along with IsoSwitch.201801.  If not, see <http://www.gnu.org/licenses/>.
+along with IsoSwitch.201802.  If not, see <http://www.gnu.org/licenses/>.
 
 A) We, the undersigned contributors to this file, declare that our
    contribution was created by us as individuals, on our own time, entirely for
@@ -350,9 +350,9 @@ namespace IsoSwitchLib
     const short numSlots = numSubframes * 32;
     const short numPktBuf = numSlots / 8;
 
-    const int SubframeUint32Count = ((4 * 32) + 4);
-    const int SubframeByteCount = SubframeUint32Count * 4;
-    
+    // 12 bytes MAC addresses, 2 byte EtherType, 32 * 16 byte payload, slotAllocatedFlags, slotErasureFlags
+    private const int SubframeByteCount = 12 + 2 + ((4 * 32) + 2) * 4;
+
     struct RX_PKT_STATE
     {
       public PKT_DECODE state; // The state enumeration
@@ -441,21 +441,14 @@ namespace IsoSwitchLib
       {
         _iSlot = 0;
       }
-      
+
       int cbMain = SubframeByteCount - 4; // Index into the last UINT32 of subframe bytes
 
-      UInt32 crcValue = BitConverter.ToUInt32(inBytes, cbMain);
+      UInt32 slotErasureFlags = BitConverter.ToUInt32(inBytes, cbMain);
       cbMain -= 4;
       UInt32 slotAllocatedFlags = BitConverter.ToUInt32(inBytes, cbMain);
-      cbMain -= 4;
-      UInt32 slotErasureFlags = BitConverter.ToUInt32(inBytes, cbMain);
-
-      if (crcValue != 0xFFFFFFFF)
-      {
-        slotErasureFlags = 0xFFFFFFFF;
-      }
-
-      cbMain = 4; // First 4 bytes of the frame are zero data (ignored)
+      
+      cbMain = 14;
       for (int i = 0; i < 32;
            i++,
            _iSlot++,
@@ -546,6 +539,11 @@ namespace IsoSwitchLib
 
         if ((slotAllocatedFlags & 1) == 1)
         {
+          
+          //
+          // TODO: Why is this hitting at the end of a stream?
+          //
+
           // The input switch thinks this slot is allocated, we must have missed an InitIsoStream
           continue;
         }
@@ -884,10 +882,12 @@ namespace IsoSwitchLib
             {
               case PKT_T.LOCAL_GET_STATUS:
                 _localGetStatusCommands[_pktDecoder.PktCommand.Route] = null;
+                Console.WriteLine("RecvGetStatus " + _pktDecoder.PktCommand.Route.ToString());
                 break;
 
               case PKT_T.LOCAL_SET_CONFIG:
                 _localSetConfigCommands[_pktDecoder.PktCommand.Route] = null;
+                Console.WriteLine("RecvSetConfig " + _pktDecoder.PktCommand.Route.ToString());
                 break;
             }
 
@@ -933,15 +933,17 @@ namespace IsoSwitchLib
       {
         case PKT_T.LOCAL_GET_STATUS:
           if (_localGetStatusCommands[pktCommand.Route] != null)
+          {
             throw new Exception("Already registered!");
-
+          }
           _localGetStatusCommands[pktCommand.Route] = (PktLocalGetStatus)pktCommand;
           break;
 
         case PKT_T.LOCAL_SET_CONFIG:
           if (_localSetConfigCommands[pktCommand.Route] != null)
+          {
             throw new Exception("Already registered!");
-
+          }
           _localSetConfigCommands[pktCommand.Route] = (PktLocalSetConfig)pktCommand;
           break;
       }

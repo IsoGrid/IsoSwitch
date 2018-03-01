@@ -1,19 +1,19 @@
 ﻿/*
 Copyright (c) 2018 Travis J Martin (travis.martin) [at} isogrid.org)
 
-This file is part of IsoSwitch.201801
+This file is part of IsoSwitch.201802
 
-IsoSwitch.201801 is free software: you can redistribute it and/or modify
+IsoSwitch.201802 is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as published
 by the Free Software Foundation.
 
-IsoSwitch.201801 is distributed in the hope that it will be useful,
+IsoSwitch.201802 is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License version 3 for more details.
 
 You should have received a copy of the GNU General Public License version 3
-along with IsoSwitch.201801.  If not, see <http://www.gnu.org/licenses/>.
+along with IsoSwitch.201802.  If not, see <http://www.gnu.org/licenses/>.
 
 A) We, the undersigned contributors to this file, declare that our
    contribution was created by us as individuals, on our own time, entirely for
@@ -79,7 +79,7 @@ namespace IsoSwitchLib
       Explicit,
     };
 
-    // Convert a GpsTime in (37.27) format to a 32-bit Tick
+    // Convert a GpsTime in (37.27) format to a 2-bit Tick
     public static TickMod ToTick(UInt64 gpsTime) => (TickMod)((UInt32)(gpsTime) >> 30);
 
     // This function converts a TimeSpan in 100-nanosecond units to 
@@ -190,10 +190,11 @@ namespace IsoSwitchLib
       }
     }
 
+    public TickMod TwoTicksAgo => ToTick(Now - GpsTime.TwoTicks);
+    public TickMod OneTickAgo => ToTick(Now - GpsTime.OneTick);
     public TickMod CurrentTick => ToTick(Now);
     public TickMod NextTick => ToTick(Now + GpsTime.OneTick);
-    public TickMod OneTickAgo => ToTick(Now - GpsTime.OneTick);
-    public TickMod TwoTicksAgo => ToTick(Now - GpsTime.TwoTicks);
+
     public UInt64 Now => _gpsTime;
 
     private UInt64[] _receivedPingGpsTimes = new UInt64[4];
@@ -263,8 +264,16 @@ namespace IsoSwitchLib
       }
     }
 
-    // Increment the current time by 1 / (2 ^ 12) seconds
-    internal void Increment_12() => _gpsTime += 1 << (27 - 12);
+    // Increment the current time by 1 / (2 ^ 10) seconds
+    internal void Increment_10()
+    {
+      _gpsTime += 1 << (27 - 10);
+
+      if ((_gpsTime & 0x3FFFFFFF) == 0)
+      {
+        Console.WriteLine("GpsTimeTick");
+      }
+    }
 
     // TEST METHOD: Increment the current time by OneSecond
     internal void Test_IncrementSecond() => _gpsTime += OneSecond;

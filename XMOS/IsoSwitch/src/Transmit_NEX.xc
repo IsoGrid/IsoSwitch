@@ -45,16 +45,18 @@ E) To the extent that this file embodies any of our patentable inventions, we
 
 #include "common.h"
 
-#define TX_FUNC() tx_ETH_(LINKID linkId, client interface ITxBufInit iTxBufInit, out buffered port:32 p_txd, in port p_txclk)
+#define TX_FUNC() tx_NEX_(LINKID linkId, client interface ITxBufInit iTxBufInit, out buffered port:32 p_txd, in port p_txclk)
 
-// This has been tuned to for NUM_SUBFRAMES == 20
-#define TX_INTERFRAME_GAP   65
+// This should be tuned to reflect the gap between frames assuming NEX_NUM_SUBFRAMES == 4
+//#define TX_INTERFRAME_GAP 3350
+#define TX_INTERFRAME_GAP   3320
+//#define TX_INTERFRAME_GAP 3320
 
-#define TX_NUM_SUBFRAMES        NUM_SUBFRAMES
-#define TX_NUM_CRUMBS_PER_EPOCH ETH_NUM_CRUMBS_PER_EPOCH
-#define TX_NUM_CRUMBS           ETH_NUM_CRUMBS
-#define TX_PKT_ISO_ARRAY_SIZE   PKT_ISO_ARRAY_SIZE
-#define TX_PKT_ARRAY_SIZE       PKT_ARRAY_SIZE
+#define TX_NUM_SUBFRAMES        NEX_NUM_SUBFRAMES
+#define TX_NUM_CRUMBS_PER_EPOCH NEX_NUM_CRUMBS_PER_EPOCH
+#define TX_NUM_CRUMBS           NEX_NUM_CRUMBS
+#define TX_PKT_ISO_ARRAY_SIZE   NEX_PKT_ISO_ARRAY_SIZE
+#define TX_PKT_ARRAY_SIZE       NEX_PKT_ARRAY_SIZE
 
 // Include the main Transmit code. It has the implementation of TX_FUNC()
 #include <Transmit.h>
@@ -73,7 +75,7 @@ E) To the extent that this file embodies any of our patentable inventions, we
 // 2. Clear the output frame and return it to the filling list after it's sent
 // 3. Maintain the standard output frequency
 //
-void tx_ETH(LINKID linkId, client interface ITxBufInit iTxBufInit,
+void tx_NEX(LINKID linkId, client interface ITxBufInit iTxBufInit,
             in port p_txclk, out port p_txen, out buffered port:32 p_txd,
             clock clk_tx)
 {
@@ -113,9 +115,9 @@ void tx_ETH(LINKID linkId, client interface ITxBufInit iTxBufInit,
     clearbuf(p_txd);
   }
 
-  printstrln("Transmitting ETH! ");
+  printstrln("Transmitting NEX! ");
 
   // This function doesn't return
-  tx_ETH_(linkId, iTxBufInit, p_txd, p_txclk);
+  tx_NEX_(linkId, iTxBufInit, p_txd, p_txclk);
 }
 

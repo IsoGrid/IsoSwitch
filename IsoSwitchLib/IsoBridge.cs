@@ -1,19 +1,19 @@
 ﻿/*
 Copyright (c) 2018 Travis J Martin (travis.martin) [at} isogrid.org)
 
-This file is part of IsoSwitch.201801
+This file is part of IsoSwitch.201802
 
-IsoSwitch.201801 is free software: you can redistribute it and/or modify
+IsoSwitch.201802 is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as published
 by the Free Software Foundation.
 
-IsoSwitch.201801 is distributed in the hope that it will be useful,
+IsoSwitch.201802 is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License version 3 for more details.
 
 You should have received a copy of the GNU General Public License version 3
-along with IsoSwitch.201801.  If not, see <http://www.gnu.org/licenses/>.
+along with IsoSwitch.201802.  If not, see <http://www.gnu.org/licenses/>.
 
 A) We, the undersigned contributors to this file, declare that our
    contribution was created by us as individuals, on our own time, entirely for
@@ -47,9 +47,65 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Win32.SafeHandles;
 
 namespace IsoSwitchLib
 {
+  class IO
+  {
+    [DllImport("Kernel32.dll", SetLastError = false, CharSet = CharSet.Auto)]
+    public static extern bool DeviceIoControl(
+      SafeFileHandle hDevice,
+      uint IoControlCode,
+      [MarshalAs(UnmanagedType.AsAny)]
+      [In] object InBuffer,
+      uint nInBufferSize,
+      [MarshalAs(UnmanagedType.AsAny)]
+      [Out] object OutBuffer,
+      uint nOutBufferSize,
+      ref uint pBytesReturned,
+      [In] ref NativeOverlapped Overlapped);
+
+
+    // Use interop to call the CreateFile function.
+    // For more information about CreateFile,
+    // see the unmanaged MSDN reference library.
+    [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+    public static extern SafeFileHandle CreateFile(string lpFileName, uint dwDesiredAccess,
+      uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition,
+      uint dwFlagsAndAttributes, IntPtr hTemplateFile);
+
+
+    public const UInt32 GENERIC_READ = 0x80000000;
+    public const UInt32 GENERIC_WRITE = 0x40000000;
+
+    public const UInt32 OPEN_EXISTING = 3;
+    public const UInt32 FILE_ATTRIBUTE_NORMAL = 0x00000080;
+    public const UInt32 OVERLAPPED = 0x40000000;
+
+    public const UInt32 ErrorIOPending = 997;
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern bool ReadFile(IntPtr hFile, [Out] byte[] lpBuffer,
+       uint nNumberOfBytesToRead, out uint lpNumberOfBytesRead, [In] ref NativeOverlapped lpOverlapped);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern bool WriteFile(IntPtr hFile, byte[] lpBuffer,
+       uint nNumberOfBytesToWrite, out uint lpNumberOfBytesWritten, [In] ref NativeOverlapped lpOverlapped);
+
+    /*
+    
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern bool ReadFile(IntPtr hFile, [Out] byte[] lpBuffer,
+       uint nNumberOfBytesToRead, out uint lpNumberOfBytesRead, [In] ref NativeOverlapped lpOverlapped);
+
+    [DllImport("kernel32.dll", SetLastError = true)]
+    public static extern bool WriteFile(IntPtr hFile, byte[] lpBuffer,
+       uint nNumberOfBytesToWrite, out uint lpNumberOfBytesWritten, [In] ref NativeOverlapped lpOverlapped);
+
+    */
+  }
+
   class Fast
   {
  //   [DllImport("kernel32.dll", EntryPoint = "CopyMemory", SetLastError = false)]
@@ -531,7 +587,11 @@ namespace IsoSwitchLib
 
       Console.WriteLine(switchName + ": Waiting for client IsoSwitch to connect...");
 
-      _serverThread = new Thread(s_ServerThread);
+#if USE_SIMULATOR
+      _serverThread = new Thread(S_NamedPipeServerThread);
+#else
+      _serverThread = new Thread(S_IsoSwitchNdisServerThread);
+#endif
       _serverThread.Start(this);
 
       _pingThread = new Thread(s_PingThread);
@@ -547,8 +607,8 @@ namespace IsoSwitchLib
     private Thread _serverThread;
     private Thread _pingThread;
 
-    private const int SubframeUint32Count = ((4 * 32) + 4);
-    private const int SubframeByteCount = SubframeUint32Count * 4;
+    // 12 bytes MAC addresses, 2 byte EtherType, 32 * 16 byte payload, slotAllocatedFlags, slotErasureFlags
+    private const int SubframeByteCount = 12 + 2 + ((4 * 32) + 2) * 4;
     private const int numThreads = 32;
 
     private ConcurrentQueue<InStream> _readyStreamQueue;
@@ -604,11 +664,22 @@ namespace IsoSwitchLib
         return stream;
       });
     }
-    
-    private static void s_ServerThread(object data) => ((IsoBridge)data).ServerThread();
 
-    private void ServerThread()
+    private UInt32 _frameCounter = 0;
+
+    private static void S_NamedPipeServerThread(object data)
     {
+      try { ((IsoBridge) data).NamedPipeServerThread(); }
+      catch (Exception e)
+      {
+        Console.Write(e);
+        throw;
+      }
+    }
+    private void NamedPipeServerThread()
+    {
+      DamienG.Security.Cryptography.Crc32 Crc32 = new DamienG.Security.Cryptography.Crc32();
+
       using (NamedPipeServerStream pipeServer =
           new NamedPipeServerStream(_switchName, PipeDirection.InOut, numThreads, PipeTransmissionMode.Message, PipeOptions.Asynchronous))
       {
@@ -627,14 +698,41 @@ namespace IsoSwitchLib
         Console.WriteLine("Client connected on thread[{0}].", threadId);
         try
         {
-          byte[] inBytes = new byte[SubframeByteCount];
-          byte[] outBytes = new byte[SubframeByteCount];
+          byte[] inBytes = new byte[SubframeByteCount + 4];
+          byte[] outBytes = new byte[SubframeByteCount + 4];
 
           while (true)
           {
-            pipeServer.Read(inBytes, 0, SubframeByteCount);
-            SubframeHandler(ref inBytes, ref outBytes);
-            pipeServer.Write(outBytes, 0, SubframeByteCount);
+            pipeServer.Read(inBytes, 0, SubframeByteCount + 4);
+
+            int cbCrc = SubframeByteCount; // Index into the last UINT32 of the array of bytes
+
+            UInt32 crcValue = BitConverter.ToUInt32(inBytes, cbCrc);
+
+            byte[] crcComputed = Crc32.ComputeHash(inBytes, 0, SubframeByteCount);
+            Array.Reverse(crcComputed);
+
+            if (BitConverter.ToUInt32(crcComputed, 0) != crcValue)
+            {
+              throw new Exception("BAD CRC!");
+            }
+
+            _rxDecoder.HandleSubframe(ref inBytes);
+
+            // NOTE: This mechanism only works when _frameCounter rolls over at the 
+            // same time as the % (MOD) is zero.
+            if (_frameCounter++ % 4 == 0)
+              _gpsTime.Increment_10();
+
+            _txEncoder.HandleSubframe(ref outBytes);
+
+
+            UInt32 crc = BitConverter.ToUInt32(Crc32.ComputeHash(outBytes, 0, SubframeByteCount), 0);
+            byte[] crcComputedWrite = BitConverter.GetBytes(crc);
+            Array.Reverse(crcComputedWrite);
+            Array.Copy(crcComputedWrite, 0, outBytes, SubframeByteCount, 4);
+
+            pipeServer.Write(outBytes, 0, SubframeByteCount + 4);
           }
         }
         // Catch the IOException that is raised if the pipe is broken or disconnected.
@@ -645,20 +743,259 @@ namespace IsoSwitchLib
         pipeServer.Close();
       }
     }
-    
-    private void SubframeHandler(ref byte[] inBytes, ref byte[] outBytes)
+
+    ConcurrentQueue<byte[]> _rxBufferQueue = new ConcurrentQueue<byte[]>();
+    ConcurrentQueue<byte[]> _rxEmptyBufferQueue = new ConcurrentQueue<byte[]>();
+    SemaphoreSlim _rxBufferReady = new SemaphoreSlim(0);
+    private static void S_IsoSwitchRxThread(object data)
     {
-      _gpsTime.Increment_12();
-      _rxDecoder.HandleSubframe(ref inBytes);
-      _txEncoder.HandleSubframe(ref outBytes);
+      try { ((IsoBridge) data).IsoSwitchRxThread(); }
+      catch (Exception e)
+      {
+        Console.Write(e);
+        throw;
+      }
+    }
+    private void IsoSwitchRxThread()
+    {
+      Thread.CurrentThread.Priority = ThreadPriority.Highest;
+
+      while (true)
+      {
+        _rxBufferReady.Wait();
+        byte[] rxBytes;
+        _rxBufferQueue.TryDequeue(out rxBytes);
+        _rxDecoder.HandleSubframe(ref rxBytes);
+        _rxEmptyBufferQueue.Enqueue(rxBytes);
+      }
+    }
+
+    ConcurrentQueue<byte[]> _txBufferQueue = new ConcurrentQueue<byte[]>();
+    ConcurrentQueue<byte[]> _txEmptyBufferQueue = new ConcurrentQueue<byte[]>();
+    SemaphoreSlim _txEncodeReady = new SemaphoreSlim(0);
+    private static void S_IsoSwitchTxThread(object data)
+    {
+      try { ((IsoBridge) data).IsoSwitchTxThread(); }
+      catch (Exception e)
+      {
+        Console.Write(e);
+        throw;
+      }
+    }
+    private void IsoSwitchTxThread()
+    {
+      Thread.CurrentThread.Priority = ThreadPriority.Highest;
+
+      for (int i = 0; i < 90; i++)
+      {
+        byte[] txBytes = new byte [SubframeByteCount + 4];
+
+        // Initialize the header
+        txBytes[0] = 0xFF;
+        txBytes[1] = 0xFF;
+        txBytes[2] = 0xFF;
+        txBytes[3] = 0xFF;
+        txBytes[4] = 0xFF;
+        txBytes[5] = 0xFF;
+        txBytes[6] = 0x00;
+        txBytes[7] = 0x00;
+        txBytes[8] = 0x00;
+        txBytes[9] = 0x00;
+        txBytes[10] = 0x00;
+        txBytes[11] = 0x00;
+        txBytes[12] = 0x65;
+        txBytes[13] = 0x00;
+
+        _txEncoder.HandleSubframe(ref txBytes);
+        _txBufferQueue.Enqueue(txBytes);
+      }
+
+      while (true)
+      {
+        _txEncodeReady.Wait();
+        byte[] txBytes;
+        _txEmptyBufferQueue.TryDequeue(out txBytes);
+        _txEncoder.HandleSubframe(ref txBytes);
+        _txBufferQueue.Enqueue(txBytes);
+      }
+    }
+
+    private static void S_IsoSwitchNdisServerThread(object data)
+    {
+      try { ((IsoBridge)data).IsoSwitchNdisServerThread(); }
+      catch (Exception e)
+      {
+        Console.Write(e);
+        throw;
+      }
+    }
+    private void IsoSwitchNdisServerThread()
+    {
+      using (SafeFileHandle hDev = IO.CreateFile("\\\\.\\\\IsoSwitch", IO.GENERIC_READ | IO.GENERIC_WRITE, 0, (IntPtr)null, IO.OPEN_EXISTING, IO.OVERLAPPED, (IntPtr)null))
+      {
+        int threadId = Thread.CurrentThread.ManagedThreadId;
+
+        Thread rxThread = new Thread(S_IsoSwitchRxThread);
+        rxThread.Start(this);
+        Thread txThread = new Thread(S_IsoSwitchTxThread);
+        txThread.Start(this);
+
+        uint readBytes;
+        uint writeBytes;
+
+        Thread.CurrentThread.Priority = ThreadPriority.Highest;
+
+        // TODO: Replace this with an IOCTL_NDISPROT_BIND_WAIT
+        // TODO: Also need to wait for the other threads to start up
+        Thread.Sleep(3000);
+
+        byte[] rxBytes;
+        for (int i = 0; i < 200; i++)
+        {
+          rxBytes = new byte[SubframeByteCount + 4];
+          _rxEmptyBufferQueue.Enqueue(rxBytes);
+        }
+
+        NativeOverlapped rxOverlapped = new NativeOverlapped();
+        ManualResetEventSlim rxEvent = new ManualResetEventSlim(false);
+        rxOverlapped.EventHandle = rxEvent.WaitHandle.SafeWaitHandle.DangerousGetHandle();
+
+        _rxEmptyBufferQueue.TryDequeue(out rxBytes);
+        rxEvent.Reset();
+        IO.ReadFile(hDev.DangerousGetHandle(), rxBytes, SubframeByteCount, out readBytes, ref rxOverlapped);
+
+        Console.WriteLine("IsoSwitch connected on thread[{0}].", threadId);
+
+        byte[] txBytes;
+        _txBufferQueue.TryDequeue(out txBytes);
+
+        int curOverlapped = 0;
+        const int maxOverlapped = 64;
+        NativeOverlapped[] txOverlappedArray = new NativeOverlapped[maxOverlapped];
+        ManualResetEventSlim[] txEventArray = new ManualResetEventSlim[maxOverlapped];
+        for (int i = 0; i < maxOverlapped; i++)
+        {
+          txOverlappedArray[i] = new NativeOverlapped();
+          txEventArray[i] = new ManualResetEventSlim(true);
+          txOverlappedArray[i].EventHandle = txEventArray[i].WaitHandle.SafeWaitHandle.DangerousGetHandle();
+        }
+
+        // Read and write a number of empty frames in quick succession to prime the buffers
+        for (int i = 0; i < 500; i++)
+        {
+          rxEvent.WaitHandle.WaitOne();
+          rxEvent.Reset();
+          if (IO.ReadFile(hDev.DangerousGetHandle(), rxBytes, SubframeByteCount, out readBytes, ref rxOverlapped))
+          {
+            throw new Exception("ReadFile completed synchronously!");
+          }
+          else
+          {
+            int error = Marshal.GetLastWin32Error();
+            if (error != IO.ErrorIOPending)
+            {
+              throw new Exception("ReadFile Failed: " + error.ToString());
+            }
+          }
+
+          /*
+          txEventArray[curOverlapped].WaitHandle.WaitOne();
+          txEventArray[curOverlapped].Reset();
+          if (IO.WriteFile(hDev.DangerousGetHandle(), txBytes, SubframeByteCount, out writeBytes, ref txOverlappedArray[curOverlapped]))
+          {
+            throw new Exception("WriteFile completed synchronously!");
+          }
+          else
+          {
+            int error = Marshal.GetLastWin32Error();
+            if (error != IO.ErrorIOPending)
+            {
+              throw new Exception("WriteFile Failed: " + error.ToString());
+            }
+          }
+
+          curOverlapped = (curOverlapped + 1) % maxOverlapped;
+          */
+        }
+
+        _txEmptyBufferQueue.Enqueue(txBytes);
+        _txEncodeReady.Release();
+
+        rxEvent.WaitHandle.WaitOne();
+        _frameCounter = BitConverter.ToUInt32(rxBytes, 6);
+
+        _rxBufferQueue.Enqueue(rxBytes);
+        _rxBufferReady.Release();
+        _rxEmptyBufferQueue.TryDequeue(out rxBytes);
+
+        while (true)
+        {
+          rxEvent.Reset();
+          IO.ReadFile(hDev.DangerousGetHandle(), rxBytes, SubframeByteCount, out readBytes, ref rxOverlapped);
+
+          if (_frameCounter++ % 4 == 0)
+            _gpsTime.Increment_10();
+
+          // TODO: Oh No! How do I time sending an output frame if I miss an input frame
+          //       due to a bad CRC? For now, just crash if we miss an input frame
+          rxEvent.WaitHandle.WaitOne();
+          UInt32 frameNumber = BitConverter.ToUInt32(rxBytes, 6);
+          if (_frameCounter != frameNumber)
+          {
+            Console.WriteLine("Lost Frame! " + _frameCounter.ToString() + " - " + frameNumber.ToString());
+            _frameCounter = frameNumber;
+            throw new Exception("Lost Frame!");
+          }
+
+          _rxBufferQueue.Enqueue(rxBytes);
+          _rxBufferReady.Release();
+          if (!_rxEmptyBufferQueue.TryDequeue(out rxBytes))
+          {
+            throw new Exception("Ran out of rxBuffer");
+          }
+          
+          if (_txBufferQueue.Count < 5)
+          {
+            throw new Exception("Ran out of txBuffer");
+          }
+
+          _txBufferQueue.TryDequeue(out txBytes);
+
+          txEventArray[curOverlapped].WaitHandle.WaitOne();
+          txEventArray[curOverlapped].Reset();
+          if (IO.WriteFile(hDev.DangerousGetHandle(), txBytes, SubframeByteCount, out writeBytes, ref txOverlappedArray[curOverlapped]))
+          {
+            throw new Exception("WriteFile completed synchronously!");
+          }
+          else
+          {
+            int error = Marshal.GetLastWin32Error();
+            if (error != IO.ErrorIOPending)
+            {
+              throw new Exception("WriteFile Failed: " + error.ToString());
+            }
+          }
+          curOverlapped = (curOverlapped + 1) % maxOverlapped;
+
+          _txEmptyBufferQueue.Enqueue(txBytes);
+          _txEncodeReady.Release();
+        }
+      }
     }
 
     private ManualResetEventSlim _timeSetEvent = new ManualResetEventSlim(false);
-    private static void s_PingThread(object data) => ((IsoBridge)data).PingThread();
-
+    private static void s_PingThread(object data)
+    {
+      try { ((IsoBridge)data).PingThread(); }
+      catch (Exception e)
+      {
+        Console.Write(e);
+        throw;
+      }
+    }
     private void PingThread()
     {
-      Thread.Sleep(5000);
+      Thread.Sleep(2000);
 
       do
       {
@@ -684,15 +1021,18 @@ namespace IsoSwitchLib
 
       UInt64 gpsTimeNextPing = _gpsTime.Now;
       TickMod lastTick = CurrentTick;
-      UInt64 gpsTimeNextGetStatus = _gpsTime.Now + GpsTime.OneTick;
 
+      // Wait until the next Tick starts
+      while (lastTick == CurrentTick)
+      {
+        Thread.Sleep(100);
+      }
+
+      // Prevent any GetStatus calls until a Tick occurs
+      UInt64 gpsTimeNextGetStatus = _gpsTime.Now + GpsTime.OneTick * 2;
       foreach (SwitchPort switchPort in _switchPorts.Values)
       {
-        TickMod nextTick = this.NextTick;
-        PktLocalGetStatus pktLocalGetStatus = switchPort.GetStatus(nextTick);
-        pktLocalGetStatus.ResponseReceivedEvent.Reset();
-        switchPort.StatusTick = nextTick;
-        _rxDecoder.RegisterCommandForResponse(pktLocalGetStatus);
+        switchPort.NextGetStatusGpsTime = gpsTimeNextGetStatus;
       }
 
       // About every 1 second, a LOCAL_SEND_PING should be sent to every XMOS switch link
@@ -703,12 +1043,12 @@ namespace IsoSwitchLib
           lastTick = CurrentTick;
           
           // Extend the time a bit to ensure that the XMOS switch has a chance to tick
-          gpsTimeNextGetStatus = _gpsTime.Now + GpsTime.OneFrame * 1;
+          gpsTimeNextGetStatus = _gpsTime.Now + GpsTime.OneFrame * 2;
         }
 
-        if (gpsTimeNextGetStatus < _gpsTime.Now)
+        if (gpsTimeNextGetStatus <= _gpsTime.Now)
         {
-          gpsTimeNextGetStatus += GpsTime.OneTick;
+          gpsTimeNextGetStatus += GpsTime.OneTick * 2;
 
           foreach (SwitchPort switchPort in _switchPorts.Values)
           {
@@ -717,6 +1057,7 @@ namespace IsoSwitchLib
             pktLocalGetStatus.ResponseReceivedEvent.Reset();
             switchPort.StatusTick = nextTick;
             _rxDecoder.RegisterCommandForResponse(pktLocalGetStatus);
+            switchPort.NextGetStatusGpsTime = _gpsTime.Now;
           }
         }
 
@@ -746,15 +1087,17 @@ namespace IsoSwitchLib
 
         foreach (SwitchPort switchPort in _switchPorts.Values)
         {
-          if (switchPort.NextGetStatusGpsTime < _gpsTime.Now)
+          if (switchPort.NextGetStatusGpsTime <= _gpsTime.Now)
           {
             PktLocalGetStatus pktLocalGetStatus = switchPort.GetStatus(NextTick);
             if (!pktLocalGetStatus.ResponseReceivedEvent.IsSet)
             {
               pktLocalGetStatus.UniqueId = (NextUniqueId & 0x3FFFFFFF) | ((UInt32)(pktLocalGetStatus.Route) << 30);
               _txEncoder.SendPkt(pktLocalGetStatus);
+              Console.WriteLine("SentGetStatus " + pktLocalGetStatus.UniqueId.ToString());
 
-              switchPort.NextGetStatusGpsTime = _gpsTime.Now + (GpsTime.OneFrame * 16);
+              // Wait long enough to make it through any SoC side buffers
+              switchPort.NextGetStatusGpsTime = _gpsTime.Now + (GpsTime.OneFrame * 128);
               WaitGpsSpan(GpsTime.OneFrame / 4);
             }
           }
@@ -787,6 +1130,7 @@ namespace IsoSwitchLib
         pktCommand.UniqueId = (NextUniqueId & 0x3FFFFFFF) | ((UInt32)(pktCommand.Route) << 30);
         _rxDecoder.RegisterCommandForResponse(pktCommand);
 
+        // TODO: This loop is too fast for non-simulation
         do
         {
           _txEncoder.SendPkt(pktCommand);
@@ -811,7 +1155,10 @@ namespace IsoSwitchLib
     public bool Test_SetImplictGpsTimeIfCoherent()
     {
       bool bRet = _gpsTime.SetImplicitTimeIfCoherent();
-      _timeSetEvent.Set();
+      if (bRet)
+      {
+        _timeSetEvent.Set();
+      }
       return bRet;
     }
 
@@ -830,6 +1177,7 @@ namespace IsoSwitchLib
         while (!switchPort.GetConfig(NextTick).ResponseReceivedEvent.IsSet)
         {
           if (gpsTimeout < _gpsTime.Now) return false; // Timeout
+
           Thread.Sleep(1);
         }
       }
@@ -841,21 +1189,42 @@ namespace IsoSwitchLib
 
     public void Test_TimeTravelForwardTick() => _gpsTime.Test_IncrementTick();
 
-    public void WaitForStatusAvailable(UInt64 gpsTimeout)
+    public bool WaitForStatusAvailable(UInt64 gpsTimeout)
     {
       foreach (SwitchPort switchPort in _switchPorts.Values)
       {
-        while (switchPort.StatusTick != NextTick)
+        if (switchPort.StatusTick != NextTick)
         {
-          Thread.Sleep(1);
+          Console.WriteLine("Had to wait for StatusTick != NextTick");
+          Thread.Sleep(100);
         }
 
         PktLocalGetStatus pktLocalGetStatus = switchPort.GetStatus(NextTick);
         while (!pktLocalGetStatus.ResponseReceivedEvent.IsSet)
         {
           Thread.Sleep(1);
+
+          if (_gpsTime.Now > gpsTimeout)
+          {
+            return false;
+          }
         }
       }
+
+      return true;
+    }
+
+    static public TickMod NextTickMod(TickMod tickMod)
+    {
+      switch (tickMod)
+      {
+        case TickMod.T0: return TickMod.T1;
+        case TickMod.T1: return TickMod.T2;
+        case TickMod.T2: return TickMod.T3;
+        case TickMod.T3: return TickMod.T0;
+      }
+
+      throw new ArgumentOutOfRangeException();
     }
 
     private SortedDictionary<UInt64, SwitchPort> _switchPorts = new SortedDictionary<UInt64, SwitchPort>();
@@ -875,6 +1244,10 @@ namespace IsoSwitchLib
     public Energy ReceivedEnergy => _rxDecoder.ReceivedEnergy;
     public Energy SentEnergy => _txEncoder.SentEnergy;
 
+#if USE_SIMULATOR
     public const Int32 SpeedFactor = 5000;
+#else
+    public const Int32 SpeedFactor = 1;
+#endif
   }
 }

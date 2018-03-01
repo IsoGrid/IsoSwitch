@@ -1,19 +1,19 @@
 ﻿/*
 Copyright (c) 2018 Travis J Martin (travis.martin) [at} isogrid.org)
 
-This file is part of IsoSwitch.201801
+This file is part of IsoSwitch.201802
 
-IsoSwitch.201801 is free software: you can redistribute it and/or modify
+IsoSwitch.201802 is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License version 3 as published
 by the Free Software Foundation.
 
-IsoSwitch.201801 is distributed in the hope that it will be useful,
+IsoSwitch.201802 is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License version 3 for more details.
 
 You should have received a copy of the GNU General Public License version 3
-along with IsoSwitch.201801.  If not, see <http://www.gnu.org/licenses/>.
+along with IsoSwitch.201802.  If not, see <http://www.gnu.org/licenses/>.
 
 A) We, the undersigned contributors to this file, declare that our
    contribution was created by us as individuals, on our own time, entirely for
@@ -81,7 +81,7 @@ namespace IsoSwitchLib
     short _subframeIdExt = -1;
     short _subframeId;
     short _iSlot = 0;
-
+    
     internal void HandleSubframe(ref byte[] outBytes)
     {
       lock (this)
@@ -95,9 +95,11 @@ namespace IsoSwitchLib
 
         MemoryStream stream = new MemoryStream(outBytes);
 
+        // Skip the Ethernet Header (it should already be written)
+        stream.Seek(14, SeekOrigin.Begin);
+ 
         UInt32 slotErasureFlags = 0;
         UInt32 slotAllocatedFlags = 0;
-        UInt32 crcValue = 0xFFFFFFFF;
 
         for (int i = 0; i < 32; i++, _iSlot++)
         {
@@ -131,7 +133,7 @@ namespace IsoSwitchLib
 
             if (_queuePkt.Count != 0)
             {
-              // an output pipe is ready to be allocated
+              // an output pkt is ready to be sent
 
               switch (_outputPktEncoderState)
               {
@@ -208,10 +210,22 @@ namespace IsoSwitchLib
           }
         }
 
-        stream.Write(BitConverter.GetBytes(slotErasureFlags), 0, 4);
         stream.Write(BitConverter.GetBytes(slotAllocatedFlags), 0, 4);
-        stream.Write(BitConverter.GetBytes(crcValue), 0, 4);
+        stream.Write(BitConverter.GetBytes(slotErasureFlags), 0, 4);
       }
+    }
+
+    UInt32 BitReverse(UInt32 val)
+    {
+      UInt32 ret = 0;
+      for (int x = 0; x < 32; x++)
+      {
+        ret <<= 1;
+        ret = ret | (val & 1);
+        val >>= 1;
+      }
+
+      return ret;
     }
 
     internal void InitiateOutputIsoStream(OutStream stream)
@@ -262,16 +276,7 @@ namespace IsoSwitchLib
     UInt32 _pktBc120Energy = 1000;
 
     TickMod _nextTick = TickMod.T1;
-    public void HandleTick()
-    {
-      switch (_nextTick)
-      {
-        case TickMod.T0: _nextTick = TickMod.T1; break;
-        case TickMod.T1: _nextTick = TickMod.T2; break;
-        case TickMod.T2: _nextTick = TickMod.T3; break;
-        case TickMod.T3: _nextTick = TickMod.T0; break;
-      }
-    }
+    public void HandleTick() => _nextTick = IsoBridge.NextTickMod(_nextTick);
 
     IPkt _nextPkt = null;
     OutputPktEncoderState _outputPktEncoderState = OutputPktEncoderState.NO_PKT;
